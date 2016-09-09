@@ -18,7 +18,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/app', ['exports', 'pdfjs-web/ui_utils',
+    define('pdfjs-dbv-web/app', ['exports', 'pdfjs-web/ui_utils',
       'pdfjs-web/download_manager', 'pdfjs-web/pdf_history',
       'pdfjs-web/preferences', 'pdfjs-web/pdf_sidebar',
       'pdfjs-web/view_history', 'pdfjs-web/pdf_thumbnail_viewer',
@@ -29,13 +29,10 @@
       'pdfjs-web/pdf_outline_viewer', 'pdfjs-web/overlay_manager',
       'pdfjs-web/pdf_attachment_viewer', 'pdfjs-web/pdf_find_controller',
       'pdfjs-web/pdf_find_bar', 'pdfjs-web/dom_events', 'pdfjs-web/pdfjs',
-      
-      'pdfjs-web/dbr_anno_viewer', 
+      'pdfjs-dbv-web/dbr_anno_viewer', 
       'pdfjs-web/inc/leaflet/leaflet', 
-      'pdfjs-web/dbr_anno_registry'
-      
-      ],
-      factory);
+      'pdfjs-web/dbr_anno_registry'],
+       factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'), require('./download_manager.js'),
       require('./pdf_history.js'), require('./preferences.js'),
@@ -48,12 +45,9 @@
       require('./overlay_manager.js'), require('./pdf_attachment_viewer.js'),
       require('./pdf_find_controller.js'), require('./pdf_find_bar.js'),
       require('./dom_events.js'), require('./pdfjs.js'),
-      
-      // paf dai
       require('./dbr_anno_viewer.js'), 
       require('inc/leaflet/leaflet.js'), 
-      require('./dbr_anno_registry.js') 
-    );
+      require('./dbr_anno_registry.js'));
   } else {
     factory((root.pdfjsWebApp = {}), root.pdfjsWebUIUtils,
       root.pdfjsWebDownloadManager, root.pdfjsWebPDFHistory,
@@ -66,12 +60,7 @@
       root.pdfjsWebPDFOutlineViewer, root.pdfjsWebOverlayManager,
       root.pdfjsWebPDFAttachmentViewer, root.pdfjsWebPDFFindController,
       root.pdfjsWebPDFFindBar, root.pdfjsWebDOMEvents, root.pdfjsWebPDFJS,
-      
-      root.pdfjsWebAnnoViewer, 
-      null, 
-      root.pdfjsWebAnnoRegistry
-    
-    );
+      root.pdfjsWebAnnoViewer, root.devnull, root.pdfjsWebAnnoRegistry);
   }
 }(this, function (exports, uiUtilsLib, downloadManagerLib, pdfHistoryLib,
                   preferencesLib, pdfSidebarLib, viewHistoryLib,

@@ -22,32 +22,11 @@ var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
 //var pdfjsWebLibs = {
 //  pdfjsWebPDFJS: window.pdfjsDistBuildPdf
 //};
-//
+//console.log(pdfjsWebLibs);
+
 //(function () {
 //#expand __BUNDLE__
 //}).call(pdfjsWebLibs);
-//#endif
-
-//#if FIREFOX || MOZCENTRAL
-//// FIXME the l10n.js file in the Firefox extension needs global FirefoxCom.
-//window.FirefoxCom = pdfjsWebLibs.pdfjsWebFirefoxCom.FirefoxCom;
-//#endif
-
-//#if CHROME
-//(function rewriteUrlClosure() {
-//  // Run this code outside DOMContentLoaded to make sure that the URL
-//  // is rewritten as soon as possible.
-//  var queryString = document.location.search.slice(1);
-//  var m = /(^|&)file=([^&]*)/.exec(queryString);
-//  DEFAULT_URL = m ? decodeURIComponent(m[2]) : '';
-//
-//  // Example: chrome-extension://.../http://example.com/file.pdf
-//  var humanReadableUrl = '/' + DEFAULT_URL + location.hash;
-//  history.replaceState(history.state, '', humanReadableUrl);
-//  if (top === window) {
-//    chrome.runtime.sendMessage('showPageAction');
-//  }
-//})();
 //#endif
 
 function getViewerConfiguration() {
@@ -177,6 +156,7 @@ function webViewerLoad() {
     web.PDFViewerApplication.run(config);
   });
 //#else
+//console.log('hello');
 //window.PDFViewerApplication = pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication;
 //pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication.run(config);
 //#endif

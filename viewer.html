@@ -22,6 +22,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 -->
 <html dir="ltr" mozdisallowselectionprint moznomarginboxes>
   <head>
+  	<meta yaya='ya'>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <!--#if GENERIC || CHROME-->
@@ -62,6 +63,10 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 <!--#if !PRODUCTION-->
     <script src="default_preferences.js"></script>
+<!--#endif-->
+
+<!--#if PRODUCTION-->
+    <script src="inc/leaflet/leaflet.js"></script>
 <!--#endif-->
 
 <!--#if !MINIFIED -->

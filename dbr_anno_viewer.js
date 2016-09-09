@@ -7,7 +7,7 @@
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'), require('./ui_utils.js'));
   } else {
-    factory((root.pdfjsWebAnnoViewer = {}), root.pdfjsWebPDFJS, root.uiUtils);
+    factory((root.pdfjsWebAnnoViewer = {}), root.pdfjsWebPDFJS, root.pdfjsWebUIUtils);
   }
 }(this, function (exports, pdfjsLib, uiUtils) {
 	

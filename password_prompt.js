@@ -17,8 +17,8 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/password_prompt', ['exports',
-      'pdfjs-web/ui_utils', 'pdfjs-web/overlay_manager', 'pdfjs-web/pdfjs'],
+    define('pdfjs-dbv/password_prompt', ['exports',
+      'pdfjs-dbv/ui_utils', 'pdfjs-dbv/overlay_manager', 'pdfjs-dbv/pdfjs'],
       factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'), require('./overlay_manager.js'),

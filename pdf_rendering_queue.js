@@ -17,7 +17,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/pdf_rendering_queue', ['exports'], factory);
+    define('pdfjs-dbv/pdf_rendering_queue', ['exports'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports);
   } else {

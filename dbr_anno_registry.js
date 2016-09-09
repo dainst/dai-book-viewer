@@ -23,7 +23,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/dbr_anno_registry', ['exports', 'pdfjs-web/pdfjs'],
+    define('pdfjs-dbv/dbr_anno_registry', ['exports', 'pdfjs-dbv/pdfjs'],
       factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'));
@@ -91,7 +91,7 @@
 						}
 						console.log('ADS Success', data);
 						self.successFn(data);
-						self.registerDigest(data);
+						self.registerSet(data);
 						self.setState('ready');
 					} else {
 						return self.error('404 not found: ' + url, request);
@@ -107,17 +107,16 @@
 			},
 			
 			/**
-			 * registers an annotation
+			 * registers a set
 			 * @param data
 			 */
-			registerDigest: function(data) {
-				
+			registerSet: function(data) {
+				console.log(data);
 				for (var type in data) {
-					for (var i = 0; i < data[type].length; i++) {
-						var annotation = data[type][i];
+					for (var i = 0; i < data[type].items.length; i++) {
+						var annotation = data[type].items[i];
 						annotation.type = type;
 						this.registerAnnotation(annotation);
-
 					}
 				}
 			},

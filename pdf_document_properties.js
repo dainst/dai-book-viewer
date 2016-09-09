@@ -17,8 +17,8 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/pdf_document_properties', ['exports',
-      'pdfjs-web/ui_utils', 'pdfjs-web/overlay_manager'], factory);
+    define('pdfjs-dbv/pdf_document_properties', ['exports',
+      'pdfjs-dbv/ui_utils', 'pdfjs-dbv/overlay_manager'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'), require('./overlay_manager.js'));
   } else {

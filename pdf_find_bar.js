@@ -17,8 +17,8 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/pdf_find_bar', ['exports',
-      'pdfjs-web/ui_utils', 'pdfjs-web/pdf_find_controller'], factory);
+    define('pdfjs-dbv/pdf_find_bar', ['exports',
+      'pdfjs-dbv/ui_utils', 'pdfjs-dbv/pdf_find_controller'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'),
       require('./pdf_find_controller.js'));

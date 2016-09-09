@@ -17,7 +17,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/ui_utils', ['exports', 'pdfjs-web/pdfjs'], factory);
+    define('pdfjs-dbv/ui_utils', ['exports', 'pdfjs-dbv/pdfjs'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'));
   } else {

@@ -17,22 +17,22 @@
 'use strict';
 
 (function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define('pdfjs-dbv-web/app', ['exports', 'pdfjs-web/ui_utils',
-      'pdfjs-web/download_manager', 'pdfjs-web/pdf_history',
-      'pdfjs-web/preferences', 'pdfjs-web/pdf_sidebar',
-      'pdfjs-web/view_history', 'pdfjs-web/pdf_thumbnail_viewer',
-      'pdfjs-web/secondary_toolbar', 'pdfjs-web/password_prompt',
-      'pdfjs-web/pdf_presentation_mode', 'pdfjs-web/pdf_document_properties',
-      'pdfjs-web/hand_tool', 'pdfjs-web/pdf_viewer',
-      'pdfjs-web/pdf_rendering_queue', 'pdfjs-web/pdf_link_service',
-      'pdfjs-web/pdf_outline_viewer', 'pdfjs-web/overlay_manager',
-      'pdfjs-web/pdf_attachment_viewer', 'pdfjs-web/pdf_find_controller',
-      'pdfjs-web/pdf_find_bar', 'pdfjs-web/dom_events', 'pdfjs-web/pdfjs',
-      'pdfjs-dbv-web/dbr_anno_viewer', 
-      'pdfjs-web/inc/leaflet/leaflet', 
-      'pdfjs-web/dbr_anno_registry'],
-       factory);
+  if (typeof define === 'function' && define.amd) { 
+    define('pdfjs-dbv/app', ['exports', 'pdfjs-dbv/ui_utils',
+     'pdfjs-dbv/download_manager', 'pdfjs-dbv/pdf_history',
+     'pdfjs-dbv/preferences', 'pdfjs-dbv/pdf_sidebar',
+     'pdfjs-dbv/view_history', 'pdfjs-dbv/pdf_thumbnail_viewer',
+     'pdfjs-dbv/secondary_toolbar', 'pdfjs-dbv/password_prompt',
+     'pdfjs-dbv/pdf_presentation_mode', 'pdfjs-dbv/pdf_document_properties',
+     'pdfjs-dbv/hand_tool', 'pdfjs-dbv/pdf_viewer',
+     'pdfjs-dbv/pdf_rendering_queue', 'pdfjs-dbv/pdf_link_service',
+     'pdfjs-dbv/pdf_outline_viewer', 'pdfjs-dbv/overlay_manager',
+     'pdfjs-dbv/pdf_attachment_viewer', 'pdfjs-dbv/pdf_find_controller',
+     'pdfjs-dbv/pdf_find_bar', 'pdfjs-dbv/dom_events', 'pdfjs-dbv/pdfjs',
+     'pdfjs-dbv/dbr_anno_viewer', 
+     'pdfjs-dbv/inc/leaflet/leaflet', 
+     'pdfjs-dbv/dbr_anno_registry'],
+     factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'), require('./download_manager.js'),
       require('./pdf_history.js'), require('./preferences.js'),
@@ -69,11 +69,8 @@
                   pdfViewerLib, pdfRenderingQueueLib, pdfLinkServiceLib,
                   pdfOutlineViewerLib, overlayManagerLib,
                   pdfAttachmentViewerLib, pdfFindControllerLib, pdfFindBarLib,
-                  domEventsLib, pdfjsLib, 
-                  
-                  annoViewerLib, 
-                  leaflet, 
-                  annotationRegistryLib
+                  domEventsLib, pdfjsLib,                   
+                  annoViewerLib, leaflet, annotationRegistryLib
 ) {
 
 var UNKNOWN_SCALE = uiUtilsLib.UNKNOWN_SCALE;

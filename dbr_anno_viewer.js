@@ -2,7 +2,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/dbr_anno_viewer', ['exports', 'pdfjs-web/pdfjs', 'pdfjs-web/ui_utils'],
+    define('pdfjs-dbv/dbr_anno_viewer', ['exports', 'pdfjs-dbv/pdfjs', 'pdfjs-dbv/ui_utils'],
       factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'), require('./ui_utils.js'));
@@ -45,10 +45,10 @@
 				this.pdfViewer = viewer;
 			},
 			
-			buildBlocks: function(data) {
+			buildBlocks: function(data) {				
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
 				this.block('places', 'Places', 'map-marker', data.locations);
-				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false);
+				this.block('map', 'Map', 'map-marker', data.locations, false, 'populateMap');
 				this.block('persons', 'Persons', 'user', data.persons);
 			},
 			
@@ -58,19 +58,28 @@
 			 * @param title 		<string>		headline @ TODO i10n
 			 * @param glyphicon 	<string> 		icon code
 			 * @param data			<object>
+			 * @param loadMore  	<bool> 			show loadMOre button if more results exists? (default:true)
 			 * @param populationFn 	<string> 		name of population function (method of this)
-			 * @param loadMoreFn  	<function> 		name of loadMore function (method of this) or (explicitly!) false
 			 * 
 			 */
-			block: function(id, title, glyphicon, data, populationFn, loadMoreFn) {
+			block: function(id, title, glyphicon, data, loadMore, populationFn) {
 				var self = this;
 				
-				
-				if (typeof data === "undefined" || data.length == 0) {
+				if (typeof data === "undefined" || typeof data.items === "undefined") {
 					return; // @ TODO what if a category has units, but no digest-important ones?
 				}
 				
-				var block		= this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
+				var block = document.getElementById('dbv-av-block-' + id);
+				if (block) {
+					console.log('b:', block);
+					
+					block.innerHTML = '';
+				} else {
+					console.log('b:new');
+					block		= this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
+					this.container.appendChild(block);
+				}
+				
 				var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
 				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'dbv-toggle': id}}, title);
 				var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
@@ -87,16 +96,13 @@
 				}
 				
 				blockh3.addEventListener('click', function (e) {return self.toggleBlock(e)});
-
-				this.container.appendChild(block);
 						
 				populationFn = populationFn || 'populate';
-				this[populationFn](blockbody, data);
+				this[populationFn](blockbody, data.items);
 				
-				if (loadMoreFn !== false) {
-					loadMoreFn = loadMoreFn || 'loadMore'
+				if ((loadMore !== false) && data.more) {
 					var loadMoreBtn = this.htmlElement('div', {'classes': ['btn', 'btn-default', 'dbv-load-more']}, "Load More");// @ TODO  l10n					
-					loadMoreBtn.addEventListener('click', function(e) {return self[loadMoreFn](id);});
+					loadMoreBtn.addEventListener('click', function(e) {return self.loadMore(id);});
 					blockbody.appendChild(loadMoreBtn); 
 				}
 				
@@ -231,7 +237,8 @@
 			
 			
 			loadMore: function(blockId) {
-				console.log(blockId);
+				console.log('load more ' + blockId);
+				this.annoRegistry.getAnnotations(['testdata', 'more.' + blockId + '_' + this.annoRegistry.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
 			},
 			
 			/**
@@ -265,11 +272,11 @@
 			},
 			
 			displayError: function(e) {
-				this.block('error', 'Error getting Annotations', 'alert', e, 'displayErrorText', false);
+				this.block('error', 'Error getting Annotations', 'alert', e, false, 'displayErrorText');
 			},
 			
 			displayErrorText: function(block, e) {
-				block.appendChild(this.htmlElement('p', {'classes': ['alert', 'alert-danger']}, e));
+				block.appendChild(this.htmlElement('p', {'classes': ['alert', 'alert-danger']}, {'items': e}));
 			},
 			
 			

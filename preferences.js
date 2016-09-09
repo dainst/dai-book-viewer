@@ -18,7 +18,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/preferences', ['exports'], factory);
+    define('pdfjs-dbv/preferences', ['exports'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports);
   } else {

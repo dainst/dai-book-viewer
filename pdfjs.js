@@ -18,7 +18,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/pdfjs', ['exports', 'pdfjs/main_loader'], factory);
+    define('pdfjs-dbv/pdfjs', ['exports', 'pdfjs/main_loader'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('../src/main_loader.js'));
   } else {

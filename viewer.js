@@ -150,8 +150,8 @@ function getViewerConfiguration() {
 function webViewerLoad() {
   var config = getViewerConfiguration();
 //#if !PRODUCTION
-  require.config({paths: {'pdfjs': '../src', 'pdfjs-web': '.'}});
-  require(['pdfjs-web/app', 'mozPrintCallback_polyfill.js'], function (web) {
+  require.config({paths: {'pdfjs': '../src', 'pdfjs-dbv': '.'}});
+  require(['pdfjs-dbv/app', 'mozPrintCallback_polyfill.js'], function (web) {
     window.PDFViewerApplication = web.PDFViewerApplication;
     web.PDFViewerApplication.run(config);
   });

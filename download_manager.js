@@ -17,7 +17,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/download_manager', ['exports', 'pdfjs-web/pdfjs'],
+    define('pdfjs-dbv/download_manager', ['exports', 'pdfjs-dbv/pdfjs'],
       factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'));

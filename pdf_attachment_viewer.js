@@ -17,7 +17,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/pdf_attachment_viewer', ['exports', 'pdfjs-web/pdfjs'],
+    define('pdfjs-dbv/pdf_attachment_viewer', ['exports', 'pdfjs-dbv/pdfjs'],
       factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'));

@@ -17,8 +17,8 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/hand_tool', ['exports', 'pdfjs-web/grab_to_pan',
-      'pdfjs-web/preferences'], factory);
+    define('pdfjs-dbv/hand_tool', ['exports', 'pdfjs-dbv/grab_to_pan',
+      'pdfjs-dbv/preferences'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./grab_to_pan.js'), require('./preferences.js'));
   } else {

@@ -17,8 +17,8 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/text_layer_builder', ['exports', 'pdfjs-web/dom_events',
-        'pdfjs-web/pdfjs'],
+    define('pdfjs-dbv/text_layer_builder', ['exports', 'pdfjs-dbv/dom_events',
+        'pdfjs-dbv/pdfjs'],
       factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./dom_events.js'), require('./pdfjs.js'));
@@ -287,8 +287,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         });
         var t2 = performance.now();
         var dur = t2 - t1;
-        console.log('PERF:' + dur);
-        console.log(annotations);
+        //console.log('PERF:' + dur);
+        //console.log(annotations);
         
         
         var ann = null;
@@ -322,8 +322,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
           begin = position.begin == -1 ? 0 : position.begin;
           tEnd = next ? next.position.begin : infinity.offset;
           
-          console.log('coords: ' + position.divIdx + '/' + position.begin + ' - ' + position.divIdx + '/' + position.end/*, 'for', JSON.stringify(ann.base)*/);
-          console.log(prev,ann,next);
+         // console.log('coords: ' + position.divIdx + '/' + position.begin + ' - ' + position.divIdx + '/' + position.end/*, 'for', JSON.stringify(ann.base)*/);
+          //console.log(prev,ann,next);
                  
           
           // first annotation or first annotation in new row

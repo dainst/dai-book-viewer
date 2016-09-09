@@ -17,8 +17,8 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/pdf_thumbnail_viewer', ['exports',
-      'pdfjs-web/ui_utils', 'pdfjs-web/pdf_thumbnail_view'], factory);
+    define('pdfjs-dbv/pdf_thumbnail_viewer', ['exports',
+      'pdfjs-dbv/ui_utils', 'pdfjs-dbv/pdf_thumbnail_view'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'),
       require('./pdf_thumbnail_view.js'));

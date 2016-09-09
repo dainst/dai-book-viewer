@@ -18,7 +18,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-web/mozPrintCallback_polyfill', ['exports'], factory);
+    define('pdfjs-dbv/mozPrintCallback_polyfill', ['exports'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports);
   } else {

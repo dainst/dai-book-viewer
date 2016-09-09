@@ -15,6 +15,16 @@
 
 @import url(pdf_viewer.css);
 
+/* \__/ */
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url("inc/fonts/bootstrap/glyphicons-halflings-regular.eot");
+    src: url("inc/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("inc/fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../../idai-components/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg");
+}
+
+/* /__\ */
+
+
 * {
   padding: 0;
   margin: 0;
@@ -518,8 +528,9 @@ html[dir='rtl'] .splitToolbarButton > .toolbarButton {
 .overlayButton {
   border: 0 none;
   background: none;
-  width: 32px;
+  width: 28px;
   height: 25px;
+  font-family: 'Glyphicons Halflings';
 }
 
 .toolbarButton > span {
@@ -842,45 +853,45 @@ html[dir='rtl'] .toolbarButton.findNext::before {
 }
 
 html[dir='ltr'] .toolbarButton.pageUp::before {
-  content: url(images/toolbarButton-pageUp.png);
+  content: "\E093";
 }
 html[dir='rtl'] .toolbarButton.pageUp::before {
-  content: url(images/toolbarButton-pageUp-rtl.png);
+  content: "\E093";
 }
 
 html[dir='ltr'] .toolbarButton.pageDown::before {
-  content: url(images/toolbarButton-pageDown.png);
+  content: "\E094";
 }
 html[dir='rtl'] .toolbarButton.pageDown::before {
-  content: url(images/toolbarButton-pageDown-rtl.png);
+  content: "\E094";
 }
 
 .toolbarButton.zoomOut::before {
-  content: url(images/toolbarButton-zoomOut.png);
+  content: "\E016";
 }
 
 .toolbarButton.zoomIn::before {
-  content: url(images/toolbarButton-zoomIn.png);
+  content: "\E015";
 }
 
 .toolbarButton.presentationMode::before,
 .secondaryToolbarButton.presentationMode::before {
-  content: url(images/toolbarButton-presentationMode.png);
+  content: "\E140";
 }
 
 .toolbarButton.print::before,
 .secondaryToolbarButton.print::before {
-  content: url(images/toolbarButton-print.png);
+  content: "\E045";
 }
 
 .toolbarButton.openFile::before,
 .secondaryToolbarButton.openFile::before {
-  content: url(images/toolbarButton-openFile.png);
+  content: "\E118";
 }
 
 .toolbarButton.download::before,
 .secondaryToolbarButton.download::before {
-  content: url(images/toolbarButton-download.png);
+  content: "\E025";
 }
 
 .toolbarButton.bookmark,
@@ -903,26 +914,29 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 
 .toolbarButton.bookmark::before,
 .secondaryToolbarButton.bookmark::before {
-  content: url(images/toolbarButton-bookmark.png);
+  content: "\E044";
 }
 
 #viewThumbnail.toolbarButton::before {
-  content: url(images/toolbarButton-viewThumbnail.png);
+  content: "\E010";
 }
 
 html[dir="ltr"] #viewOutline.toolbarButton::before {
-  content: url(images/toolbarButton-viewOutline.png);
+  content: "\E032";
 }
 html[dir="rtl"] #viewOutline.toolbarButton::before {
-  content: url(images/toolbarButton-viewOutline-rtl.png);
+  content: "\E032";
 }
 
 #viewAttachments.toolbarButton::before {
-  content: url(images/toolbarButton-viewAttachments.png);
+  content: "\E142";
+}
+#dbv-viewAnnotations.toolbarButton::before {
+  content: "\e042";
 }
 
 #viewFind.toolbarButton::before {
-  content: url(images/toolbarButton-search.png);
+  content: "\E003";
 }
 
 .secondaryToolbarButton {
@@ -958,19 +972,19 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 .secondaryToolbarButton.firstPage::before {
-  content: url(images/secondaryToolbarButton-firstPage.png);
+  content: "\E069";
 }
 
 .secondaryToolbarButton.lastPage::before {
-  content: url(images/secondaryToolbarButton-lastPage.png);
+  content: "\E077";
 }
 
 .secondaryToolbarButton.rotateCcw::before {
-  content: url(images/secondaryToolbarButton-rotateCcw.png);
+  content: "\E295";
 }
 
 .secondaryToolbarButton.rotateCw::before {
-  content: url(images/secondaryToolbarButton-rotateCw.png);
+  content: "\E294";
 }
 
 .secondaryToolbarButton.handTool::before {
@@ -978,7 +992,7 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 .secondaryToolbarButton.documentProperties::before {
-  content: url(images/secondaryToolbarButton-documentProperties.png);
+  content: "\E086";
 }
 
 .verticalToolbarSeparator {
@@ -1339,7 +1353,7 @@ html[dir='rtl'] .outlineItemToggler::before {
   color: hsl(0,0%,85%);
   font-size: 12px;
   line-height: 14px;
-  background-color: background-color: rgba(85, 114, 161, 1); 
+  background-color: rgba(85, 114, 161, 1); 
   border: 1px solid hsla(0,0%,0%,.5);
   border-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
@@ -1650,10 +1664,10 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   }
 
   html[dir="ltr"] #viewOutline.toolbarButton::before {
-    content: url(images/toolbarButton-viewOutline@2x.png);
+    content: "\E032";
   }
   html[dir="rtl"] #viewOutline.toolbarButton::before {
-    content: url(images/toolbarButton-viewOutline-rtl@2x.png);
+    content: "\E032";
   }
 
   #viewAttachments.toolbarButton::before {
@@ -1927,7 +1941,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-user:before 			{content: "\e008"}
 .glyphicon-map-marker:before 	{content: "\e062"}
 .glyphicon-tags:before 			{content: "\e042"}
-.glyphicon-alert:before 			{content: "\e209"}
+.glyphicon-alert:before 		{content: "\e209"}
 
 
 

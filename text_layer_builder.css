@@ -55,27 +55,28 @@
 
 @keyframes breath {
 	0%, 100% {
-		box-shadow: 0px 0px 5px 5px rgba(0,0,0,0.75);
+		box-shadow: 0px 0px 10px 10px rgba(0,0,0,1);
 	}
 	50% {
-		box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.9);
+		box-shadow: 0px 0px 20px 20px rgba(0,0,0,1);
 	}
 
 }
 
 .textLayer .highlight.blink {
-	animation: breath 3s;
+	animation: breath 2s;
 	animation-iteration-count: infinite;
-	background: white !important;
 	border: 1px solid rgba(0,0,0,1);
-	z-index: 20
+	z-index: 20;
+	border: 1px solid hsla(0,0%,0%,.5);
+	border-radius: 7px;
 }
 
 
-.textLayer .dbv-annotation.active {
+.textLayer .dbv-annotation.clickable {
 	cursor: pointer
 }
-
+/*
 .textLayer .dbv-annotation.keyterms.overlap-to-left {
 	background: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,255,1), rgba(0,0,255,1), rgba(0,0,255,1));
 }
@@ -95,7 +96,7 @@
 .textLayer .dbv-annotation.locations.overlap-to-right {
 	background: linear-gradient(to right, rgba(255,0,0,0), #006B00, #006B00, #006B00);
 }
-
+*/
 .textLayer .dbv-annotation.keyterms.overlap {
 	background-color: rgba(0, 0, 255, 0.5);
 }
@@ -150,8 +151,8 @@
 
 
 
-.textLayer ::selection { background: rgb(0,0,255); }
-.textLayer ::-moz-selection { background: rgb(0,0,255); }
+.textLayer ::selection { background: rgb(155,155,155); }
+.textLayer ::-moz-selection { background: rgb(155,155,155); }
 
 .textLayer .endOfContent {
   display: block;

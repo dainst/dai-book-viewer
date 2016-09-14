@@ -1370,13 +1370,13 @@ html[dir='rtl'] .outlineItemToggler::before {
   display: inline-block;
   padding: 15px;
   border-spacing: 4px;
-  color: hsl(0,0%,85%);
+  color: black;
   font-size: 12px;
   line-height: 14px;
-  background-color: rgba(85, 114, 161, 1); 
-  border: 1px solid hsla(0,0%,0%,.5);
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  background-color: white; 
+	border: 1px solid hsla(0,0%,0%,.5);
+	border-radius: 7px;
+	box-shadow: 0 1px 70px 7px rgba(0, 0, 0, 0.7);
 }
 
 .dialog > .row {
@@ -1968,15 +1968,16 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 
 #dbv-ao {
-  background-color: white; 
-  color: black;
-  border: 1px solid hsla(0,0%,0%,.5);
-  border-radius: 2px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  padding: 0.4em;
-  position: absolute;
-  top:45%;
-  left:45%
+	background-color: white;
+	color: black;
+	border: 1px solid hsla(0,0%,0%,.5);
+	border-radius: 7px;
+	box-shadow: 0 1px 70px 7px rgba(0, 0, 0, 0.7);
+	padding: 0.4em;
+	position: absolute;
+	top: 45%;
+	left: 45%;
+	max-width: 250px;
 }
 
 
@@ -2166,7 +2167,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .dbv-edit-types-list label + input:[type="radio"][type="checkbox"] {
-		display: inline;
+	display: inline;
 }
 
 .dbv-edit-annotation-type {

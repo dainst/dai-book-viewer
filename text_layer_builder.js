@@ -221,9 +221,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         }
 
         var self = this;
-        var popupFn = function(e) {return self.pPopup(e)};
-        var popupHideFn = function(e) {return self.pPopupHide(e)};
-        var popupClickFn = function(e) {return self.pPopupClick(e)};
+        var popupFn = function(e) {return self.popupEventHandler(e)};
         
         var bidiTexts = this.textContent.items;
         var textDivs = this.textDivs;
@@ -260,8 +258,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
             	 */
             	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== undefined) {
             		span.addEventListener('mouseover', popupFn);
-            		span.addEventListener('mouseout', popupHideFn);
-            		span.addEventListener('click', popupClickFn);
+            		//span.addEventListener('mouseout', popupHideFn);
+            		span.addEventListener('click', popupFn);
             		className += ' active';
             	}
             }
@@ -317,7 +315,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
           position = ann.position;
           next = nextAnnoSameRow(i);
           prev = prevAnnoSameRow(i);
-          highlightSuffix = 'dbv-annotation highlight ' + ann.base.type;
+          highlightSuffix = 'dbv-annotation highlight ' + ann.base.type + ' ';
+          highlightSuffix += ((Object.keys(ann.base.references || {}).length === 0) && ((ann.base.text || '') == '')) ? '' : 'clickable '; 
           end = position.end == 1000000 ? infinity.offset : position.end;
           begin = position.begin == -1 ? 0 : position.begin;
           tEnd = next ? next.position.begin : infinity.offset;
@@ -356,45 +355,19 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     /**
      * show the popup
      */
-    pPopup: function TextLayerBuilder_pPopup(e) {
-    	
-    	var annotation = this.findController.annoRegistry.registry[e.target.dataset.id]; 	
-    	
-    	//console.log('hover', this, e, annotation, e.target.dataset.id);
-    	var box = document.getElementById('dbv-ao');
-    	var text = document.getElementById('dbv-ao-text');
-    	var link = document.getElementById('dbv-ao-link');
-    	
-    	box.classList.remove('hidden');
-    	
-    	link.innerHTML = '';
-    	link.href = '';
-    	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== "undefined") {
-        	link.innerHTML = annotation.references[0].url;
-        	link.href = annotation.references[0].url
-    	}
-    	text.innerHTML = annotation.text || '';
-    	
-    	box.style.left = e.pageX + 'px';
-    	box.style.top = e.pageY + 'px';
-    	
-    	if (typeof annotation.coordinates !== "undefined") {
-    		this.annoViewer.mapCenter(annotation);
-    	}
-    	
-    },
     
-    pPopupHide: function TextLayerBuilder_pPopupHide(e) {
-    	var box = document.getElementById('dbv-ao');
-    	box.classList.add('hidden');
-    },
-    
-    pPopupClick: function TextLayerBuilder_pPopupClick(e) {
-    	var annotation = this.findController.annoRegistry.registry[e.target.dataset.id];
-    	console.log(annotation);
-    	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== "undefined") {
-    		window.open(annotation.references[0].url, '_blank');
+    popupEventHandler: function(event) {
+    	var annotation = this.findController.annoRegistry.registry[event.target.dataset.id]; 	
+    	   	
+    	if (event.type == 'click') {
+    		this.annoViewer.renderAnnotationPopup(annotation, event.pageX, event.pageY);
     	}
+
+    	if (event.type == 'mouseover') {
+    		this.annoViewer.hoverAnnotationPopup(annotation, event.pageX, event.pageY);
+    	}
+    	
+    	
     },
     
     renderMatches: function TextLayerBuilder_renderMatches(matches) {

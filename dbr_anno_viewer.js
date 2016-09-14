@@ -63,7 +63,11 @@
 			
 			/* map */
 			map: false,
-		
+			
+			/**
+			 * 
+			 * @param file
+			 */
 			load: function AnnoViewerLoad(file) { // @ TODO move to registry!? 
 				var self = this;		
 				this.annoRegistry.successFn 	= function(data) {return self.buildBlocks(data)};
@@ -71,12 +75,27 @@
 				this.annoRegistry.setFilename(file);
 				this.annoRegistry.getAnnotations(['testdata', 'digest_' + this.annoRegistry.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
 				this.displayEditor();
+				
+				
+				this.annotationPopup = document.getElementById('dbv-ao'); // @ todo do better blah
+				document.getElementsByTagName('html')[0].addEventListener('click', function(e) {
+					self.annotationPopup.classList.add('hidden');
+				}, true);
+				
 			},
 			
+			/**
+			 * 
+			 * @param viewer
+			 */
 			setViewer: function(viewer) {
 				this.pdfViewer = viewer;
 			},
 			
+			/**
+			 * 
+			 * @param data
+			 */
 			buildBlocks: function(data) {				
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
 				this.block('places', 'Places', 'map-marker', data.locations);
@@ -213,7 +232,8 @@
 							continue;
 						}
 						
-						var radius = (isNaN(b.max) || b.max == b.min) ? 10 : (unit.count - b.min) / (b.max - b.min) * (8 - 2) + 2;
+						var count = unit.count || 1;
+						var radius = (isNaN(b.max) || b.max == b.min) ? 9 : (count - b.min) / (b.max - b.min) * 8 + 4;
 						console.log('MM: ' , radius, b);
 						
 						//var marker = L.marker([parseFloat(unit.coordinates[0]), parseFloat(unit.coordinates[1])]).addTo(map);
@@ -311,6 +331,66 @@
 				block.appendChild(this.htmlElement('p', {'classes': ['alert', 'alert-danger']}, e));
 			},
 			
+			annotationPopup: false,
+
+			
+			/**
+			 * shows the annotationPopup with content of the annotations (reference links and text)
+			 * 
+			 * @param annotation
+			 * @param pageX
+			 * @param pageY
+			 */
+			renderAnnotationPopup: function(annotation, pageX, pageY) {
+								
+				var box = this.annotationPopup;
+				
+				var text = annotation.text || '';
+				var refs = annotation.references || {};
+				
+
+				
+				if ((Object.keys(refs).length === 0) && (text == '')) {
+					return;
+				}
+				
+				box.innerHTML = '';
+				
+				if (annotation.text) {
+					box.appendChild(this.htmlElement('div', {}, annotation.text));	
+				}
+				
+				if (typeof annotation.references !== "undefined" && (annotation.references.length != 0)) {
+					for (var refid in annotation.references) {
+						var ref = annotation.references[refid];
+						var d = this.htmlElement('div');
+						d.appendChild(this.htmlElement('a', {"target": "_blank", "href": ref.url || ""}, ref.name || refid));
+						box.appendChild(d);
+					}
+				}
+				
+		    	box.style.left = pageX + 'px';
+		    	box.style.top = pageY + 'px';				
+				box.classList.remove('hidden');
+			},
+			
+			hoverAnnotationPopup: function(annotation, pageX, pageY) {
+		    	if (typeof annotation.coordinates !== "undefined") {
+		    		this.mapCenter(annotation);
+		    	}
+			},
+			
+			/**
+			 * toggle the annotation
+			 * 
+			 * @param e
+			 */
+			toggleAnnotationPopup: function() {
+				if (!this.annotationPopupDontHide) {
+					this.annotationPopup.classList.add('hidden');
+				}
+				
+			},
 			
 			
 			/* annotation editor */
@@ -567,8 +647,8 @@
 				var minOccurance = 1000;
 				for (var k = 0; k < units.length; k++) {
 					var unit = units[k]; 
-					maxOccurance = Math.max(maxOccurance, unit.count);
-					minOccurance = Math.min(minOccurance, unit.count);
+					maxOccurance = Math.max(maxOccurance, unit.count || 1);
+					minOccurance = Math.min(minOccurance, unit.count || 1);
 				}
 				
 				//console.log("maxmin: " + minOccurance + '-' + maxOccurance);

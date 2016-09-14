@@ -1367,13 +1367,13 @@ html[dir='rtl'] .outlineItemToggler::before {
 }
 
 #overlayContainer > .container > .dialog {
-  display: inline-block;
-  padding: 15px;
-  border-spacing: 4px;
-  color: black;
-  font-size: 12px;
-  line-height: 14px;
-  background-color: white; 
+	display: inline-block;
+	padding: 15px;
+	border-spacing: 4px;
+	color: black;
+	font-size: 12px;
+	line-height: 14px;
+	background-color: white; 
 	border: 1px solid hsla(0,0%,0%,.5);
 	border-radius: 7px;
 	box-shadow: 0 1px 70px 7px rgba(0, 0, 0, 0.7);

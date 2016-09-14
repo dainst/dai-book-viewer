@@ -494,6 +494,7 @@
 			},
 			
 			updateNewAnnotation: function(field, value) {
+				value = value.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1');
 				if (field == 'terms') {
 					this.editorNewAnnotation[field] = [value];
 				} else if (field == 'pages') {

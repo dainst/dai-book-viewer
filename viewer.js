@@ -88,11 +88,13 @@ function getViewerConfiguration() {
       outlineButton: document.getElementById('viewOutline'),
       attachmentsButton: document.getElementById('viewAttachments'),
       annotationsButton: document.getElementById('dbv-viewAnnotations'), // dai paf
+      editAnnotationsButton: document.getElementById('dbv-editAnnotations'), // dai paf
       // Views
       thumbnailView: document.getElementById('thumbnailView'),
       outlineView: document.getElementById('outlineView'),
       attachmentsView: document.getElementById('attachmentsView'),
       annotationsView: document.getElementById('dbv-annotationsView'),// dai paf
+      editAnnotationsView: document.getElementById('dbv-editAnnotationsView'),// dai paf
     },
     findBar: {
       bar: document.getElementById('findbar'),

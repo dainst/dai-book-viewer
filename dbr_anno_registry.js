@@ -23,8 +23,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-dbv/dbr_anno_registry', ['exports', 'pdfjs-dbv/pdfjs'],
-      factory);
+    define('pdfjs-dbv/dbr_anno_registry', ['exports', 'pdfjs-dbv/pdfjs'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'));
   } else {
@@ -147,12 +146,13 @@
 			 * @param x
 			 */
 			error: function(e, x) {
-				console.log('ADS Error', e, x);
+				console.log('Error: ', e, x);
+				console.log(this.errorFn)
 				this.setState('error');
 				this.errorFn(e);
 			},
 			
-			setFilename(url) {
+			setFilename: function(url) {
 				this.url = url;
 				this.filename = url.split('/').pop();
 			},

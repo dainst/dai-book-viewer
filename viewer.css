@@ -68,7 +68,8 @@ body,
 input,
 button,
 select {
-  font-family: "Source Sans Pro",Helvetica,sans-serif;
+	font: message-box;
+  /*font-family: "Source Sans Pro",Helvetica,sans-serif;*/
   outline: none;
 }
 
@@ -577,6 +578,8 @@ html[dir='rtl'] .splitToolbarButton > .toolbarButton {
   margin: 0;
 }
 
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover,
 .splitToolbarButton:hover > .toolbarButton,
 .splitToolbarButton:focus > .toolbarButton,
 .splitToolbarButton.toggled > .toolbarButton,
@@ -597,6 +600,8 @@ html[dir='rtl'] .splitToolbarButton > .toolbarButton {
   transition-timing-function: ease;
 
 }
+
+
 .splitToolbarButton > .toolbarButton:hover,
 .splitToolbarButton > .toolbarButton:focus,
 .dropdownToolbarButton:hover,
@@ -1843,8 +1848,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     top: 37px;
   }
   #sidebarContent {
-    top: 32px;
-    background-color: hsla(0,0%,0%,.7);
+    top: 42px;
+    width: 390px;
   }
 
   html[dir='ltr'] #outerContainer.sidebarOpen > #mainContainer {
@@ -1957,6 +1962,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-map-marker:before 	{content: "\e062"}
 .glyphicon-tags:before 			{content: "\e042"}
 .glyphicon-alert:before 		{content: "\e209"}
+.glyphicon-pencil:before 		{content: "\270f"}
 
 
 
@@ -2017,7 +2023,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .panel {
 	margin: 14px;
 	background: white;
-	border-radius: 1px
+	border-radius: 1px;
 }
 
 .panel-title {
@@ -2044,12 +2050,14 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 }
 
+.dbv-av-block a,
 .dbv-load-more,
 .dbv-av-block-entry-caption {
 	color: rgba(85, 114, 161, 1);
 	cursor: pointer
 }
 
+.dbv-av-block a:hover,
 .dbv-load-more:hover,
 .dbv-av-block-entry-caption:hover {
 	text-decoration: underline;
@@ -2106,3 +2114,43 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .dbv-hidden .panel-body {
 	display: none;
 }
+
+#dbv-edit-annotation-result,
+#dbv-edit-annotation-overview {
+	background: #F5F5F5;
+	border-radius: 1px;
+	padding: 2px;
+	min-height: 30px;
+	font-family: monospace;
+}
+
+#dbv-edit-annotation-overview {
+	height: 300px;
+	overflow-y: scroll;
+}
+
+.dbv-edit-types-list input:not([type="radio"]):not([type="checkbox"]) ~ label,
+.dbv-edit-types-list input:not([type="radio"]):not([type="checkbox"]) {
+	display: block;
+	width: 100%
+}
+
+.dbv-edit-types-list input:not([type="radio"]):not([type="checkbox"]) {
+	border: 1px solid silver;
+	border-radius: 2px;
+	background-color: #F5F5F5
+}
+
+.dbv-edit-types-list label {
+	font-size: small;
+	margin-top: 4px
+}
+
+.dbv-edit-types-list label + input:[type="radio"][type="checkbox"] {
+		display: inline;
+}
+
+.dbv-edit-annotation-type {
+	margin-top: 6px;
+}
+

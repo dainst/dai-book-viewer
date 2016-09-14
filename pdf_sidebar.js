@@ -33,7 +33,8 @@ var SidebarView = {
   THUMBS: 1,
   OUTLINE: 2,
   ATTACHMENTS: 3,
-  ANNO: 4
+  ANNO: 4,
+  EDIT_ANNO: 5
 };
 
 /**
@@ -95,11 +96,13 @@ var PDFSidebar = (function PDFSidebarClosure() {
     this.outlineButton = options.outlineButton;
     this.attachmentsButton = options.attachmentsButton;
     this.annotationsButton = options.annotationsButton;
+    this.editAnnotationsButton = options.editAnnotationsButton;
 
     this.thumbnailView = options.thumbnailView;
     this.outlineView = options.outlineView;
     this.attachmentsView = options.attachmentsView;
     this.annotationsView = options.annotationsView;
+    this.editAnnotationsView = options.editAnnotationsView;
 
     this._addEventListeners();
   }
@@ -180,17 +183,20 @@ var PDFSidebar = (function PDFSidebarClosure() {
           this.outlineButton.classList.remove('toggled');
           this.attachmentsButton.classList.remove('toggled');
           this.annotationsButton.classList.remove('toggled');
+          this.editAnnotationsButton.classList.remove('toggled');
 
           this.thumbnailView.classList.remove('hidden');
           this.outlineView.classList.add('hidden');
           this.attachmentsView.classList.add('hidden');
           this.annotationsView.classList.add('hidden');
+          this.editAnnotationsView.classList.add('hidden');
 
           if (this.isOpen && isViewChanged) {
             this._updateThumbnailViewer();
             shouldForceRendering = true;
           }
           break;
+          
         case SidebarView.OUTLINE:
           if (this.outlineButton.disabled) {
             return;
@@ -199,12 +205,15 @@ var PDFSidebar = (function PDFSidebarClosure() {
           this.outlineButton.classList.add('toggled');
           this.attachmentsButton.classList.remove('toggled');
           this.annotationsButton.classList.remove('toggled');
+          this.editAnnotationsButton.classList.remove('toggled');
 
           this.thumbnailView.classList.add('hidden');
           this.outlineView.classList.remove('hidden');
           this.attachmentsView.classList.add('hidden');
           this.annotationsView.classList.add('hidden');
+          this.editAnnotationsView.classList.add('hidden');
           break;
+          
         case SidebarView.ATTACHMENTS:
           if (this.attachmentsButton.disabled) {
             return;
@@ -213,11 +222,13 @@ var PDFSidebar = (function PDFSidebarClosure() {
           this.outlineButton.classList.remove('toggled');
           this.attachmentsButton.classList.add('toggled');
           this.annotationsButton.classList.remove('toggled');
+          this.editAnnotationsButton.classList.remove('toggled');
 
           this.thumbnailView.classList.add('hidden');
           this.outlineView.classList.add('hidden');
           this.attachmentsView.classList.remove('hidden');
           this.annotationsView.classList.add('hidden');
+          this.editAnnotationsView.classList.add('hidden');
           break;
           
         case SidebarView.ANNO: // paf dai
@@ -225,13 +236,30 @@ var PDFSidebar = (function PDFSidebarClosure() {
           this.outlineButton.classList.remove('toggled');
           this.attachmentsButton.classList.remove('toggled');
           this.annotationsButton.classList.add('toggled');
+          this.editAnnotationsButton.classList.remove('toggled');
 
           this.thumbnailView.classList.add('hidden');
           this.outlineView.classList.add('hidden');
           this.attachmentsView.classList.add('hidden');
           this.annotationsView.classList.remove('hidden');
+          this.editAnnotationsView.classList.add('hidden');
           
           break;
+          
+        case SidebarView.EDIT_ANNO: // paf dai
+            this.thumbnailButton.classList.remove('toggled');
+            this.outlineButton.classList.remove('toggled');
+            this.attachmentsButton.classList.remove('toggled');
+            this.annotationsButton.classList.remove('toggled');
+            this.editAnnotationsButton.classList.add('toggled');
+
+            this.thumbnailView.classList.add('hidden');
+            this.outlineView.classList.add('hidden');
+            this.attachmentsView.classList.add('hidden');
+            this.annotationsView.classList.add('hidden');
+            this.editAnnotationsView.classList.remove('hidden');
+            
+       break;
           
           
         default:
@@ -368,6 +396,9 @@ var PDFSidebar = (function PDFSidebarClosure() {
           self.switchView(SidebarView.ANNO);
       });
       
+      self.editAnnotationsButton.addEventListener('click', function() { // paf dai
+          self.switchView(SidebarView.EDIT_ANNO);
+      });
       
       // Disable/enable views.
       self.eventBus.on('outlineloaded', function(e) {

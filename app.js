@@ -219,7 +219,8 @@ var PDFViewerApplication = {
     // paf dai
     this.annoRegistry = new annoRegistry(); 
     this.annoViewer = new annoViewer({ 
-        container: appConfig.sidebar.annotationsView,
+    	container: appConfig.sidebar.annotationsView,
+        editContainer: appConfig.sidebar.editAnnotationsView,
         eventBus: this.eventBus,
         annotationRegistry: this.annoRegistry
     });
@@ -1024,6 +1025,7 @@ var PDFViewerApplication = {
       pdfDocument.getAttachments().then(function(attachments) {
         self.pdfAttachmentViewer.render({ attachments: attachments });
       });
+      self.annoViewer.refreshMap();
     });
 
     pdfDocument.getMetadata().then(function(data) {
@@ -1712,6 +1714,12 @@ function webViewerPageMode(e) {
     case 'attachments':
       view = SidebarView.ATTACHMENTS;
       break;
+    case 'annotations':
+        view = SidebarView.ANNOS;
+        break;
+    case 'editAnnotations':
+        view = SidebarView.EDIT_ANNO;
+        break;
     case 'none':
       view = SidebarView.NONE;
       break;

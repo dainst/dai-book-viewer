@@ -54,6 +54,40 @@ function cloneObj(obj) {
 }
 
 /**
+ * part of dbv extension (paf dai)
+ * 
+ * function to deep copy Objects, containing objects, arrays and primitives
+ *  
+ * @param <object>	obj
+ */
+function cloneObjDeep(obj) {
+    var copy;
+
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+
+    // Handle Array
+    if (obj instanceof Array) {
+        copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = cloneObjDeep(obj[i]);
+        }
+        return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+        copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = cloneObjDeep(obj[attr]);
+        }
+        return copy;
+    }
+
+    console.log("Unable to copy obj! Its type isn't supported.");
+}
+
+/**
  * Preferences - Utility for storing persistent settings.
  *   Used for settings that should be applied to all opened documents,
  *   or every time the viewer is loaded.

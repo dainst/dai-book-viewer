@@ -248,12 +248,12 @@ html[dir='rtl'] #outerContainer.sidebarOpen > #sidebarContainer {
 html[dir='ltr'] #outerContainer.sidebarOpen > #mainContainer {
   -webkit-transition-property: left;
   transition-property: left;
-  left: 390px;
+  left: 400px;
 }
 html[dir='rtl'] #outerContainer.sidebarOpen > #mainContainer {
   -webkit-transition-property: right;
   transition-property: right;
-  right: 390px;
+  right: 400px;
 }
 
 #sidebarContent {
@@ -297,7 +297,7 @@ html[dir='rtl'] #viewerContainer {
 }
 
 #toolbarSidebar {
-  width: 390px;
+  width: 400px;
   height: 38px;
   background-color: rgba(85, 114, 161, 1);
   padding-top: 4px;
@@ -1997,7 +1997,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     background-image: url(images/loading-small@2x.png);
     background-size: 16px 17px;	
 }
-
+/*
 .dbv-av-state.ready:after {
 	content: 'READY';
 	background-color: green;
@@ -2018,24 +2018,43 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	background-color: red;
 
 }
-
-
+*/
 .panel {
 	margin: 14px;
 	background: white;
 	border-radius: 1px;
+	 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .panel-title {
-	background: rgba(85, 114, 161, 0.9);
+	background: rgba(85, 114, 161, 0.3);
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
 	padding: 10px 10px 7px 10px;
-	color: white;
+	color: black;
 	font-weight: normal;
 	cursor: pointer
 }
 
+.dbv-colors-places {
+	background-color: rgba(0, 107, 0, 0.3);
+}
+
+.dbv-colors-persons {
+	background-color: rgba(255, 0, 0, 0.3);
+}
+
+.dbv-colors-keyterms {
+	background-color: rgba(0, 0, 255, 0.3);
+}
+
+.dbv-colors-error {
+	background-color: rgba(129, 0, 0, 0.5);
+}
+
+.dbv-colors-map {
+	background-color: rgba(93, 144, 93, 0.3);
+}
 
 .panel-body {
 	border-bottom-left-radius: 2px;

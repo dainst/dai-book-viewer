@@ -114,7 +114,7 @@
 				}
 				
 				var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
-				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'dbv-toggle': id}}, title, {'click': ['toggleBlock', id]});
+				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id]}, title, {'click': ['toggleBlock', id]});
 				var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
 				var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
 				

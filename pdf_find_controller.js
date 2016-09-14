@@ -368,6 +368,8 @@ var PDFFindController = (function PDFFindControllerClosure() {
         }
         matches.push(matchIdx);
       }
+      console.log(matches);
+      
       this.pageMatches[pageIndex] = matches;
     },
 
@@ -426,6 +428,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
             query = query.toLowerCase();
         }
       }
+
 
       if (this.state.wholeWordSearch) {
     	this.calcFindWholeWordMatch(query, pageIndex, pageContent);
@@ -605,6 +608,8 @@ var PDFFindController = (function PDFFindControllerClosure() {
       var previous = this.state.findPrevious;
 
       if (numMatches) {
+    	  console.log('OO: ', matches);
+    	  
         // There were matches for the page, so initialize the matchIdx.
         this.hadMatch = true;
         offset.matchIdx = (previous ? numMatches - 1 : 0);

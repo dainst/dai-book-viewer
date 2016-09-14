@@ -458,15 +458,17 @@
 
 				
 				// find page number
-				function hasClass(el, className) {return (el.classList) ? el.classList.contains(className): new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);}
+				function hasClass(el, className) {console.log(el);
+				return el ? ((el.classList) ? el.classList.contains(className): new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className)) : false;}
 				var parent = e.target.parentNode;
-				while (!hasClass(parent, 'page')) {parent = parent.parentNode;}
-				var page = parseInt(parent.dataset.pageNumber) - 1;
-				
-				if (this.editorNewAnnotation.pages.indexOf(page) === -1) {
-					this.editorNewAnnotation.pages.push(page);
+				while (parent && !hasClass(parent, 'page')) {parent = parent.parentNode;}
+				if (parent) {
+					var page = parseInt(parent.dataset.pageNumber) - 1;
+					if (this.editorNewAnnotation.pages.indexOf(page) === -1) {
+						this.editorNewAnnotation.pages.push(page);
+					}
 				}
-				
+					
 				this.viewNewAnnotation();
 			},
 			

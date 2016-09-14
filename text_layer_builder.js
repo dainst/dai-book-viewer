@@ -123,10 +123,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     convertMatches: function TextLayerBuilder_convertMatches(matches, matchesLength) {
       var i = 0;
       var iIndex = 0;
-      if (typeof this.textContent === "undefined") {
-    	  console.log('THE error we should haved to fixed', this.textContent, matches, matchesLength);
-    	  return;
-      }
+
       var bidiTexts = this.textContent.items;
       var end = bidiTexts.length - 1;
       var queryLen = ((this.findController === null || this.findController.state === null) ? 0 : this.findController.state.query.length); // paf
@@ -279,12 +276,12 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
          * (it is NOT possible to just skip them in the next step) 
          * 
          */
-        var t1 = performance.now();
+        //var t1 = performance.now();
         annotations.sort(function(a, b) {
         	return ((a.position.divIdx * 10000 + a.position.begin) - (b.position.divIdx * 10000 + b.position.begin));
         });
-        var t2 = performance.now();
-        var dur = t2 - t1;
+        //var t2 = performance.now();
+        //var dur = t2 - t1;
         //console.log('PERF:' + dur);
         //console.log(annotations);
         
@@ -394,7 +391,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
       function beginText(begin, className) {
         var divIdx = begin.divIdx;
         textDivs[divIdx].textContent = '';
-        appendTextToDiv(divIdx, 0, 5, className);
+        appendTextToDiv(divIdx, 0, begin.offset, className);
       }
 
       function appendTextToDiv(divIdx, fromOffset, toOffset, className) {

@@ -487,6 +487,9 @@
 					tabs[i].classList.add('hidden');
 				}
 				e.target.parentNode.querySelector('.dbv-edit-annotation-tab').classList.remove('hidden');
+				console.log(this.blocks);
+				
+				this.blocks.edit.block.querySelector('h3.panel-title ').className = 'panel-title dbv-colors-' + at;
 				this.editorNewAnnotation.type = at;
 				this.viewNewAnnotation();
 			},

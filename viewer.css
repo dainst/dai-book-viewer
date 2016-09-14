@@ -2037,7 +2037,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	cursor: pointer
 }
 
-.dbv-colors-places {
+.dbv-colors-places, /* @ TODO eleminate places */
+.dbv-colors-locations {
 	background-color: rgba(0, 107, 0, 0.3);
 }
 
@@ -2142,6 +2143,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	padding: 2px;
 	min-height: 30px;
 	font-family: monospace;
+	overflow-x: scroll;
 }
 
 #dbv-edit-annotation-overview {

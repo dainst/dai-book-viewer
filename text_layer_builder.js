@@ -369,7 +369,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	
     	link.innerHTML = '';
     	link.href = '';
-    	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== undefined) {
+    	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== "undefined") {
         	link.innerHTML = annotation.references[0].url;
         	link.href = annotation.references[0].url
     	}
@@ -392,7 +392,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     pPopupClick: function TextLayerBuilder_pPopupClick(e) {
     	var annotation = this.findController.annoRegistry.registry[e.target.dataset.id];
     	console.log(annotation);
-    	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== undefined) {
+    	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== "undefined") {
     		window.open(annotation.references[0].url, '_blank');
     	}
     },

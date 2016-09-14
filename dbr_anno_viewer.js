@@ -33,7 +33,8 @@
 				pages: [],
 				text: '',
 				references: {},
-				coordinates: []
+				coordinates: [],
+				id: 'id#' + Math.random()
 			}
 		};
 		
@@ -61,7 +62,7 @@
 			blocks: {}, 
 			
 			/* map */
-			map: null,
+			map: false,
 		
 			load: function AnnoViewerLoad(file) { // @ TODO move to registry!? 
 				var self = this;		
@@ -171,7 +172,7 @@
 					caption.addEventListener('mouseout', function(e) {return self.eventHandler(e);})
 					
 					entry.appendChild(caption);
-					entry.appendChild(this.htmlElement('span', {'classes': ['badge', 'pull-right']}, unit.count));
+					entry.appendChild(this.htmlElement('span', {'classes': ['badge', 'pull-right']}, unit.count || 1));
 					
 					this.references(entry, unit.references);		
 					//console.log(k, unit, entry);
@@ -212,7 +213,9 @@
 							continue;
 						}
 						
-						var radius = (b.max == b.min) ? 10 : (unit.count - b.min) / (b.max - b.min) * (8 - 2) + 2;
+						var radius = (isNaN(b.max) || b.max == b.min) ? 10 : (unit.count - b.min) / (b.max - b.min) * (8 - 2) + 2;
+						console.log('MM: ' , radius, b);
+						
 						//var marker = L.marker([parseFloat(unit.coordinates[0]), parseFloat(unit.coordinates[1])]).addTo(map);
 						var marker = L.circleMarker(
 							[parseFloat(unit.coordinates[0]), parseFloat(unit.coordinates[1])], 
@@ -220,8 +223,7 @@
 								fillColor: 		'#006B00',
 								fillOpacity:	0.2,
 								color:			'#006B00',
-								className:		unit.id // abuse of classname for our sinister goals
-								
+								className:		unit.id // abuse of classname for our sinister goals								
 							}
 						).addTo(map);						
 						
@@ -260,8 +262,9 @@
 			},
 			
 			refreshMap: function() {
-				this.map.invalidateSize();
-				
+				if (this.map) {
+					this.map.invalidateSize();	
+				}
 			},
 			
 			
@@ -369,8 +372,8 @@
 			    }
 
 			    if (text != '') {
-				    self.updateNewAnnotation('terms', text);
-				    self.updateNewAnnotation('lemma', text);
+				    this.updateNewAnnotation('terms', text);
+				    this.updateNewAnnotation('lemma', text);
 			    }
 
 				
@@ -380,11 +383,11 @@
 				while (!hasClass(parent, 'page')) {parent = parent.parentNode;}
 				var page = parseInt(parent.dataset.pageNumber) - 1;
 				
-				if (self.editorNewAnnotation.pages.indexOf(page) === -1) {
-					self.editorNewAnnotation.pages.push(page);
+				if (this.editorNewAnnotation.pages.indexOf(page) === -1) {
+					this.editorNewAnnotation.pages.push(page);
 				}
 				
-				self.viewNewAnnotation();
+				this.viewNewAnnotation();
 			},
 			
 			saveAnnotation: function() {
@@ -611,7 +614,10 @@
 			 * center map on annotation
 			 */
 			mapCenter: function(annotation) {
-				this.map.panTo(new L.LatLng(annotation.coordinates[0], annotation.coordinates[1]));
+				if (annotation.coordinates.length == 2) {
+					this.map.panTo(new L.LatLng(annotation.coordinates[0], annotation.coordinates[1]));
+				}
+				
 			},
 			
 			/**

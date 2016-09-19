@@ -296,7 +296,6 @@ var PDFViewerApplication = {
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
     });
-    console.log(this.findController);
     
     this.pdfViewer.setDbvControllers({
     	annoViewer: this.annoViewer,
@@ -1330,25 +1329,7 @@ var PDFViewerApplication = {
     eventBus.on('find', webViewerFind);
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
     
-    eventBus.on('pafEvent', function(x) {
-    	console.log("eo captain jack!");
-    	// @ TODO toggle visibility of annotations
-    	var a = {
-				"type": "other",
-				"terms": [
-					"Gegenmeinung"
-				],
-				"lemma": "Gegenmeinung",
-				"pages": [
-					1
-				],
-				"text": "",
-				"references": {},
-				"coordinates": [],
-				"id": "id#0.7936567347720048"
-			}
-    	PDFViewerApplication.findController.showAnnotation(a);
-    });
+    eventBus.on('pafEvent', dbvToggleAnnotations);
     
 //#if GENERIC
     eventBus.on('fileinputchange', webViewerFileInputChange);
@@ -2079,6 +2060,11 @@ function webViewerPageChanging(e) {
       Stats.add(page, pageView.stats);
     }
   }
+}
+
+function dbvToggleAnnotations() {
+	console.log('toggle annotations');
+	PDFViewerApplication.annoViewer.toggleAnnotations();
 }
 
 var zoomDisabled = false, zoomDisabledTimeout;

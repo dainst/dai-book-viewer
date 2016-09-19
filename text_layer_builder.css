@@ -67,7 +67,6 @@
 	50% {
 		box-shadow: 0px 0px 20px 20px rgba(0,0,0,1);
 	}
-
 }
 
 .textLayer .highlight.blink {
@@ -83,27 +82,7 @@
 .textLayer .dbv-annotation.clickable {
 	cursor: pointer
 }
-/*
-.textLayer .dbv-annotation.keyterms.overlap-to-left {
-	background: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,255,1), rgba(0,0,255,1), rgba(0,0,255,1));
-}
-.textLayer .dbv-annotation.persons.overlap-to-left {
-	background: linear-gradient(to left, rgba(0,0,0,0), rgba(255,0,0,1));
-}
-.textLayer .dbv-annotation.locations.overlap-to-left {
-	background: linear-gradient(to left, rgba(255,0,0,0), #006B00, #006B00, #006B00);
-}
 
-.textLayer .dbv-annotation.keyterms.overlap-to-right {
-	background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,255,1), rgba(0,0,255,1), rgba(0,0,255,1));
-}
-.textLayer .dbv-annotation.persons.overlap-to-right {
-	background: linear-gradient(to right, rgba(0,0,0,0), rgba(255,0,0,1));
-}
-.textLayer .dbv-annotation.locations.overlap-to-right {
-	background: linear-gradient(to right, rgba(255,0,0,0), #006B00, #006B00, #006B00);
-}
-*/
 .textLayer .dbv-annotation.keyterms.overlap {
 	background-color: rgba(0, 0, 255, 0.5);
 }
@@ -154,9 +133,9 @@
   background-color: rgb(0, 100, 0);
 }
 
-
-
-
+.dbv-annotations-hidden .highlight {
+	display: none
+}
 
 .textLayer ::selection { background: rgb(155,155,155); }
 .textLayer ::-moz-selection { background: rgb(155,155,155); }

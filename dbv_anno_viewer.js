@@ -458,13 +458,25 @@
 		    /* render control */
 		    
 		    showAnnotation: function(annotation) {
-		    	console.log('GG:', annotation);
+		    	//console.log('GG:', annotation);
 		    	var annotation = PDFViewerApplication.annoRegistry.registerAnnotation(annotation);
-		    	console.log('GG:', annotation);
+		    	//console.log('GG:', annotation);
 		    	PDFViewerApplication.findController.pSetAnnotation(annotation);
 		    	for (var i; i < annotation.pages.length; i++) {
 			    	PDFViewerApplication.findController.reloadPageTextLayer(annotation.pages[i]);
 		    	}
+		    },
+		    
+		    annotationsVisible: true,
+		    toggleAnnotations: function() {
+		    	this.annotationsVisible = !this.annotationsVisible;
+		    	console.log(this.annotationsVisible);
+		    	if (!this.annotationsVisible) {
+		    		this.pdfViewer.container.classList.add('dbv-annotations-hidden');
+		    	} else {
+		    		this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
+		    	}
+		    	
 		    }
 		    
 

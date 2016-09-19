@@ -108,7 +108,7 @@ var PDFFindController = pdfFindControllerLib.PDFFindController;
 var PDFFindBar = pdfFindBarLib.PDFFindBar;
 var getGlobalEventBus = domEventsLib.getGlobalEventBus;
 var annoViewer = annoViewerLib.AnnoViewer;
-var annoEditor = annoEditorLib.AnnoEditor;console.log(annoSidebarLib);
+var annoEditor = annoEditorLib.AnnoEditor;
 var annoRegistry = annoRegistryLib.AnnoRegistry;
 var annoSidebar = annoSidebarLib.AnnoSidebar;
 
@@ -225,21 +225,7 @@ var PDFViewerApplication = {
     var downloadManager = this.externalServices.createDownloadManager();
     this.downloadManager = downloadManager;
 
-    // paf dai
-    this.annoRegistry = new annoRegistry(); 
-    this.annoViewer = new annoViewer({ 
-    	container: appConfig.sidebar.annotationsView,
-        eventBus: this.eventBus,
-        annoRegistry: this.annoRegistry,
-        annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView})
-    });
-    this.annoEditor = new annoEditor({
-    	annoRegistry: this.annoRegistry,
-    	annoViewer: this.annoViewer,
-        container: appConfig.sidebar.editAnnotationsView,
-        findController: this.findController,
-        annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
-    });
+
     
     var container = appConfig.mainContainer;
     var viewer = appConfig.viewerContainer;
@@ -249,14 +235,11 @@ var PDFViewerApplication = {
       eventBus: eventBus,
       renderingQueue: pdfRenderingQueue,
       linkService: pdfLinkService,
-      downloadManager: downloadManager,
-      annoRegistry: this.annoRegistry,
-      annoViewer: this.annoViewer,
-      annoEditor: this.annoEditor
+      downloadManager: downloadManager
     });
     pdfRenderingQueue.setViewer(this.pdfViewer);
     pdfLinkService.setViewer(this.pdfViewer);
-    this.annoViewer.setViewer(this.pdfViewer);
+    
 
     var thumbnailContainer = appConfig.sidebar.thumbnailView;
     this.pdfThumbnailViewer = new PDFThumbnailViewer({
@@ -276,7 +259,9 @@ var PDFViewerApplication = {
     pdfLinkService.setHistory(this.pdfHistory);
 
 
-    
+    // paf dai
+    this.annoRegistry = new annoRegistry(); 
+        
     this.findController = new PDFFindController({
       annoRegistry: this.annoRegistry,
       pdfViewer: this.pdfViewer
@@ -298,6 +283,26 @@ var PDFViewerApplication = {
 
     this.pdfViewer.setFindController(this.findController);
 
+    
+    // paf dai
+    this.annoViewer = new annoViewer({ 
+        pdfViewer: this.pdfViewer,
+        annoRegistry: this.annoRegistry,
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView})
+    });
+    //this.annoViewer.setViewer(this.pdfViewer);
+    this.annoEditor = new annoEditor({
+        findController: this.findController,
+        annoRegistry: this.annoRegistry,
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
+    });
+    console.log(this.findController);
+    
+    this.pdfViewer.setDbvControllers({
+    	annoViewer: this.annoViewer,
+    	annoRegistry: this.annoRegistry
+    });
+    
     
     // FIXME better PDFFindBar constructor parameters
     var findBarConfig = Object.create(appConfig.findBar);
@@ -1327,7 +1332,7 @@ var PDFViewerApplication = {
     
     eventBus.on('pafEvent', function(x) {
     	console.log("eo captain jack!");
-    	/* TODO toggle visibility of annotations */
+    	// @ TODO toggle visibility of annotations
     	var a = {
 				"type": "other",
 				"terms": [

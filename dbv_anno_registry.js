@@ -110,7 +110,6 @@
 			 * @param data
 			 */
 			registerSet: function(data) {
-				console.log(data);
 				for (var type in data) {
 					for (var i = 0; i < data[type].items.length; i++) {
 						var annotation = data[type].items[i];

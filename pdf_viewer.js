@@ -127,8 +127,6 @@ var PDFViewer = (function pdfViewer() {
     this.linkService = options.linkService || new SimpleLinkService();
     this.downloadManager = options.downloadManager || null;
     this.removePageBorders = options.removePageBorders || false;
-    this.annoRegistry = options.annoRegistry;
-    this.annoViewer = options.annoViewer;
 
     this.defaultRenderingQueue = !options.renderingQueue;
     if (this.defaultRenderingQueue) {
@@ -809,6 +807,11 @@ var PDFViewer = (function pdfViewer() {
     setFindController: function (findController) {
       this.findController = findController;
     },
+    
+    setDbvControllers: function(dbv) {
+    	this.annoViewer = dbv.annoViewer;
+    	this.annoRegistry = dbv.annoRegistry;
+    }
   };
 
   return PDFViewer;

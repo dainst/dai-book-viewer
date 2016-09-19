@@ -209,8 +209,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	return ret;
     },
    
-    
-    // paf
     pHighlight: function TextLayerBuilder_pHighlight(annotations) {
     	// Early exit if there is nothing to render.
         if (annotations.length === 0) {

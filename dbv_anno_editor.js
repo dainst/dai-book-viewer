@@ -12,7 +12,7 @@
 	var AnnoEditor = (function AnnoEditorClosure() {
 	
 		function AnnoEditor(options) {
-			this.annoRegistry = options.annotationRegistry;
+			this.annoRegistry = options.annoRegistry;
 			this.findController = options.findController;
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
@@ -142,9 +142,14 @@
 				console.log(this.editorNewCollection);
 				
 				this.editorNewCollection[this.editorNewAnnotation.type].items.push(this.editorNewAnnotation);
+				
+				this.annoRegistry.registerAnnotation(this.editorNewAnnotation);
+				this.findController.showAnnotation(this.editorNewAnnotation);
+				
 				this.editorNewAnnotation = new annotation(this.editorNewAnnotation.type);
 				this.viewNewAnnotation();
 				this.editorElements.overview.textContent = JSON.stringify(this.editorNewCollection, null, "  ");
+				
 			},
 			
 			selectNewAnnoType: function(e, at) {

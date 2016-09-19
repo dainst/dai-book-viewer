@@ -37,10 +37,11 @@
 	 */
 	var AnnoViewer = (function AnnoViewerClosure() {
 		function AnnoViewer(options) {
-			this.eventBus = options.eventBus;
+			this.pdfViewer = options.pdfViewer;
 			this.annoRegistry = options.annoRegistry;
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
+			
 		}
 		
 		AnnoViewer.prototype = {

@@ -191,23 +191,25 @@ var PDFFindController = (function PDFFindControllerClosure() {
     pSetAnnotations: function PDFFindController_pSetAnntotations() {
     	//console.log(this.annoRegistry.registry);
 		for (var id in this.annoRegistry.registry) {			
-			var annotation = this.annoRegistry.registry[id];
-			
-	    	if (typeof annotation.terms === "undefined" || annotation.terms.length == 0) {
-	    		console.log('no terms for ', annotation);
-	    		continue;
-	    	}
-	    	if (typeof annotation.pages === "undefined" || annotation.pages.length == 0) {
-	    		console.log('no pages for ', annotation);
-	    		continue;
-	    	}
-			
-			for (var j = 0; j < annotation.terms.length; j++) {
-				for (var k = 0; k < annotation.pages.length; k++) {
-					var term = annotation.terms[j];
-					var page = annotation.pages[k];
-					this.pFindAnnotation(annotation, term, page);
-				}
+			this.pSetAnnotation(this.annoRegistry.registry[id]);
+		}
+    },
+    
+    pSetAnnotation: function(annotation) {
+    	if (typeof annotation.terms === "undefined" || annotation.terms.length == 0) {
+    		console.log('no terms for ', annotation);
+    		return;
+    	}
+    	if (typeof annotation.pages === "undefined" || annotation.pages.length == 0) {
+    		console.log('no pages for ', annotation);
+    		return;
+    	}
+		
+		for (var j = 0; j < annotation.terms.length; j++) {
+			for (var k = 0; k < annotation.pages.length; k++) {
+				var term = annotation.terms[j];
+				var page = annotation.pages[k];
+				this.pFindAnnotation(annotation, term, page);
 			}
 		}
     },
@@ -236,16 +238,6 @@ var PDFFindController = (function PDFFindControllerClosure() {
     			base: annotation
     		});
 		    
-		    // is it the last one? @ TODO does not work?!
-    		/*
-    		self.pCount -= 1;
-    		if (self.pCount == 0) {
-    			console.log('the last one resolved!');
-    			// clear pending box
-    			self.dbvAnnoMatchesPending = {};
-    			
-    			return;
-    		}*/
     	}
     	
     	/**
@@ -368,7 +360,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         }
         matches.push(matchIdx);
       }
-      console.log(matches);
+      //console.log(matches);
       
       this.pageMatches[pageIndex] = matches;
     },
@@ -525,6 +517,14 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	  page.textLayer.updateMatches();
       }
     },
+    
+    reloadPageTextLayer: function(index) {
+        var page = this.pdfViewer.getPageView(index);
+        if (page.textLayer) {
+      	  //page.textLayer.updateMatches();
+      	  page.textLayer.pUpdateAnnotations();
+        }    	
+    },
 
     nextMatch: function PDFFindController_nextMatch() {
       var previous = this.state.findPrevious;
@@ -608,8 +608,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
       var previous = this.state.findPrevious;
 
       if (numMatches) {
-    	  console.log('OO: ', matches);
-    	  
+     	  
         // There were matches for the page, so initialize the matchIdx.
         this.hadMatch = true;
         offset.matchIdx = (previous ? numMatches - 1 : 0);
@@ -706,18 +705,36 @@ var PDFFindController = (function PDFFindControllerClosure() {
       }
     },
 
+    updateUIState: function PDFFindController_updateUIState(state, previous) {
+        if (this.onUpdateState) {
+          this.onUpdateState(state, previous, this.matchCount);
+        }
+    },
+    
     updateUIResultsCount:
         function PDFFindController_updateUIResultsCount() {
       if (this.onUpdateResultsCount) {
         this.onUpdateResultsCount(this.matchCount);
       }
     },
-
-    updateUIState: function PDFFindController_updateUIState(state, previous) {
-      if (this.onUpdateState) {
-        this.onUpdateState(state, previous, this.matchCount);
-      }
+    
+    /* annotation control */
+    
+    showAnnotation: function(annotation) {
+    	console.log('GG:', annotation);
+    	var annotation = this.annoRegistry.registerAnnotation(annotation);
+    	console.log('GG:', annotation);
+    	this.pSetAnnotation(annotation);
+    	for (var i =  0; i < annotation.pages.length; i++) {
+    		console.log('GG:', i, annotation.pages[i]);
+	    	this.reloadPageTextLayer(annotation.pages[i]);
+    	}
     }
+    
+    
+
+
+
   };
   return PDFFindController;
 })();

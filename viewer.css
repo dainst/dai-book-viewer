@@ -2064,8 +2064,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	padding: 7px 10px 10px 10px;
 }
 
-
-
 .dbv-av-block-entry {
 	padding: 2px 0 5px 0px;
 
@@ -2085,8 +2083,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .dbv-load-more {
-	margin-top: 2px;
-	padding-top: 2px;
+	margin-top: 4px;
 	border-top: 1px dotted rgba(1,1,1,0.3);
 	text-align: right;
 }

@@ -29,9 +29,11 @@
      'pdfjs-dbv/pdf_outline_viewer', 'pdfjs-dbv/overlay_manager',
      'pdfjs-dbv/pdf_attachment_viewer', 'pdfjs-dbv/pdf_find_controller',
      'pdfjs-dbv/pdf_find_bar', 'pdfjs-dbv/dom_events', 'pdfjs-dbv/pdfjs',
-     'pdfjs-dbv/dbr_anno_viewer', 
+     'pdfjs-dbv/dbv_anno_viewer', 
      'pdfjs-dbv/inc/leaflet/leaflet', 
-     'pdfjs-dbv/dbr_anno_registry'],
+     'pdfjs-dbv/dbv_anno_registry',
+     'pdfjs-dbv/dbv_anno_editor',
+     'pdfjs-dbv/dbv_anno_sidebar'],
      factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'), require('./download_manager.js'),
@@ -45,9 +47,11 @@
       require('./overlay_manager.js'), require('./pdf_attachment_viewer.js'),
       require('./pdf_find_controller.js'), require('./pdf_find_bar.js'),
       require('./dom_events.js'), require('./pdfjs.js'),
-      require('./dbr_anno_viewer.js'), 
+      require('./dbv_anno_viewer.js'), 
       require('inc/leaflet/leaflet.js'), 
-      require('./dbr_anno_registry.js'));
+      require('./dbv_anno_registry.js'),
+      require('./dbv_anno_editor.js'),
+      require('./dbv_anno_sidebar.js'));
   } else {
     factory((root.pdfjsWebApp = {}), root.pdfjsWebUIUtils,
       root.pdfjsWebDownloadManager, root.pdfjsWebPDFHistory,
@@ -60,7 +64,8 @@
       root.pdfjsWebPDFOutlineViewer, root.pdfjsWebOverlayManager,
       root.pdfjsWebPDFAttachmentViewer, root.pdfjsWebPDFFindController,
       root.pdfjsWebPDFFindBar, root.pdfjsWebDOMEvents, root.pdfjsWebPDFJS,
-      root.pdfjsWebAnnoViewer, root.devnull, root.pdfjsWebAnnoRegistry);
+      root.pdfjsWebAnnoViewer, root.devnull, root.pdfjsWebAnnoRegistry,
+      root.pdfjsWebAnnoEditor, root.pdfjsWebAnnoSidebar);
   }
 }(this, function (exports, uiUtilsLib, downloadManagerLib, pdfHistoryLib,
                   preferencesLib, pdfSidebarLib, viewHistoryLib,
@@ -70,7 +75,7 @@
                   pdfOutlineViewerLib, overlayManagerLib,
                   pdfAttachmentViewerLib, pdfFindControllerLib, pdfFindBarLib,
                   domEventsLib, pdfjsLib,                   
-                  annoViewerLib, leaflet, annotationRegistryLib
+                  annoViewerLib, leaflet, annoRegistryLib, annoEditorLib, annoSidebarLib
 ) {
 
 var UNKNOWN_SCALE = uiUtilsLib.UNKNOWN_SCALE;
@@ -103,7 +108,9 @@ var PDFFindController = pdfFindControllerLib.PDFFindController;
 var PDFFindBar = pdfFindBarLib.PDFFindBar;
 var getGlobalEventBus = domEventsLib.getGlobalEventBus;
 var annoViewer = annoViewerLib.AnnoViewer;
-var annoRegistry = annotationRegistryLib.AnnoRegistry;
+var annoEditor = annoEditorLib.AnnoEditor;console.log(annoSidebarLib);
+var annoRegistry = annoRegistryLib.AnnoRegistry;
+var annoSidebar = annoSidebarLib.AnnoSidebar;
 
 var DEFAULT_SCALE_DELTA = 1.1;
 var MIN_SCALE = 0.25;
@@ -178,6 +185,8 @@ var PDFViewerApplication = {
   /** dai paf */
   annoViewer: null,
   
+  annoViewer: null,
+  
   /** @type {ViewHistory} */
   store: null,
   /** @type {DownloadManager} */
@@ -220,9 +229,16 @@ var PDFViewerApplication = {
     this.annoRegistry = new annoRegistry(); 
     this.annoViewer = new annoViewer({ 
     	container: appConfig.sidebar.annotationsView,
-        editContainer: appConfig.sidebar.editAnnotationsView,
         eventBus: this.eventBus,
-        annotationRegistry: this.annoRegistry
+        annoRegistry: this.annoRegistry,
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView})
+    });
+    this.annoEditor = new annoEditor({
+    	annoRegistry: this.annoRegistry,
+    	annoViewer: this.annoViewer,
+        container: appConfig.sidebar.editAnnotationsView,
+        findController: this.findController,
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
     });
     
     var container = appConfig.mainContainer;
@@ -235,7 +251,8 @@ var PDFViewerApplication = {
       linkService: pdfLinkService,
       downloadManager: downloadManager,
       annoRegistry: this.annoRegistry,
-      annoViewer: this.annoViewer
+      annoViewer: this.annoViewer,
+      annoEditor: this.annoEditor
     });
     pdfRenderingQueue.setViewer(this.pdfViewer);
     pdfLinkService.setViewer(this.pdfViewer);
@@ -334,6 +351,7 @@ var PDFViewerApplication = {
     sidebarConfig.pdfOutlineViewer = this.pdfOutlineViewer;
     sidebarConfig.eventBus = this.eventBus;
     sidebarConfig.annoViewer = this.annoViewer; // paf dai
+    sidebarConfig.annoEditor = this.annoEditor; // paf dai
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
 
@@ -602,7 +620,7 @@ var PDFViewerApplication = {
 	  // @ TODO what if file is binary data...
 	  console.log('try to get annotations!', file, args, this.annoViewer);
 	  this.annoViewer.load(file);
-	  
+	  this.annoEditor.load();
 	  
     var scale = 0;
     if (arguments.length > 2 || typeof args === 'number') {
@@ -1308,8 +1326,23 @@ var PDFViewerApplication = {
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
     
     eventBus.on('pafEvent', function(x) {
+    	console.log("eo captain jack!");
     	/* TODO toggle visibility of annotations */
-    	PDFViewerApplication.findController.pFindAnnotation();
+    	var a = {
+				"type": "other",
+				"terms": [
+					"Gegenmeinung"
+				],
+				"lemma": "Gegenmeinung",
+				"pages": [
+					1
+				],
+				"text": "",
+				"references": {},
+				"coordinates": [],
+				"id": "id#0.7936567347720048"
+			}
+    	PDFViewerApplication.findController.showAnnotation(a);
     });
     
 //#if GENERIC

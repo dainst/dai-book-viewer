@@ -23,7 +23,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-dbv/dbr_anno_registry', ['exports', 'pdfjs-dbv/pdfjs'], factory);
+    define('pdfjs-dbv/dbv_anno_registry', ['exports', 'pdfjs-dbv/pdfjs'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./pdfjs.js'));
   } else {
@@ -31,12 +31,12 @@
   }
 }(this, function (exports, pdfjsLib) {
 
+	var AnnoRegistry = (function AnnoRegistryClosure() {
+		function AnnoRegistry() {
+		};
 	
-	function AnnoRegistry() {
-	}
-
-	AnnoRegistry.prototype = {
-			
+		AnnoRegistry.prototype = {
+				
 			/* file information */
 			url: '',
 			filename: '',			
@@ -99,7 +99,7 @@
 				request.onerror = function(e) {
 					return self.error(e, request);
 				};
-
+	
 				request.send();
 				
 				
@@ -121,22 +121,26 @@
 			},
 			
 			/**
-			 * registers an annotation and returns if it was already registered
+			 * registers an annotation 
+			 * 
+			 * Attention: annotation only gets added to collection, not shown
+			 * 
 			 * 
 			 * @param annotation
-			 * @returns {Boolean}
+			 * @returns annotation
 			 */
 			registerAnnotation: function(annotation) {
 		
 				annotation.lemma = annotation.lemma || annotation.terms[0] ||  '<annotation>';
 				annotation.type = annotation.type || 'link';
-
+	
 				this.registry[annotation.id] = annotation;
 				
-				return true;
+				return this.registry[annotation.id];
 				
 			},
 			
+	
 			
 			/**
 			 * display Error with errorFn
@@ -147,7 +151,6 @@
 			 */
 			error: function(e, x) {
 				console.log('Error: ', e, x);
-				console.log(this.errorFn)
 				this.setState('error');
 				this.errorFn(e);
 			},
@@ -187,9 +190,12 @@
 				}
 				div.classList.add(state);
 			}
-			
-			
-	}
+				
+				
+		}
+		return AnnoRegistry;
+	})();
+
 	
 	exports.AnnoRegistry = AnnoRegistry;
 }));

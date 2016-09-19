@@ -245,7 +245,8 @@ var PDFViewerApplication = {
     this.pdfThumbnailViewer = new PDFThumbnailViewer({
       container: thumbnailContainer,
       renderingQueue: pdfRenderingQueue,
-      linkService: pdfLinkService
+      linkService: pdfLinkService,
+      annoSidebar: new annoSidebar({container: thumbnailContainer})
     });
     pdfRenderingQueue.setThumbnailViewer(this.pdfThumbnailViewer);
 
@@ -338,12 +339,14 @@ var PDFViewerApplication = {
       container: appConfig.sidebar.outlineView,
       eventBus: this.eventBus,
       linkService: pdfLinkService,
+      annoSidebar: new annoSidebar({container: appConfig.sidebar.outlineView})
     });
 
     this.pdfAttachmentViewer = new PDFAttachmentViewer({
       container: appConfig.sidebar.attachmentsView,
       eventBus: this.eventBus,
-      downloadManager: downloadManager
+      downloadManager: downloadManager,
+      annoSidebar: new annoSidebar({container: appConfig.sidebar.attachmentsView})
     });
 
 
@@ -1736,6 +1739,7 @@ function webViewerPageMode(e) {
     case 'annotations':
         view = SidebarView.ANNOS;
         break;
+    case 'annotations-editor':
     case 'editAnnotations':
         view = SidebarView.EDIT_ANNO;
         break;

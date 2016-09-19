@@ -91,7 +91,7 @@
 			
 
 			block: function(id, title, glyphicon, data, populationFn, loadMore) {
-				var block = this.$.block(id, title, glyphicon);
+				var block = this.$.block(id, title, glyphicon, true);
 				
 				var populationFn = populationFn || 'populate';
 				
@@ -104,6 +104,8 @@
 					block.appendChild(loadMoreBtn); 
 				}
 			},
+			
+			
 			
 			/**
 			 * 
@@ -470,7 +472,6 @@
 		    annotationsVisible: true,
 		    toggleAnnotations: function() {
 		    	this.annotationsVisible = !this.annotationsVisible;
-		    	console.log(this.annotationsVisible);
 		    	if (!this.annotationsVisible) {
 		    		this.pdfViewer.container.classList.add('dbv-annotations-hidden');
 		    	} else {

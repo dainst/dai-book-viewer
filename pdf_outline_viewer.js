@@ -54,6 +54,7 @@ var PDFOutlineViewer = (function PDFOutlineViewerClosure() {
     this.container = options.container;
     this.linkService = options.linkService;
     this.eventBus = options.eventBus;
+    this.$ = options.annoSidebar
   }
 
   PDFOutlineViewer.prototype = {
@@ -213,23 +214,10 @@ var PDFOutlineViewer = (function PDFOutlineViewerClosure() {
         this.container.classList.add('outlineWithDeepNesting');
       }
       
-      var panel = document.createElement('div'); //paf
-      var panelbody = document.createElement('div');
-      var panelhead = document.createElement('div');
-      var h3 = document.createElement('h3');
-      panel.className = 'panel';
-      panelbody.className = 'panel-body';
-      panelhead.className = 'panel-heading';
-      h3.className = 'panel-title';
-      //h3.dataset['l10n-id'] = 'outline';
-      h3.textContent = 'Outline';
-      panelhead.appendChild(h3);
-      panel.appendChild(panelhead);
-      panel.appendChild(panelbody);
-      panelbody.appendChild(fragment)
+      var block = this.$.block('outline', 'Outline', 'list-alt');
+      block.appendChild(fragment);
       
-      this.container.appendChild(panel);
-
+      
       this._dispatchEvent(outlineCount);
     }
   };

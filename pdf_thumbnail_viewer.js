@@ -54,10 +54,12 @@ var PDFThumbnailViewer = (function PDFThumbnailViewerClosure() {
    * @param {PDFThumbnailViewerOptions} options
    */
   function PDFThumbnailViewer(options) {
-    this.container = options.container;
+    //this.container = options.container;
     this.renderingQueue = options.renderingQueue;
     this.linkService = options.linkService;
-
+    this.$ = options.annoSidebar;
+    this.container = this.$.block('thumbnails', 'Thumbnails', 'th-large');
+    
     this.scroll = watchScroll(this.container, this._scrollUpdated.bind(this));
     this._resetView();
   }

@@ -51,6 +51,7 @@ var PDFAttachmentViewer = (function PDFAttachmentViewerClosure() {
     this.container = options.container;
     this.eventBus = options.eventBus;
     this.downloadManager = options.downloadManager;
+    this.$ = options.annoSidebar
   }
 
   PDFAttachmentViewer.prototype = {
@@ -107,6 +108,8 @@ var PDFAttachmentViewer = (function PDFAttachmentViewerClosure() {
       });
       attachmentsCount = names.length;
 
+      var fragment = document.createDocumentFragment();
+      
       for (var i = 0; i < attachmentsCount; i++) {
         var item = attachments[names[i]];
         var filename = pdfjsLib.getFilenameFromUrl(item.filename);
@@ -116,8 +119,13 @@ var PDFAttachmentViewer = (function PDFAttachmentViewerClosure() {
         this._bindLink(button, item.content, filename);
         button.textContent = pdfjsLib.removeNullCharacters(filename);
         div.appendChild(button);
-        this.container.appendChild(div);
+        fragment.appendChild(div);
       }
+      
+      var block = this.$.block('attachments', 'Attachments', 'paperclip');
+      block.appendChild(fragment);
+      
+      
 
       this._dispatchEvent(attachmentsCount);
     }

@@ -22,7 +22,6 @@ See https://github.com/adobe-type-tools/cmap-resources
 -->
 <html dir="ltr" mozdisallowselectionprint moznomarginboxes>
   <head>
-  	<meta yaya='ya'>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <!--#if GENERIC || CHROME-->
@@ -32,13 +31,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!--#endif-->
     <title>PDF.js viewer</title>
-
-<!--#if FIREFOX || MOZCENTRAL-->
-<!--#include viewer-snippet-firefox-extension.html-->
-<!--#endif-->
-<!--#if CHROME-->
-<!--#include viewer-snippet-chrome-extension.html-->
-<!--#endif-->
 
     <link rel="stylesheet" href="viewer.css">
 <!--#if !PRODUCTION-->
@@ -86,21 +78,21 @@ See https://github.com/adobe-type-tools/cmap-resources
       <div id="sidebarContainer">
         <div id="toolbarSidebar">
           <div class="splitToolbarButton toggled">
-            <button id="viewThumbnail" class="toolbarButton group toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
+            <button id="viewThumbnail" class="toolbarButton group toggled glyphicon-th-large" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
                <span data-l10n-id="thumbs_label">Thumbnails</span>
             </button>
-            <button id="viewOutline" class="toolbarButton group" title="Show Document Outline" tabindex="3" data-l10n-id="outline">
+            <button id="viewOutline" class="toolbarButton group glyphicon-list-alt" title="Show Document Outline" tabindex="3" data-l10n-id="outline">
                <span data-l10n-id="outline_label">Document Outline</span>
             </button>
-            <button id="viewAttachments" class="toolbarButton group" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
+            <button id="viewAttachments" class="toolbarButton group glyphicon-paperclip" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
                <span data-l10n-id="attachments_label">Attachments</span>
             </button>
             
-            <button id="dbv-viewAnnotations" class="toolbarButton group" title="Annotations" tabindex="5" data-l10n-id="annotations">
+            <button id="dbv-viewAnnotations" class="toolbarButton group glyphicon-tags" title="Annotations" tabindex="5" data-l10n-id="annotations">
                <span data-l10n-id="annotations_label">Annotations</span>
             </button>
             
-			<button id="dbv-editAnnotations" class="toolbarButton group" title="Annotations" tabindex="6" data-l10n-id="edit_annotations">
+			<button id="dbv-editAnnotations" class="toolbarButton group glyphicon-wrench" title="Annotations" tabindex="6" data-l10n-id="edit_annotations">
                <span data-l10n-id="edit_annotations_label">Annotations</span>
             </button>
             

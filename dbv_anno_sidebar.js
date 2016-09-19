@@ -54,9 +54,10 @@
 			 * @param id -			<string>		id
 			 * @param title 		<string>		headline @ TODO i10n
 			 * @param glyphicon 	<string> 		icon code
+			 * @param minimizable 	<boolean> 		is minimizable
 			 * 
 			 */
-			block: function(id, title, glyphicon) {
+			block: function(id, title, glyphicon, minimizable) {
 				var self = this;
 				
 				var block = document.getElementById('dbv-av-block-' + id);
@@ -68,7 +69,7 @@
 				}
 				
 				var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
-				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id]}, title, {'click': ['toggleBlock', id]});
+				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id]}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
 				var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
 				var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
 				
@@ -158,17 +159,26 @@
 				}
 
 				if (typeof eventListeners === "object") {
+					var isActive = false;
 					for (var event in eventListeners) {						
 						var fun = (typeof eventListeners[event] === 'object') ? eventListeners[event][0] : eventListeners[event];
 						var param = (typeof eventListeners[event] === 'object') ? eventListeners[event][1] : null;
-						//if (typeof self.parent[fun] === 'function') {
+						if (typeof self.parent[fun] === 'function') {
 							el.addEventListener(event, function(e) {							
 								return self.parent[fun](e, param);
 							});
-						/*} else {
+							isActive = true;
+						} else  if (typeof self[fun] === 'function') {
+							el.addEventListener(event, function(e) {							
+								return self[fun](e, param);
+							});	
+							isActive = true;
+						} else {
 							console.log('function not found: ', fun);
-						} */
-						
+						}
+					}
+					if (isActive) {
+						el.classList.add('active');
 					}
 				}
 				return el;

@@ -28,7 +28,6 @@
   overflow: visible;
   border: none;
   background-clip: content-box;
-  border-image: url(images/shadow.png) 9 9 repeat;
   background-color: white;
   margin-bottom: 3em;
 }

@@ -1262,15 +1262,19 @@ html[dir='rtl'] .attachmentsItem > button {
   color: hsla(0,0%,100%,.5);
 }
 .outlineItemToggler::before {
-  content: url(images/treeitem-expanded.png);
+  content: "\E250";
+  font-family: 'Glyphicons Halflings';
   display: inline-block;
   position: absolute;
+  font-size: 80%;
+  padding: 1px;
+  color: #5572A1;
 }
 html[dir='ltr'] .outlineItemToggler.outlineItemsHidden::before {
-  content: url(images/treeitem-collapsed.png);
+    content: "\E252";
 }
 html[dir='rtl'] .outlineItemToggler.outlineItemsHidden::before {
-  content: url(images/treeitem-collapsed-rtl.png);
+   content: "\E251";
 }
 .outlineItemToggler.outlineItemsHidden ~ .outlineItems {
   display: none;
@@ -1574,364 +1578,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   display: none;
 }
 
-@media screen and (min-resolution: 2dppx) {
-  /* Rules for Retina screens */
-  .toolbarButton::before {
-    -webkit-transform: scale(0.5);
-    transform: scale(0.5);
-    top: -5px;
-  }
-
-  .secondaryToolbarButton::before {
-    -webkit-transform: scale(0.5);
-    transform: scale(0.5);
-    top: -4px;
-  }
-
-  html[dir='ltr'] .toolbarButton::before,
-  html[dir='rtl'] .toolbarButton::before {
-    left: -1px;
-  }
-
-  html[dir='ltr'] .secondaryToolbarButton::before {
-    left: -2px;
-  }
-  html[dir='rtl'] .secondaryToolbarButton::before {
-    left: 186px;
-  }
-
-  .toolbarField.pageNumber.visiblePageIsLoading,
-  #findInput[data-status="pending"] {
-    background-image: url(images/loading-small@2x.png);
-    background-size: 16px 17px;
-  }
-
-  .dropdownToolbarButton {
-    background: url(images/toolbarButton-menuArrows@2x.png) no-repeat;
-    background-size: 7px 16px;
-  }
-
-  html[dir='ltr'] .toolbarButton#sidebarToggle::before {
-    content: url(images/toolbarButton-sidebarToggle@2x.png);
-  }
-  html[dir='rtl'] .toolbarButton#sidebarToggle::before {
-    content: url(images/toolbarButton-sidebarToggle-rtl@2x.png);
-  }
-
-  html[dir='ltr'] .toolbarButton#secondaryToolbarToggle::before {
-    content: url(images/toolbarButton-secondaryToolbarToggle@2x.png);
-  }
-  html[dir='rtl'] .toolbarButton#secondaryToolbarToggle::before {
-    content: url(images/toolbarButton-secondaryToolbarToggle-rtl@2x.png);
-  }
-
-  html[dir='ltr'] .toolbarButton.findPrevious::before {
-    content: url(images/findbarButton-previous@2x.png);
-  }
-  html[dir='rtl'] .toolbarButton.findPrevious::before {
-    content: url(images/findbarButton-previous-rtl@2x.png);
-  }
-
-  html[dir='ltr'] .toolbarButton.findNext::before {
-    content: url(images/findbarButton-next@2x.png);
-  }
-  html[dir='rtl'] .toolbarButton.findNext::before {
-    content: url(images/findbarButton-next-rtl@2x.png);
-  }
-
-  html[dir='ltr'] .toolbarButton.pageUp::before {
-    content: url(images/toolbarButton-pageUp@2x.png);
-  }
-  html[dir='rtl'] .toolbarButton.pageUp::before {
-    content: url(images/toolbarButton-pageUp-rtl@2x.png);
-  }
-
-  html[dir='ltr'] .toolbarButton.pageDown::before {
-    content: url(images/toolbarButton-pageDown@2x.png);
-  }
-  html[dir='rtl'] .toolbarButton.pageDown::before {
-    content: url(images/toolbarButton-pageDown-rtl@2x.png);
-  }
-
-  .toolbarButton.zoomIn::before {
-    content: url(images/toolbarButton-zoomIn@2x.png);
-  }
-
-  .toolbarButton.zoomOut::before {
-    content: url(images/toolbarButton-zoomOut@2x.png);
-  }
-
-  .toolbarButton.presentationMode::before,
-  .secondaryToolbarButton.presentationMode::before {
-    content: url(images/toolbarButton-presentationMode@2x.png);
-  }
-
-  .toolbarButton.print::before,
-  .secondaryToolbarButton.print::before {
-    content: url(images/toolbarButton-print@2x.png);
-  }
-
-  .toolbarButton.openFile::before,
-  .secondaryToolbarButton.openFile::before {
-    content: url(images/toolbarButton-openFile@2x.png);
-  }
-
-  .toolbarButton.download::before,
-  .secondaryToolbarButton.download::before {
-    content: url(images/toolbarButton-download@2x.png);
-  }
-
-  .toolbarButton.bookmark::before,
-  .secondaryToolbarButton.bookmark::before {
-    content: url(images/toolbarButton-bookmark@2x.png);
-  }
-
-  #viewThumbnail.toolbarButton::before {
-    content: url(images/toolbarButton-viewThumbnail@2x.png);
-  }
-
-  html[dir="ltr"] #viewOutline.toolbarButton::before {
-    content: "\E032";
-  }
-  html[dir="rtl"] #viewOutline.toolbarButton::before {
-    content: "\E032";
-  }
-
-  #viewAttachments.toolbarButton::before {
-    content: url(images/toolbarButton-viewAttachments@2x.png);
-  }
-
-  #viewFind.toolbarButton::before {
-    content: url(images/toolbarButton-search@2x.png);
-  }
-
-  .secondaryToolbarButton.firstPage::before {
-    content: url(images/secondaryToolbarButton-firstPage@2x.png);
-  }
-
-  .secondaryToolbarButton.lastPage::before {
-    content: url(images/secondaryToolbarButton-lastPage@2x.png);
-  }
-
-  .secondaryToolbarButton.rotateCcw::before {
-    content: url(images/secondaryToolbarButton-rotateCcw@2x.png);
-  }
-
-  .secondaryToolbarButton.rotateCw::before {
-    content: url(images/secondaryToolbarButton-rotateCw@2x.png);
-  }
-
-  .secondaryToolbarButton.handTool::before {
-    content: url(images/secondaryToolbarButton-handTool@2x.png);
-  }
-
-  .secondaryToolbarButton.documentProperties::before {
-    content: url(images/secondaryToolbarButton-documentProperties@2x.png);
-  }
-
-  .outlineItemToggler::before {
-    -webkit-transform: scale(0.5);
-    transform: scale(0.5);
-    top: -1px;
-    content: url(images/treeitem-expanded@2x.png);
-  }
-  html[dir='ltr'] .outlineItemToggler.outlineItemsHidden::before {
-    content: url(images/treeitem-collapsed@2x.png);
-  }
-  html[dir='rtl'] .outlineItemToggler.outlineItemsHidden::before {
-    content: url(images/treeitem-collapsed-rtl@2x.png);
-  }
-  html[dir='ltr'] .outlineItemToggler::before {
-    right: 0;
-  }
-  html[dir='rtl'] .outlineItemToggler::before {
-    left: 0;
-  }
-}
-
-@media print {
-  /* General rules for printing. */
-  body {
-    background: transparent none;
-  }
-
-  /* Rules for browsers that don't support mozPrintCallback. */
-  #sidebarContainer, #secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
-    display: none;
-  }
-  #viewerContainer {
-    overflow: visible;
-  }
-
-  #mainContainer, #viewerContainer, .page, .page canvas {
-    position: static;
-    padding: 0;
-    margin: 0;
-  }
-
-  .page {
-    float: left;
-    display: none;
-    border: none;
-    box-shadow: none;
-    background-clip: content-box;
-    background-color: white;
-  }
-
-  .page[data-loaded] {
-    display: block;
-  }
-
-  .fileInput {
-    display: none;
-  }
-
-  /* Rules for browsers that support mozPrintCallback */
-  body[data-mozPrintCallback] #outerContainer {
-    display: none;
-  }
-  body[data-mozPrintCallback] #printContainer {
-    display: block;
-  }
-  #printContainer {
-    height: 100%;
-  }
-  /* wrapper around (scaled) print canvas elements */
-  #printContainer > div {
-    position: relative;
-    top: 0;
-    left: 0;
-    height: 100%;
-    overflow: hidden;
-  }
-  #printContainer canvas {
-    display: block;
-  }
-}
-
-.visibleLargeView,
-.visibleMediumView,
-.visibleSmallView {
-  display: none;
-}
-
-@media all and (max-width: 960px) {
-  html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='ltr'] #outerContainer.sidebarOpen .outerCenter {
-    float: left;
-    left: 205px;
-  }
-  html[dir='rtl'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='rtl'] #outerContainer.sidebarOpen .outerCenter {
-    float: right;
-    right: 205px;
-  }
-}
-
-@media all and (max-width: 900px) {
-  .sidebarOpen .hiddenLargeView {
-    display: none;
-  }
-  .sidebarOpen .visibleLargeView {
-    display: inherit;
-  }
-}
-
-@media all and (max-width: 860px) {
-  .sidebarOpen .hiddenMediumView {
-    display: none;
-  }
-  .sidebarOpen .visibleMediumView {
-    display: inherit;
-  }
-}
-
-@media all and (max-width: 770px) {
-  #sidebarContainer {
-    top: 32px;
-    z-index: 100;
-  }
-  .loadingInProgress #sidebarContainer {
-    top: 37px;
-  }
-  #sidebarContent {
-    top: 42px;
-    width: 390px;
-  }
-
-  html[dir='ltr'] #outerContainer.sidebarOpen > #mainContainer {
-    left: 0px;
-  }
-  html[dir='rtl'] #outerContainer.sidebarOpen > #mainContainer {
-    right: 0px;
-  }
-
-  html[dir='ltr'] .outerCenter {
-    float: left;
-    left: 205px;
-  }
-  html[dir='rtl'] .outerCenter {
-    float: right;
-    right: 205px;
-  }
-
-  #outerContainer .hiddenLargeView,
-  #outerContainer .hiddenMediumView {
-    display: inherit;
-  }
-  #outerContainer .visibleLargeView,
-  #outerContainer .visibleMediumView {
-    display: none;
-  }
-}
-
-@media all and (max-width: 700px) {
-  #outerContainer .hiddenLargeView {
-    display: none;
-  }
-  #outerContainer .visibleLargeView {
-    display: inherit;
-  }
-}
-
-@media all and (max-width: 660px) {
-  #outerContainer .hiddenMediumView {
-    display: none;
-  }
-  #outerContainer .visibleMediumView {
-    display: inherit;
-  }
-}
-
-@media all and (max-width: 600px) {
-  .hiddenSmallView {
-    display: none;
-  }
-  .visibleSmallView {
-    display: inherit;
-  }
-  html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='ltr'] #outerContainer.sidebarOpen .outerCenter,
-  html[dir='ltr'] .outerCenter {
-    left: 156px;
-  }
-  html[dir='rtl'] #outerContainer.sidebarMoving .outerCenter,
-  html[dir='rtl'] #outerContainer.sidebarOpen .outerCenter,
-  html[dir='rtl'] .outerCenter {
-    right: 156px;
-  }
-  .toolbarButtonSpacer {
-    width: 0;
-  }
-}
-
-@media all and (max-width: 510px) {
-  #scaleSelectContainer, #pageNumberLabel {
-    display: none;
-  }
-}
-
-
 /* \__/ */
 @font-face {
     font-family: 'Glyphicons Halflings';
@@ -2197,10 +1843,266 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 
+/* small screen */
+
+@media screen and (min-resolution: 2dppx) {
+  /* Rules for Retina screens */
+
+	html {
+	font-size: 28px;
+	}
+
+
+  html[dir='ltr'] .toolbarButton::before,
+  html[dir='rtl'] .toolbarButton::before {
+    left: -1px;
+  }
+
+  html[dir='ltr'] .secondaryToolbarButton::before {
+    left: -2px;
+  }
+  html[dir='rtl'] .secondaryToolbarButton::before {
+    left: 186px;
+  }
+
+  .toolbarField.pageNumber.visiblePageIsLoading,
+  #findInput[data-status="pending"] {
+    background-image: url(images/loading-small@2x.png);
+    background-size: 16px 17px;
+  }
+
+  .dropdownToolbarButton {
+    background: url(images/toolbarButton-menuArrows@2x.png) no-repeat;
+    background-size: 7px 16px;
+  }
+
+	.toolbarButton::before, .secondaryToolbarButton::before {
+		position: relative;
+		top: 0px
+	}
+
+	.panel-title,
+	.dbv-av-block-entry {
+	    font-size: 200%;
+	}
+
+
+
+  .outlineItemToggler::before {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+    top: 5px;
+
+  }
+
+  html[dir='ltr'] .outlineItemToggler::before {
+    right: 0;
+  }
+  html[dir='rtl'] .outlineItemToggler::before {
+    left: 0;
+  }
+}
+
+@media print {
+  /* General rules for printing. */
+  body {
+    background: transparent none;
+  }
+
+  /* Rules for browsers that don't support mozPrintCallback. */
+  #sidebarContainer, #secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
+    display: none;
+  }
+  #viewerContainer {
+    overflow: visible;
+  }
+
+  #mainContainer, #viewerContainer, .page, .page canvas {
+    position: static;
+    padding: 0;
+    margin: 0;
+  }
+
+  .page {
+    float: left;
+    display: none;
+    border: none;
+    box-shadow: none;
+    background-clip: content-box;
+    background-color: white;
+  }
+
+  .page[data-loaded] {
+    display: block;
+  }
+
+  .fileInput {
+    display: none;
+  }
+
+  /* Rules for browsers that support mozPrintCallback */
+  body[data-mozPrintCallback] #outerContainer {
+    display: none;
+  }
+  body[data-mozPrintCallback] #printContainer {
+    display: block;
+  }
+  #printContainer {
+    height: 100%;
+  }
+  /* wrapper around (scaled) print canvas elements */
+  #printContainer > div {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  #printContainer canvas {
+    display: block;
+  }
+}
+
+.visibleLargeView,
+.visibleMediumView,
+.visibleSmallView {
+  display: none;
+}
+
+@media all and (max-width: 960px) {
+  html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,
+  html[dir='ltr'] #outerContainer.sidebarOpen .outerCenter {
+    float: left;
+    left: 205px;
+  }
+  html[dir='rtl'] #outerContainer.sidebarMoving .outerCenter,
+  html[dir='rtl'] #outerContainer.sidebarOpen .outerCenter {
+    float: right;
+    right: 205px;
+  }
+}
+
+@media all and (max-width: 900px) {
+  .sidebarOpen .hiddenLargeView {
+    display: none;
+  }
+  .sidebarOpen .visibleLargeView {
+    display: inherit;
+  }
+}
+
+@media all and (max-width: 860px) {
+  .sidebarOpen .hiddenMediumView {
+    display: none;
+  }
+  .sidebarOpen .visibleMediumView {
+    display: inherit;
+  }
+}
+
+@media all and (max-width: 770px) {
+  #sidebarContainer {
+    top: 32px;
+    z-index: 100;
+  }
+  .loadingInProgress #sidebarContainer {
+    top: 37px;
+  }
+  #sidebarContent {
+	padding-top: 0px;
+  }
+  #toolbarSidebar {
+  	padding-left: 0px;
+  }
+  
+  .sidebarOpen #sidebarContainer {
+  	box-shadow: 2px 0px 3px 0px rgba(0,0,0,0.75);
+  }
+  html[dir='ltr'] #outerContainer.sidebarOpen > #mainContainer {
+    left: 0px;
+  }
+  html[dir='rtl'] #outerContainer.sidebarOpen > #mainContainer {
+    right: 0px;
+  }
+
+  html[dir='ltr'] .outerCenter {
+    float: left;
+    left: 205px;
+  }
+  html[dir='rtl'] .outerCenter {
+    float: right;
+    right: 205px;
+  }
+
+	#dbv-av-block-thumbnails .panel-body {
+    	height: 250px;
+    	height: calc(100vh - 180px); 
+		overflow-y: scroll;
+	}
+
+  #outerContainer .hiddenLargeView,
+  #outerContainer .hiddenMediumView {
+    display: inherit;
+  }
+  #outerContainer .visibleLargeView,
+  #outerContainer .visibleMediumView {
+    display: none;
+  }
+}
+
+@media all and (max-width: 700px) {
+  #outerContainer .hiddenLargeView {
+    display: none;
+  }
+  #outerContainer .visibleLargeView {
+    display: inherit;
+  }
+}
+
+@media all and (max-width: 660px) {
+  #outerContainer .hiddenMediumView {
+    display: none;
+  }
+  #outerContainer .visibleMediumView {
+    display: inherit;
+  }
+}
+
+@media all and (max-width: 600px) {
+  .hiddenSmallView {
+    display: none;
+  }
+  .visibleSmallView {
+    display: inherit;
+  }
+  html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,
+  html[dir='ltr'] #outerContainer.sidebarOpen .outerCenter,
+  html[dir='ltr'] .outerCenter {
+    left: 156px;
+  }
+  html[dir='rtl'] #outerContainer.sidebarMoving .outerCenter,
+  html[dir='rtl'] #outerContainer.sidebarOpen .outerCenter,
+  html[dir='rtl'] .outerCenter {
+    right: 156px;
+  }
+  .toolbarButtonSpacer {
+    width: 0;
+  }
+}
+
+@media all and (max-width: 510px) {
+  #scaleSelectContainer, #pageNumberLabel {
+    display: none;
+  }
+}
+
+
+/* embedded design */
+
 .embeddedViewer #toolbarSidebar,
 .embeddedViewer #toolbarViewerMiddle,
 .embeddedViewer #toolbarContainer {
-	background: none
+	background: #F5F5F5;
 }
 
 .embeddedViewer .dropdownToolbarButton > select > option,

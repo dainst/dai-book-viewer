@@ -28,14 +28,7 @@
 
 var RenderingStates = pdfRenderingQueue.RenderingStates;
 
-var SidebarView = {
-  NONE: 0,
-  THUMBS: 1,
-  OUTLINE: 2,
-  ATTACHMENTS: 3,
-  ANNO: 4,
-  EDIT_ANNO: 5
-};
+
 
 /**
  * @typedef {Object} PDFSidebarOptions
@@ -73,7 +66,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
    */
   function PDFSidebar(options) {
     this.isOpen = false;
-    this.active = SidebarView.THUMBS;
+    this.active = 'thumbnail';
     this.isInitialViewSet = false;
 
     /**
@@ -112,7 +105,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
       this.isInitialViewSet = false;
 
       this.close();
-      this.switchView(SidebarView.THUMBS);
+      this.switchView('thumbnail');
 
       this.outlineButton.disabled = false;
       this.attachmentsButton.disabled = false;
@@ -122,19 +115,19 @@ var PDFSidebar = (function PDFSidebarClosure() {
      * @returns {number} One of the values in {SidebarView}.
      */
     get visibleView() {
-      return (this.isOpen ? this.active : SidebarView.NONE);
+      return (this.isOpen ? this.active : 'none');
     },
 
     get isThumbnailViewVisible() {
-      return (this.isOpen && this.active === SidebarView.THUMBS);
+      return (this.isOpen && this.active === 'thumbnail');
     },
 
     get isOutlineViewVisible() {
-      return (this.isOpen && this.active === SidebarView.OUTLINE);
+      return (this.isOpen && this.active === 'outline');
     },
 
     get isAttachmentsViewVisible() {
-      return (this.isOpen && this.active === SidebarView.ATTACHMENTS);
+      return (this.isOpen && this.active === 'attachments');
     },
 
     /**
@@ -147,7 +140,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
       }
       this.isInitialViewSet = true;
 
-      if (this.isOpen && view === SidebarView.NONE) {
+      if (this.isOpen && view === 'none') {
         this._dispatchEvent();
         // If the user has already manually opened the sidebar,
         // immediately closing it would be bad UX.
@@ -171,118 +164,74 @@ var PDFSidebar = (function PDFSidebarClosure() {
      *                              The default value is false.
      */
     switchView: function PDFSidebar_switchView(view, forceOpen) {
-      if (view === SidebarView.NONE) {
-        this.close();
-        return;
-      }
-      var isViewChanged = (view !== this.active);
-      var shouldForceRendering = false;
-
-      switch (view) {
-        case SidebarView.THUMBS:
-          this.thumbnailButton.classList.add('toggled');
-          this.outlineButton.classList.remove('toggled');
-          this.attachmentsButton.classList.remove('toggled');
-          this.annotationsButton.classList.remove('toggled');
-          this.editAnnotationsButton.classList.remove('toggled');
-
-          this.thumbnailView.classList.remove('hidden');
-          this.outlineView.classList.add('hidden');
-          this.attachmentsView.classList.add('hidden');
-          this.annotationsView.classList.add('hidden');
-          this.editAnnotationsView.classList.add('hidden');
-
-          if (this.isOpen && isViewChanged) {
-            this._updateThumbnailViewer();
-            shouldForceRendering = true;
-          }
-          break;
-          
-        case SidebarView.OUTLINE:
-          if (this.outlineButton.disabled) {
-            return;
-          }
-          this.thumbnailButton.classList.remove('toggled');
-          this.outlineButton.classList.add('toggled');
-          this.attachmentsButton.classList.remove('toggled');
-          this.annotationsButton.classList.remove('toggled');
-          this.editAnnotationsButton.classList.remove('toggled');
-
-          this.thumbnailView.classList.add('hidden');
-          this.outlineView.classList.remove('hidden');
-          this.attachmentsView.classList.add('hidden');
-          this.annotationsView.classList.add('hidden');
-          this.editAnnotationsView.classList.add('hidden');
-          break;
-          
-        case SidebarView.ATTACHMENTS:
-          if (this.attachmentsButton.disabled) {
-            return;
-          }
-          this.thumbnailButton.classList.remove('toggled');
-          this.outlineButton.classList.remove('toggled');
-          this.attachmentsButton.classList.add('toggled');
-          this.annotationsButton.classList.remove('toggled');
-          this.editAnnotationsButton.classList.remove('toggled');
-
-          this.thumbnailView.classList.add('hidden');
-          this.outlineView.classList.add('hidden');
-          this.attachmentsView.classList.remove('hidden');
-          this.annotationsView.classList.add('hidden');
-          this.editAnnotationsView.classList.add('hidden');
-          break;
-          
-        case SidebarView.ANNO: // paf dai
-          this.thumbnailButton.classList.remove('toggled');
-          this.outlineButton.classList.remove('toggled');
-          this.attachmentsButton.classList.remove('toggled');
-          this.annotationsButton.classList.add('toggled');
-          this.editAnnotationsButton.classList.remove('toggled');
-
-          this.thumbnailView.classList.add('hidden');
-          this.outlineView.classList.add('hidden');
-          this.attachmentsView.classList.add('hidden');
-          this.annotationsView.classList.remove('hidden');
-          this.editAnnotationsView.classList.add('hidden');
-          
-          break;
-          
-        case SidebarView.EDIT_ANNO: // paf dai
-            this.thumbnailButton.classList.remove('toggled');
-            this.outlineButton.classList.remove('toggled');
-            this.attachmentsButton.classList.remove('toggled');
-            this.annotationsButton.classList.remove('toggled');
-            this.editAnnotationsButton.classList.add('toggled');
-
-            this.thumbnailView.classList.add('hidden');
-            this.outlineView.classList.add('hidden');
-            this.attachmentsView.classList.add('hidden');
-            this.annotationsView.classList.add('hidden');
-            this.editAnnotationsView.classList.remove('hidden');
-            
-       break;
-          
-          
-        default:
-          console.error('PDFSidebar_switchView: "' + view +
-                        '" is an unsupported value.');
-          return;
-      }
-      // Update the active view *after* it has been validated above,
-      // in order to prevent setting it to an invalid state.
-      this.active = view | 0;
-
-      if (forceOpen && !this.isOpen) {
-        this.open();
-        // NOTE: `this.open` will trigger rendering, and dispatch the event.
-        return;
-      }
-      if (shouldForceRendering) {
-        this._forceRendering();
-      }
-      if (isViewChanged) {
-        this._dispatchEvent();
-      }
+    	
+    	console.log('Switch to view: ' + view);
+      
+    	if (view === 'none') {
+    		this.close();
+    		return;
+    	}
+    	
+		var isViewChanged = (view !== this.active);
+		var shouldForceRendering = false;
+	
+		var buttons = [
+			'thumbnailButton',
+			'outlineButton',
+			'attachmentsButton',
+			'annotationsButton',
+			'editAnnotationsButton'
+		];
+		var views = [
+			'thumbnailView',
+			'outlineView',
+			'attachmentsView',
+			'annotationsView',
+			'editAnnotationsView'
+		];
+		
+		if ((typeof this[view + 'Button'] === "undefined") || (this[view + 'Button'].disabled)) {
+			return;
+		}
+		
+		for (var i = 0; i < buttons.length; i++) {
+			this[buttons[i]].classList.remove('toggled');
+		}
+		for (var i = 0; i < views.length; i++) {
+			this[views[i]].classList.add('hidden');
+		}
+		
+		this[view + 'Button'].classList.add('toggled');
+		this[view + 'View'].classList.remove('hidden');
+		
+		switch (view) {
+			case 'thumbnail':
+				if (this.isOpen && isViewChanged) {
+					this._updateThumbnailViewer();
+					shouldForceRendering = true;
+				}
+			break;
+			
+			case 'annotations':
+				this.annoViewer.map.invalidateSize();
+			break;
+		}
+    
+		// Update the active view *after* it has been validated above,
+		// in order to prevent setting it to an invalid state.
+		this.active = view || 'none';
+	
+		if (forceOpen && !this.isOpen) {
+			this.open();
+			// NOTE: `this.open` will trigger rendering, and dispatch the event.
+			return;
+		}
+		if (shouldForceRendering) {
+			this._forceRendering();
+		}
+		if (isViewChanged) {
+			this._dispatchEvent();
+		}
     },
 
     open: function PDFSidebar_open() {
@@ -295,7 +244,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
       this.outerContainer.classList.add('sidebarMoving');
       this.outerContainer.classList.add('sidebarOpen');
 
-      if (this.active === SidebarView.THUMBS) {
+      if (this.active === 'thumbnail') {
         this._updateThumbnailViewer();
       }
       this._forceRendering();
@@ -379,26 +328,26 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
       // Buttons for switching views.
       self.thumbnailButton.addEventListener('click', function() {
-        self.switchView(SidebarView.THUMBS);
+        self.switchView('thumbnail');
       });
 
       self.outlineButton.addEventListener('click', function() {
-        self.switchView(SidebarView.OUTLINE);
+        self.switchView('outline');
       });
       self.outlineButton.addEventListener('dblclick', function() {
         self.pdfOutlineViewer.toggleOutlineTree();
       });
 
       self.attachmentsButton.addEventListener('click', function() {
-        self.switchView(SidebarView.ATTACHMENTS);
+        self.switchView('attachments');
       });
 
       self.annotationsButton.addEventListener('click', function() { // paf dai
-          self.switchView(SidebarView.ANNO);
+          self.switchView('annotations');
       });
       
       self.editAnnotationsButton.addEventListener('click', function() { // paf dai
-          self.switchView(SidebarView.EDIT_ANNO);
+          self.switchView('editAnnotations');
       });
       
       // Disable/enable views.
@@ -406,8 +355,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
         var outlineCount = e.outlineCount;
 
         self.outlineButton.disabled = !outlineCount;
-        if (!outlineCount && self.active === SidebarView.OUTLINE) {
-          self.switchView(SidebarView.THUMBS);
+        if (!outlineCount && self.active === 'outline') {
+          self.switchView('thumbnail');
         }
       });
 
@@ -415,8 +364,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
         var attachmentsCount = e.attachmentsCount;
 
         self.attachmentsButton.disabled = !attachmentsCount;
-        if (!attachmentsCount && self.active === SidebarView.ATTACHMENTS) {
-          self.switchView(SidebarView.THUMBS);
+        if (!attachmentsCount && self.active === 'attachments') {
+          self.switchView('thumbnail');
         }
       });
 
@@ -432,6 +381,6 @@ var PDFSidebar = (function PDFSidebarClosure() {
   return PDFSidebar;
 })();
 
-exports.SidebarView = SidebarView;
+
 exports.PDFSidebar = PDFSidebar;
 }));

@@ -196,7 +196,7 @@ var PDFViewerApplication = {
   pageRotation: 0,
   isInitialViewSet: false,
   animationStartedPromise: null,
-  preferenceSidebarViewOnLoad: SidebarView.NONE,
+  preferenceSidebarViewOnLoad: 'none',
   preferencePdfBugEnabled: false,
   preferenceShowPreviousViewOnLoad: true,
   preferenceDefaultZoomValue: '',
@@ -962,23 +962,20 @@ var PDFViewerApplication = {
 
       store.initializedPromise.then(function resolved() {
         var storedHash = null, sidebarView = null;
-        if (self.preferenceShowPreviousViewOnLoad &&
-            store.get('exists', false)) {
+        if (self.preferenceShowPreviousViewOnLoad && store.get('exists', false)) {
           var pageNum = store.get('page', '1');
-          var zoom = self.preferenceDefaultZoomValue ||
-                     store.get('zoom', DEFAULT_SCALE_VALUE);
+          var zoom = self.preferenceDefaultZoomValue || store.get('zoom', DEFAULT_SCALE_VALUE);
           var left = store.get('scrollLeft', '0');
           var top = store.get('scrollTop', '0');
 
-          storedHash = 'page=' + pageNum + '&zoom=' + zoom + ',' +
-                       left + ',' + top;
+          storedHash = 'page=' + pageNum + '&zoom=' + zoom + ',' + left + ',' + top;
 
-          sidebarView = store.get('sidebarView', SidebarView.NONE);
+          sidebarView = store.get('sidebarView', 'none');
+
         } else if (self.preferenceDefaultZoomValue) {
           storedHash = 'page=1&zoom=' + self.preferenceDefaultZoomValue;
         }
-        self.setInitialView(storedHash,
-          { scale: scale, sidebarView: sidebarView });
+        self.setInitialView(storedHash,{ scale: scale, sidebarView: sidebarView });
 
         initialParams.hash = storedHash;
 
@@ -1124,9 +1121,6 @@ var PDFViewerApplication = {
 
   setInitialView: function pdfViewSetInitialView(storedHash, options) {
 
-	  
-	  
-	  
 	var scale = options && options.scale;
     var sidebarView = options && options.sidebarView;
 
@@ -1136,8 +1130,7 @@ var PDFViewerApplication = {
     // ensure that the 'pageNumber' element displays the correct value.
     this.appConfig.toolbar.pageNumber.value = this.pdfViewer.currentPageNumber;
 
-    this.pdfSidebar.setInitialView(this.preferenceSidebarViewOnLoad ||
-                                   (sidebarView | 0));
+    this.pdfSidebar.setInitialView(this.preferenceSidebarViewOnLoad || (sidebarView || 'none'));
 
     if (this.initialDestination) {
       this.pdfLinkService.navigateTo(this.initialDestination);
@@ -1479,7 +1472,7 @@ function webViewerInitialized() {
       PDFJS.cMapPacked = false;
     }
 //#endif
-console.log('HASH', hashParams);
+
     if ('locale' in hashParams) {
     
       PDFJS.locale = hashParams['locale'];
@@ -1734,29 +1727,31 @@ function webViewerPageMode(e) {
   // Handle the 'pagemode' hash parameter, see also `PDFLinkService_setHash`.
   var mode = e.mode, view;
   switch (mode) {
+  	case 'thumbnail':
+  	case 'thumbnails':
     case 'thumbs':
-      view = SidebarView.THUMBS;
+      view = 'thumbnail';
       break;
     case 'bookmarks':
     case 'outline':
-      view = SidebarView.OUTLINE;
+      view = 'outline';
       break;
     case 'attachments':
-      view = SidebarView.ATTACHMENTS;
+      view = 'attachments';
       break;
     case 'annotations':
-        view = SidebarView.ANNOS;
+        view = 'annotations';
         break;
     case 'annotations-editor':
     case 'editAnnotations':
-        view = SidebarView.EDIT_ANNO;
+        view = 'editAnnotations';
         break;
     case 'none':
-      view = SidebarView.NONE;
+      view = SidebarView.none;
       break;
     default:
-      console.error('Invalid "pagemode" hash parameter: ' + mode);
-      return;
+    	view = mode;
+		break;
   }
   PDFViewerApplication.pdfSidebar.switchView(view, /* forceOpen = */ true);
 }

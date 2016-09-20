@@ -823,7 +823,7 @@ html[dir='ltr'] .splitToolbarButton:last-child,
 html[dir='ltr'] .toolbarButton:last-child,
 html[dir='rtl'] .splitToolbarButton:first-child,
 html[dir='rtl'] .toolbarButton:first-child {
-  margin-right: 4px;
+  margin-right: 8px !important;
 }
 
 .toolbarButtonSpacer {
@@ -1201,10 +1201,9 @@ a:focus:hover > .thumbnail > .thumbnailSelectionRing,
 }
 
 
-#outlineView.outlineWithDeepNesting .panel-body {
-  padding-left: 20px;
-}
 
+
+html[dir='rtl']
 
 html[dir='ltr'] .outlineWithDeepNesting > .outlineItem,
 html[dir='ltr'] .outlineItem > .outlineItems {
@@ -1262,20 +1261,32 @@ html[dir='rtl'] .attachmentsItem > button {
   color: hsla(0,0%,100%,.5);
 }
 .outlineItemToggler::before {
-  content: "\E250";
+
+  content: "\E252";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   position: absolute;
   font-size: 80%;
   padding: 1px;
+  margin-top: 2px;
   color: #5572A1;
 }
 html[dir='ltr'] .outlineItemToggler.outlineItemsHidden::before {
-    content: "\E252";
+      content: "\E250";
 }
 html[dir='rtl'] .outlineItemToggler.outlineItemsHidden::before {
    content: "\E251";
 }
+
+
+html[dir='ltr'] .outlineWithDeepNesting .outlineItem {
+	margin-left: 12px;
+}
+
+html[dir='rtl'] .outlineWithDeepNesting .outlineItem {
+	margin-right: 10px;
+}
+
 .outlineItemToggler.outlineItemsHidden ~ .outlineItems {
   display: none;
 }
@@ -1289,7 +1300,7 @@ html[dir='ltr'] .outlineItemToggler::before {
   right: 4px;
 }
 html[dir='rtl'] .outlineItemToggler::before {
-  left: 4px;
+  left: -2px;
 }
 
 .outlineItemToggler:hover,
@@ -1747,6 +1758,11 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .pull-right {
     float: right !important;
 }
+
+html[dir='rtl'] .pull-right {
+    float: left !important;
+}
+
 .badge {
     display: inline-block;
     min-width: 10px;

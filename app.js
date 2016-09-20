@@ -1479,8 +1479,9 @@ function webViewerInitialized() {
       PDFJS.cMapPacked = false;
     }
 //#endif
-
+console.log('HASH', hashParams);
     if ('locale' in hashParams) {
+    
       PDFJS.locale = hashParams['locale'];
     }
 

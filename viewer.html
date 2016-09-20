@@ -69,11 +69,12 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 	<link rel="stylesheet" href="inc/leaflet/leaflet.css">
 
-
   </head>
 
   <body tabindex="1" class="loadingInProgress">
-    <div id="outerContainer">
+    <div id="outerContainer" class="embeddedViewer">
+    	<script>if (window === window.top) {document.getElementById('outerContainer').classList.remove("embeddedViewer") }</script>
+    
 
       <div id="sidebarContainer">
         <div id="toolbarSidebar">
@@ -233,13 +234,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span data-l10n-id="bookmark_label">Current View</span>
                 </a>
 
-                <button id="buttonPaf" class="toolbarButton" title="sssss" tabindex="53">
-              		<span>sssss</span>
+                <button id="buttonPaf" class="toolbarButton" title="Togggle Annotations" tabindex="36">
+              		<span>Togggle Annotations</span>
             	</button>
 
                 <div class="verticalToolbarSeparator hiddenSmallView"></div>
 
-                <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="36" data-l10n-id="tools">
+                <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="37" data-l10n-id="tools">
                   <span data-l10n-id="tools_label">Tools</span>
                 </button>          
 

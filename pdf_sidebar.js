@@ -161,6 +161,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
         // since `this.switchView` dispatched the event if the view changed.
         this._dispatchEvent();
       }
+           
     },
 
     /**

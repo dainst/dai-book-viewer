@@ -206,6 +206,7 @@ var PDFViewerApplication = {
 
   // called once when the document is loaded
   initialize: function pdfViewInitialize(appConfig) {
+
     configure(pdfjsLib.PDFJS);
     this.appConfig = appConfig;
 
@@ -224,8 +225,6 @@ var PDFViewerApplication = {
 
     var downloadManager = this.externalServices.createDownloadManager();
     this.downloadManager = downloadManager;
-
-
     
     var container = appConfig.mainContainer;
     var viewer = appConfig.viewerContainer;
@@ -1124,7 +1123,11 @@ var PDFViewerApplication = {
   },
 
   setInitialView: function pdfViewSetInitialView(storedHash, options) {
-    var scale = options && options.scale;
+
+	  
+	  
+	  
+	var scale = options && options.scale;
     var sidebarView = options && options.sidebarView;
 
     this.isInitialViewSet = true;
@@ -1424,7 +1427,10 @@ function webViewerInitialized() {
 //appConfig.toolbar.openFile.setAttribute('hidden', 'true');
 //appConfig.secondaryToolbar.openFileButton.setAttribute('hidden', 'true');
 //#endif
+  
 
+  
+  
   var PDFJS = pdfjsLib.PDFJS;
 
 //#if !PRODUCTION
@@ -1473,11 +1479,11 @@ function webViewerInitialized() {
       PDFJS.cMapPacked = false;
     }
 //#endif
-//#if !(FIREFOX || MOZCENTRAL)
+
     if ('locale' in hashParams) {
       PDFJS.locale = hashParams['locale'];
     }
-//#endif
+
     if ('textlayer' in hashParams) {
       switch (hashParams['textlayer']) {
         case 'off':
@@ -1497,6 +1503,7 @@ function webViewerInitialized() {
       var enabled = pdfBug.split(',');
       waitForBeforeOpening.push(loadAndEnablePDFBug(enabled));
     }
+    
   }
 
 //#if !(FIREFOX || MOZCENTRAL)

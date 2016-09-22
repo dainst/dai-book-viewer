@@ -69,8 +69,7 @@ function getViewerConfiguration() {
       lastPageButton: document.getElementById('lastPage'),
       pageRotateCwButton: document.getElementById('pageRotateCw'),
       pageRotateCcwButton: document.getElementById('pageRotateCcw'),
-      toggleHandToolButton: document.getElementById('toggleHandTool'),
-      documentPropertiesButton: document.getElementById('documentProperties'),
+      toggleHandToolButton: document.getElementById('toggleHandTool')
     },
     fullscreen: {
       contextFirstPage: document.getElementById('contextFirstPage'),
@@ -89,12 +88,14 @@ function getViewerConfiguration() {
       attachmentsButton: document.getElementById('viewAttachments'),
       annotationsButton: document.getElementById('dbv-viewAnnotations'), // dai paf
       editAnnotationsButton: document.getElementById('dbv-editAnnotations'), // dai paf
+      infoButton: document.getElementById('dbv-info'), // dai paf
       // Views
       thumbnailView: document.getElementById('thumbnailView'),
       outlineView: document.getElementById('outlineView'),
       attachmentsView: document.getElementById('attachmentsView'),
       annotationsView: document.getElementById('dbv-annotationsView'),// dai paf
       editAnnotationsView: document.getElementById('dbv-editAnnotationsView'),// dai paf
+      infoView: document.getElementById('dbv-infoView'),// dai paf
     },
     findBar: {
       bar: document.getElementById('findbar'),
@@ -117,9 +118,6 @@ function getViewerConfiguration() {
       cancelButton: document.getElementById('passwordCancel')
     },
     documentProperties: {
-      overlayName: 'documentPropertiesOverlay',
-      container: document.getElementById('documentPropertiesOverlay'),
-      closeButton: document.getElementById('documentPropertiesClose'),
       fields: {
         'fileName': document.getElementById('fileNameField'),
         'fileSize': document.getElementById('fileSizeField'),
@@ -142,6 +140,13 @@ function getViewerConfiguration() {
       errorMoreInfo: document.getElementById('errorMoreInfo'),
       moreInfoButton: document.getElementById('errorShowMore'),
       lessInfoButton: document.getElementById('errorShowLess'),
+    },
+    dbvInfo: {
+    	annoInfoTable: document.getElementById('dbv-info-annoInfoTable'),
+    	dlAnnotationsJson: document.getElementById('dbv-info-dlAnnotationsJson'),
+    	dlAnnotationsPdf: document.getElementById('dbv-info-dlAnnotationsPdf'),
+    	version: document.getElementById('dbv-info-version'),
+    	pdfjsVersion: document.getElementById('dbv-info-pdfjsVersion')
     },
     printContainer: document.getElementById('printContainer'),
     openFileInputName: 'fileInput',

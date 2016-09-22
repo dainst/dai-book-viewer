@@ -33,7 +33,8 @@
      'pdfjs-dbv/inc/leaflet/leaflet', 
      'pdfjs-dbv/dbv_anno_registry',
      'pdfjs-dbv/dbv_anno_editor',
-     'pdfjs-dbv/dbv_anno_sidebar'],
+     'pdfjs-dbv/dbv_anno_sidebar',
+     'pdfjs-dbv/dbv_anno_info'],
      factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('./ui_utils.js'), require('./download_manager.js'),
@@ -51,7 +52,8 @@
       require('inc/leaflet/leaflet.js'), 
       require('./dbv_anno_registry.js'),
       require('./dbv_anno_editor.js'),
-      require('./dbv_anno_sidebar.js'));
+      require('./dbv_anno_sidebar.js'),
+      require('./dbv_anno_info.js'));
   } else {
     factory((root.pdfjsWebApp = {}), root.pdfjsWebUIUtils,
       root.pdfjsWebDownloadManager, root.pdfjsWebPDFHistory,
@@ -65,7 +67,7 @@
       root.pdfjsWebPDFAttachmentViewer, root.pdfjsWebPDFFindController,
       root.pdfjsWebPDFFindBar, root.pdfjsWebDOMEvents, root.pdfjsWebPDFJS,
       root.pdfjsWebAnnoViewer, root.devnull, root.pdfjsWebAnnoRegistry,
-      root.pdfjsWebAnnoEditor, root.pdfjsWebAnnoSidebar);
+      root.pdfjsWebAnnoEditor, root.pdfjsWebAnnoSidebar, root.pdfjsWebAnnoInfo);
   }
 }(this, function (exports, uiUtilsLib, downloadManagerLib, pdfHistoryLib,
                   preferencesLib, pdfSidebarLib, viewHistoryLib,
@@ -75,9 +77,14 @@
                   pdfOutlineViewerLib, overlayManagerLib,
                   pdfAttachmentViewerLib, pdfFindControllerLib, pdfFindBarLib,
                   domEventsLib, pdfjsLib,                   
-                  annoViewerLib, leaflet, annoRegistryLib, annoEditorLib, annoSidebarLib
+                  annoViewerLib, leaflet, annoRegistryLib, annoEditorLib, annoSidebarLib,
+                  annoInfoLib
 ) {
 
+var PDFJS_VERSION = "1.5";
+var DBV_VERSION = "0.5";
+	
+	
 var UNKNOWN_SCALE = uiUtilsLib.UNKNOWN_SCALE;
 var DEFAULT_SCALE_VALUE = uiUtilsLib.DEFAULT_SCALE_VALUE;
 var ProgressBar = uiUtilsLib.ProgressBar;
@@ -111,6 +118,7 @@ var annoViewer = annoViewerLib.AnnoViewer;
 var annoEditor = annoEditorLib.AnnoEditor;
 var annoRegistry = annoRegistryLib.AnnoRegistry;
 var annoSidebar = annoSidebarLib.AnnoSidebar;
+var annoInfo = annoInfoLib.AnnoInfo;
 
 var DEFAULT_SCALE_DELTA = 1.1;
 var MIN_SCALE = 0.25;
@@ -134,6 +142,7 @@ function configure(PDFJS) {
 //PDFJS.cMapPacked = true;
 //#endif
 }
+
 
 var DefaultExernalServices = {
   updateFindControlState: function (data) {},
@@ -284,24 +293,7 @@ var PDFViewerApplication = {
     this.pdfViewer.setFindController(this.findController);
 
     
-    // paf dai
-    this.annoViewer = new annoViewer({ 
-        pdfViewer: this.pdfViewer,
-        annoRegistry: this.annoRegistry,
-        annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView})
-    });
-    //this.annoViewer.setViewer(this.pdfViewer);
-    this.annoEditor = new annoEditor({
-        findController: this.findController,
-        annoRegistry: this.annoRegistry,
-        annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
-    });
-    
-    this.pdfViewer.setDbvControllers({
-    	annoViewer: this.annoViewer,
-    	annoRegistry: this.annoRegistry
-    });
-    
+
     
     // FIXME better PDFFindBar constructor parameters
     var findBarConfig = Object.create(appConfig.findBar);
@@ -316,8 +308,34 @@ var PDFViewerApplication = {
       eventBus: this.eventBus,
     });
 
-    this.pdfDocumentProperties =
-      new PDFDocumentProperties(appConfig.documentProperties);
+    this.pdfDocumentProperties = new PDFDocumentProperties(appConfig.documentProperties);
+        
+    // paf dai
+    this.annoViewer = new annoViewer({ 
+        pdfViewer: this.pdfViewer,
+        annoRegistry: this.annoRegistry,
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView})
+    });
+    //this.annoViewer.setViewer(this.pdfViewer);
+    this.annoEditor = new annoEditor({
+        findController: this.findController,
+        annoRegistry: this.annoRegistry,
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
+    });
+    this.annoInfo = new annoInfo({
+        annoRegistry: this.annoRegistry,
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.infoView}),
+        pdfDocumentProperties: this.pdfDocumentProperties,
+        elements: appConfig.dbvInfo,
+    	dbvVersion: DBV_VERSION,
+    	pdfjsVersion: PDFJS_VERSION
+    });
+    
+    this.pdfViewer.setDbvControllers({
+    	annoViewer: this.annoViewer,
+    	annoRegistry: this.annoRegistry
+    });
+    
 
     this.secondaryToolbar =
       new SecondaryToolbar(appConfig.secondaryToolbar, eventBus);
@@ -363,6 +381,7 @@ var PDFViewerApplication = {
 
     var self = this;
     var PDFJS = pdfjsLib.PDFJS;
+    
     var initializedPromise = Promise.all([
       Preferences.get('enableWebGL').then(function resolved(value) {
         PDFJS.disableWebGL = !value;
@@ -621,12 +640,7 @@ var PDFViewerApplication = {
    *                      is opened.
    */
   open: function pdfViewOpen(file, args) {
-	  
-	  // paf dai
-	  // @ TODO what if file is binary data...
-	  console.log('try to get annotations!', file, args, this.annoViewer);
-	  this.annoViewer.load(file);
-	  this.annoEditor.load();
+
 	  
     var scale = 0;
     if (arguments.length > 2 || typeof args === 'number') {
@@ -656,6 +670,8 @@ var PDFViewerApplication = {
         return this.open(file, args);
       }.bind(this));
     }
+    
+
 
     var parameters = Object.create(null);
     if (typeof file === 'string') { // URL
@@ -693,6 +709,11 @@ var PDFViewerApplication = {
 
     var result = loadingTask.promise.then(
       function getDocumentCallback(pdfDocument) {
+    	  
+    	// @ TODO what if file is binary data...
+    	console.log('RESC try to get annotations!', parameters);
+    	self.annoViewer.load(parameters.filename || parameters.url);
+    	  
         self.load(pdfDocument, scale);
       },
       function getDocumentError(exception) {
@@ -932,6 +953,12 @@ var PDFViewerApplication = {
 
     this.pdfThumbnailViewer.setDocument(pdfDocument);
 
+	  // paf dai
+    	console.log('DBV initalize Editor & Info');
+	  this.annoEditor.load(); // TODO check editor mode
+	  this.annoInfo.load();
+    
+    
     firstPagePromise.then(function(pdfPage) {
       downloadedPromise.then(function () {
         self.eventBus.dispatch('documentload', {source: self});
@@ -1324,7 +1351,6 @@ var PDFViewerApplication = {
     eventBus.on('lastpage', webViewerLastPage);
     eventBus.on('rotatecw', webViewerRotateCw);
     eventBus.on('rotateccw', webViewerRotateCcw);
-    eventBus.on('documentproperties', webViewerDocumentProperties);
     eventBus.on('find', webViewerFind);
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
     
@@ -1612,7 +1638,7 @@ function webViewerInitialized() {
   });
 }
 
-//#if GENERIC
+
 function webViewerOpenFileViaURL(file) {
   if (file && file.lastIndexOf('file:', 0) === 0) {
     // file:-scheme. Load the contents in the main thread because QtWebKit
@@ -1638,18 +1664,7 @@ function webViewerOpenFileViaURL(file) {
     PDFViewerApplication.open(file);
   }
 }
-//#elif (FIREFOX || MOZCENTRAL || CHROME)
-//function webViewerOpenFileViaURL(file) {
-//  PDFViewerApplication.setTitleUsingUrl(file);
-//  PDFViewerApplication.initPassiveLoading();
-//}
-//#else
-//function webViewerOpenFileURL(file) {
-//  if (file) {
-//    throw new Error('Not implemented: webViewerOpenFileURL');
-//  }
-//}
-//#endif
+
 
 function webViewerPageRendered(e) {
   var pageNumber = e.pageNumber;
@@ -1898,16 +1913,15 @@ window.addEventListener('change', function webViewerChange(evt) {
 function webViewerFileInputChange(e) {
   var file = e.fileInput.files[0];
 
-  if (!pdfjsLib.PDFJS.disableCreateObjectURL &&
-      typeof URL !== 'undefined' && URL.createObjectURL) {
-    PDFViewerApplication.open(URL.createObjectURL(file));
+  if (!pdfjsLib.PDFJS.disableCreateObjectURL && typeof URL !== 'undefined' && URL.createObjectURL) {
+    PDFViewerApplication.open(URL.createObjectURL(file), {'filename': file.name});
   } else {
     // Read the local file into a Uint8Array.
     var fileReader = new FileReader();
     fileReader.onload = function webViewerChangeFileReaderOnload(evt) {
       var buffer = evt.target.result;
       var uint8Array = new Uint8Array(buffer);
-      PDFViewerApplication.open(uint8Array);
+      PDFViewerApplication.open(uint8Array, {'filename': file.name}); // TODO find out what this is and provide real file name
     };
     fileReader.readAsArrayBuffer(file);
   }
@@ -1998,9 +2012,8 @@ function webViewerRotateCw() {
 function webViewerRotateCcw() {
   PDFViewerApplication.rotatePages(-90);
 }
-function webViewerDocumentProperties() {
-  PDFViewerApplication.pdfDocumentProperties.open();
-}
+
+
 
 function webViewerFind(e) {
   PDFViewerApplication.findController.executeCommand('find' + e.type, {

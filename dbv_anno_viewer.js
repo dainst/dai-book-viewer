@@ -58,10 +58,12 @@
 			 */
 			load: function AnnoViewerLoad(file) { // @ TODO move to registry!? 
 				var self = this;		
-				this.annoRegistry.successFn 	= function(data) {return self.buildBlocks(data)};
+				this.annoRegistry.onGetAnnotations(function(data) {return self.buildBlocks(data)});
 				this.annoRegistry.errorFn 		= function(e) {return self.$.displayError(e)};
 				this.annoRegistry.setFilename(file);
 				this.annoRegistry.getAnnotations(['testdata', 'digest_' + this.annoRegistry.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
+				
+				this.$.clear();
 				
 				this.annotationPopup = document.getElementById('dbv-ao'); // @ TODO do better blah
 				document.getElementsByTagName('html')[0].addEventListener('click', function(e) {
@@ -82,7 +84,7 @@
 			 * 
 			 * @param data
 			 */
-			buildBlocks: function(data) {				
+			buildBlocks: function(data) {
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
 				this.block('places', 'Places', 'map-marker', data.locations);
 				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false);

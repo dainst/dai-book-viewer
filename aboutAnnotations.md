@@ -65,6 +65,32 @@ So let's understand our annotation as a search query an encode it like this:
 
 
 	  
+# Metadata
+
+known fields
+
+"meta": {
+
+	"annotation_date"			1474472287087
+	"annotation_creator"		'NLP Pipeline 1.0'
+	"annotation_owner"		'DAI'		
+	
+	"file_url"					''
+	"publication_zenon_id"					''
+	
+	"publication_language"
+	"publication_journal"
+	"publication_year"
+
+
+
+} 
+
+
+
+
+
+
 
 
 

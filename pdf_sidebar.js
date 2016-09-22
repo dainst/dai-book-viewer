@@ -90,12 +90,14 @@ var PDFSidebar = (function PDFSidebarClosure() {
     this.attachmentsButton = options.attachmentsButton;
     this.annotationsButton = options.annotationsButton;
     this.editAnnotationsButton = options.editAnnotationsButton;
+    this.infoButton = options.infoButton;
 
     this.thumbnailView = options.thumbnailView;
     this.outlineView = options.outlineView;
     this.attachmentsView = options.attachmentsView;
     this.annotationsView = options.annotationsView;
     this.editAnnotationsView = options.editAnnotationsView;
+    this.infoView = options.infoView;
 
     this._addEventListeners();
   }
@@ -165,7 +167,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
      */
     switchView: function PDFSidebar_switchView(view, forceOpen) {
     	
-    	console.log('Switch to view: ' + view);
+    	//console.log('Switch to view: ' + view);
       
     	if (view === 'none') {
     		this.close();
@@ -175,32 +177,25 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		var isViewChanged = (view !== this.active);
 		var shouldForceRendering = false;
 	
-		var buttons = [
-			'thumbnailButton',
-			'outlineButton',
-			'attachmentsButton',
-			'annotationsButton',
-			'editAnnotationsButton'
+		var tabs = [
+			'thumbnail',
+			'outline',
+			'attachments',
+			'annotations',
+			'editAnnotations',
+			'info'
 		];
-		var views = [
-			'thumbnailView',
-			'outlineView',
-			'attachmentsView',
-			'annotationsView',
-			'editAnnotationsView'
-		];
+
 		
 		if ((typeof this[view + 'Button'] === "undefined") || (this[view + 'Button'].disabled)) {
 			return;
 		}
 		
-		for (var i = 0; i < buttons.length; i++) {
-			this[buttons[i]].classList.remove('toggled');
+		for (var i = 0; i < tabs.length; i++) {
+			this[tabs[i] + 'Button'].classList.remove('toggled');
+			this[tabs[i] + 'View'].classList.add('hidden');
 		}
-		for (var i = 0; i < views.length; i++) {
-			this[views[i]].classList.add('hidden');
-		}
-		
+
 		this[view + 'Button'].classList.add('toggled');
 		this[view + 'View'].classList.remove('hidden');
 		
@@ -213,7 +208,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
 			break;
 			
 			case 'annotations':
-				this.annoViewer.map.invalidateSize();
+				this.annoViewer.refreshMap();
 			break;
 		}
     
@@ -348,6 +343,10 @@ var PDFSidebar = (function PDFSidebarClosure() {
       
       self.editAnnotationsButton.addEventListener('click', function() { // paf dai
           self.switchView('editAnnotations');
+      });
+      
+      self.infoButton.addEventListener('click', function() { // paf dai
+          self.switchView('info');
       });
       
       // Disable/enable views.

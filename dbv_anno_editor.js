@@ -124,8 +124,9 @@
 	
 				
 				// find page number
-				function hasClass(el, className) {console.log(el);
-				return el ? ((el.classList) ? el.classList.contains(className): new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className)) : false;}
+				function hasClass(el, className) {
+					return el ? ((el.classList) ? el.classList.contains(className): new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className)) : false;
+				}
 				var parent = e.target.parentNode;
 				while (parent && !hasClass(parent, 'page')) {parent = parent.parentNode;}
 				if (parent) {

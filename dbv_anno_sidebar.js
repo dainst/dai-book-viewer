@@ -210,6 +210,29 @@
 				
 			},
 			
+			htmlTableRow: function(content, rowdata, coldata, appendTo) {
+				
+				if (typeof content !== "object") {
+					return;
+				}
+								
+				var tr = this.htmlElement('tr', rowdata);
+				
+				for (var i = 0; i < content.length; i++) {
+					tr.appendChild(this.htmlElement('td', coldata, content[i]));
+				}
+				
+				if (typeof appendTo !== "undefined") {
+					appendTo.appendChild(tr);
+				} 
+				
+				return tr;
+			},
+			
+			clear: function() {
+				this.container.innerHTML = '';
+				this.blocks = {};
+			}
 			
 		};
 		

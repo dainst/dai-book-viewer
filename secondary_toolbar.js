@@ -82,9 +82,7 @@ var SecondaryToolbar = (function SecondaryToolbarClosure() {
       { element: options.pageRotateCcwButton, eventName: 'rotateccw',
         close: false },
       { element: options.toggleHandToolButton, eventName: 'togglehandtool',
-        close: true },
-      { element: options.documentPropertiesButton,
-        eventName: 'documentproperties', close: true },
+        close: true }
 
     ];
 

@@ -48,42 +48,35 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
    */
   function PDFDocumentProperties(options) {
     this.fields = options.fields;
-    this.overlayName = options.overlayName;
     this.container = options.container;
 
     this.rawFileSize = 0;
     this.url = null;
     this.pdfDocument = null;
 
-    // Bind the event listener for the Close button.
-    if (options.closeButton) {
-      options.closeButton.addEventListener('click', this.close.bind(this));
-    }
 
     this.dataAvailablePromise = new Promise(function (resolve) {
-      this.resolveDataAvailable = resolve;
+        this._getProperties();
+        this.resolveDataAvailable = resolve;
     }.bind(this));
 
-    OverlayManager.register(this.overlayName, this.container,
-                            this.close.bind(this));
   }
 
   PDFDocumentProperties.prototype = {
     /**
      * Open the document properties overlay.
      */
-    open: function PDFDocumentProperties_open() {
-      Promise.all([OverlayManager.open(this.overlayName),
-                   this.dataAvailablePromise]).then(function () {
-        this._getProperties();
-      }.bind(this));
+    refresh: function PDFDocumentProperties_open() {
+    	this.dataAvailablePromise.then(function () {
+    		this._getProperties();
+    	}.bind(this));
     },
 
     /**
      * Close the document properties overlay.
      */
     close: function PDFDocumentProperties_close() {
-      OverlayManager.close(this.overlayName);
+      
     },
 
     /**
@@ -108,10 +101,10 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
      * @param {Object} pdfDocument - A reference to the PDF document.
      * @param {string} url - The URL of the document.
      */
-    setDocumentAndUrl:
-        function PDFDocumentProperties_setDocumentAndUrl(pdfDocument, url) {
+    setDocumentAndUrl: function PDFDocumentProperties_setDocumentAndUrl(pdfDocument, url) {
       this.pdfDocument = pdfDocument;
       this.url = url;
+      this.reset();
       this.resolveDataAvailable();
     },
 
@@ -119,22 +112,22 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
      * @private
      */
     _getProperties: function PDFDocumentProperties_getProperties() {
-      if (!OverlayManager.active) {
-        // If the dialog was closed before dataAvailablePromise was resolved,
-        // don't bother updating the properties.
-        return;
-      }
+    	
+    	if (this.pdfDocument == null) {
+    		return;
+    	}
+    	
       // Get the file size (if it hasn't already been set).
-      this.pdfDocument.getDownloadInfo().then(function(data) {
+     this.pdfDocument.getDownloadInfo().then(function(data) { 
         if (data.length === this.rawFileSize) {
           return;
         }
         this.setFileSize(data.length);
         this._updateUI(this.fields['fileSize'], this._parseFileSize());
       }.bind(this));
-
+      
       // Get the document properties.
-      this.pdfDocument.getMetadata().then(function(data) {
+      this.pdfDocument.getMetadata().then(function(data) { 
         var content = {
           'fileName': getPDFFileNameFromURL(this.url),
           'fileSize': this._parseFileSize(),
@@ -149,12 +142,32 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
           'version': data.info.PDFFormatVersion,
           'pageCount': this.pdfDocument.numPages
         };
-
         // Show the properties in the dialog.
         for (var identifier in content) {
           this._updateUI(this.fields[identifier], content[identifier]);
         }
-      }.bind(this));
+      }.bind(this)); 
+    },
+    
+    reset: function() {
+    	var content = [
+	        'fileName',
+	        'fileSize',
+	        'title',
+	        'author',
+	        'subject',
+	        'keywords',
+	        'creationDate',
+	        'modificationDate',
+	        'creator',
+	        'producer',
+	        'version',
+	        'pageCount'
+    	];
+
+		for (var i = 0; i < content.length; i++) {			
+			this._updateUI(this.fields[content[i]], ' - ');
+		}
     },
 
     /**

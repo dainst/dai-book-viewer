@@ -32,14 +32,14 @@
 }(this, function (exports, pdfjsLib) {
 
 	var AnnoRegistry = (function AnnoRegistryClosure() {
-		function AnnoRegistry() {
-		};
+		function AnnoRegistry() {};
 	
 		AnnoRegistry.prototype = {
 				
 			/* file information */
 			url: '',
-			filename: '',			
+			filename: '',
+			metadata: {},
 			
 			/* registry for loaded annotations ordered by ID */
 			registry: {},
@@ -55,7 +55,7 @@
 			statusDiv: null,
 			
 			/* data loader functions */
-			successFn: function() {},
+			successFn: {},
 			errorFn: function() {},
 			
 			/**
@@ -75,7 +75,7 @@
 				var url = source + '/' + restparams.join('/');
 				var get = post ? 'POST': 'GET';
 				
-				console.log('fetch', get, url);
+				//console.log('fetch', get, url);
 				
 				this.setState('loading');
 				
@@ -88,9 +88,11 @@
 						} catch (e) {
 							return self.error(e, request);
 						}
-						console.log('ADS Success', data);
-						self.successFn(data);
+						console.log('ADS Success', data, self.successFn);
 						self.registerSet(data);
+						for (var fn in self.successFn) {
+							self.successFn[fn](data);
+						}
 						self.setState('ready');
 					} else {
 						return self.error('404 not found: ' + url, request);
@@ -101,16 +103,29 @@
 				};
 	
 				request.send();
-				
-				
+			},
+			
+			/**
+			 * registers a function, wich get called after data loading
+			 * @param fn
+			 */
+			onGetAnnotations: function(fn) {				
+				var name = 'fn__' + Object.keys(this.successFn).length;
+				this.successFn[fn.name || name] = fn;
 			},
 			
 			/**
 			 * registers a set
 			 * @param data
 			 */
-			registerSet: function(data) {
-				for (var type in data) {
+			registerSet: function(data) {			
+				for (var type in data) {					
+					// register metadata
+					if (type == 'meta') {						
+						this.metadata = data[type];
+						continue;
+					}
+					// register items	
 					for (var i = 0; i < data[type].items.length; i++) {
 						var annotation = data[type].items[i];
 						annotation.type = type;
@@ -188,6 +203,14 @@
 					div.classList.remove(st);
 				}
 				div.classList.add(state);
+			},
+			
+			reset: function() {
+				this.url = '';
+				this.filename = '';
+				this.state = 'wait';
+				this.registry = {};
+				this.metadata = {};
 			}
 				
 				

@@ -73,6 +73,13 @@ select {
   outline: none;
 }
 
+ul {
+    list-style-position: inside;
+}
+
+
+
+
 .hidden {
   display: none !important;
 }
@@ -259,7 +266,7 @@ html[dir='rtl'] #outerContainer.sidebarOpen > #mainContainer {
 #sidebarContent {
   top: 38px;
   bottom: 0;
-  overflow: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   position: absolute;
   width: 400px;
@@ -590,35 +597,6 @@ html[dir='rtl'] .splitToolbarButton > .toolbarButton {
 .splitToolbarButton:hover > .toolbarButton,
 .splitToolbarButton:focus > .toolbarButton {
   background-color: hsla(0,0%,0%,.12) !important;
-  /*.toolbarButton.toggled
-  background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  background-clip: padding-box;
-  border: 1px solid hsla(0,0%,0%,.35);
-  border-color: hsla(0,0%,0%,.32) hsla(0,0%,0%,.38) hsla(0,0%,0%,.42);
-  box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset,
-              0 0 1px hsla(0,0%,100%,.15) inset,
-              0 1px 0 hsla(0,0%,100%,.05);*//*
-  -webkit-transition-property: background-color, border-color, box-shadow;
-  -webkit-transition-duration: 150ms;
-  -webkit-transition-timing-function: ease;
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 150ms;
-  transition-timing-function: ease;
-
-}
-
-
-.splitToolbarButton > .toolbarButton:hover,
-.splitToolbarButton > .toolbarButton:focus,
-.dropdownToolbarButton:hover,
-.overlayButton:hover,
-.overlayButton:focus,
-.toolbarButton.textButton:hover,
-.toolbarButton.textButton:focus {
-  background-color: hsla(0,0%,0%,.2);
-/*  box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset,
-              0 0 1px hsla(0,0%,100%,.15) inset,
-              0 0 1px hsla(0,0%,0%,.05);*/
   z-index: 199;
 }
 .splitToolbarButton > .toolbarButton {
@@ -711,26 +689,15 @@ html[dir='rtl'] .dropdownToolbarButton {
 .overlayButton,
 .secondaryToolbarButton:hover,
 .secondaryToolbarButton:focus {
-  background-color: hsla(0,0%,0%,.12);/*
-  background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  background-clip: padding-box;
-  border: 1px solid hsla(0,0%,0%,.35);
-  border-color: hsla(0,0%,0%,.32) hsla(0,0%,0%,.38) hsla(0,0%,0%,.42);
-  /*box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset,
-              0 0 1px hsla(0,0%,100%,.15) inset,
-              0 1px 0 hsla(0,0%,100%,.05);*/
+  background-color: hsla(0,0%,0%,.12);
+
 }
 
 .toolbarButton:hover:active,
 .overlayButton:hover:active,
 .dropdownToolbarButton:hover:active,
 .secondaryToolbarButton:hover:active {
-  background-color: hsla(0,0%,0%,.2);/*
-  background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  border-color: hsla(0,0%,0%,.35) hsla(0,0%,0%,.4) hsla(0,0%,0%,.45);
-  box-shadow: 0 1px 1px hsla(0,0%,0%,.1) inset,
-              0 0 1px hsla(0,0%,0%,.2) inset,
-              0 1px 0 hsla(0,0%,100%,.05);*/
+  background-color: hsla(0,0%,0%,.2);
   -webkit-transition-property: background-color, border-color, box-shadow;
   -webkit-transition-duration: 10ms;
   -webkit-transition-timing-function: linear;
@@ -743,29 +710,13 @@ html[dir='rtl'] .dropdownToolbarButton {
 .splitToolbarButton.toggled > .toolbarButton.toggled,
 .secondaryToolbarButton.toggled {
   background-color: hsla(0,0%,0%,.3);
-  /*background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  border-color: hsla(0,0%,0%,.4) hsla(0,0%,0%,.45) hsla(0,0%,0%,.5);
-  box-shadow: 0 1px 1px hsla(0,0%,0%,.1) inset,
-              0 0 1px hsla(0,0%,0%,.2) inset,
-              0 1px 0 hsla(0,0%,100%,.05);*//*
-  -webkit-transition-property: background-color, border-color, box-shadow;
-  -webkit-transition-duration: 10ms;
-  -webkit-transition-timing-function: linear;
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 10ms;
-  transition-timing-function: linear;*/
-  
-  /*color: rgba(85, 114, 161, 1) !important;*/
+
 }
 
 .toolbarButton.toggled:hover:active,
 .splitToolbarButton.toggled > .toolbarButton.toggled:hover:active,
 .secondaryToolbarButton.toggled:hover:active {
   background-color: hsla(0,0%,0%,.4);
-  border-color: hsla(0,0%,0%,.4) hsla(0,0%,0%,.5) hsla(0,0%,0%,.55);
-  box-shadow: 0 1px 1px hsla(0,0%,0%,.2) inset,
-              0 0 1px hsla(0,0%,0%,.3) inset,
-              0 1px 0 hsla(0,0%,100%,.05);
 }
 
 .dropdownToolbarButton {
@@ -1180,7 +1131,7 @@ a:focus:hover > .thumbnail > .thumbnailSelectionRing,
 	background-color: rgba(185, 185, 185, 0.75);
 	color: hsla(0,0%,100%,1);
 }
-
+/*
 #annotationsView,
 #outlineView,
 #attachmentsView {
@@ -1194,16 +1145,12 @@ a:focus:hover > .thumbnail > .thumbnailSelectionRing,
   -moz-user-select: none;
 }
 */
-
+/*
 #thumbnailView {
 	margin-top: 14px;
-	background: red;
 }
+*/
 
-
-
-
-html[dir='rtl']
 
 html[dir='ltr'] .outlineWithDeepNesting > .outlineItem,
 html[dir='ltr'] .outlineItem > .outlineItems {
@@ -1400,6 +1347,8 @@ html[dir='rtl'] .outlineItemToggler::before {
 	border-radius: 7px;
 	box-shadow: 0 1px 70px 7px rgba(0, 0, 0, 0.7);
 }
+
+/* only password overlay is left */
 
 .dialog > .row {
   display: table-row;
@@ -1631,6 +1580,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-paperclip:before 	{content: "\E142"}
 .glyphicon-wrench:before 		{content: "\E136"}
 .glyphicon-th-large:before 		{content: "\e010"}
+.glyphicon-info:before 			{content: "\E086"}
+.glyphicon-download-alt:before 	{content: "\E025"}
 
 
 
@@ -1739,8 +1690,9 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .dbv-av-block a,
 .dbv-load-more,
 .dbv-av-block-entry-caption {
-	color: rgba(85, 114, 161, 1);
-	cursor: pointer
+	color: #223657;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 .dbv-av-block a:hover,
@@ -1858,6 +1810,57 @@ html[dir='rtl'] .pull-right {
 	cursor: pointer;
 }
 
+
+.panel-body table {
+	width: 100%
+}
+
+.panel-body table td {
+	width: 50%;
+}
+
+.panel-body table tbody tr:first-of-type td {
+	padding-top: 6px;
+	border-top: 1px dotted rgba(1,1,1,0.3);
+}
+
+.panel-body table tbody tr:last-of-type td {
+	padding-bottom: 6px;
+}
+
+.panel-body table tbody:first-of-type tr:first-of-type td {
+	padding-top: 0px;
+	border-top: none
+}
+
+.panel-body table tbody:last-of-type tr:last-of-type td {
+	padding-bottom: 0px;
+}
+
+.panel-body p {
+	margin-top: 4px;
+}
+
+.panel-body p:first-of-type {
+	margin-top: 0px;
+}
+
+.panel-body p.separator { /*, .panel-body table tr.separator td*/
+	margin-bottom: 2px;
+	margin-top: 8px;
+
+	border-top: 1px dotted rgba(1,1,1,0.3);
+}
+
+.panel-body .btn-group button {
+	position: relative;
+	background: rgba(0,0,0,0.1);
+	color: black;
+}
+
+.panel-body .btn-group button:hover {
+	color: #223657;
+}
 
 /* small screen */
 

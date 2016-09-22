@@ -31,6 +31,8 @@
   }
 }(this, function (exports, pdfjsLib, uiUtils) {
 
+	var mozL10n = uiUtils.mozL10n;
+	
 	/**
 	 * @class
 	 */
@@ -69,7 +71,7 @@
 				}
 				
 				var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
-				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id]}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
+				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
 				var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
 				var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
 				
@@ -84,7 +86,6 @@
 				}
 				
 				return blockbody;
-				
 			},
 			
 			/**
@@ -181,6 +182,12 @@
 						el.classList.add('active');
 					}
 				}
+				
+				// translate				
+				if ((typeof attr.data !== "undefined") && (typeof attr.data['l10n-id'] !== "undefined")) {
+					mozL10n.translate(el); 
+				}
+
 				return el;
 			},
 			

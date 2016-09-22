@@ -146,7 +146,10 @@ function getViewerConfiguration() {
     	dlAnnotationsJson: document.getElementById('dbv-info-dlAnnotationsJson'),
     	dlAnnotationsPdf: document.getElementById('dbv-info-dlAnnotationsPdf'),
     	version: document.getElementById('dbv-info-version'),
-    	pdfjsVersion: document.getElementById('dbv-info-pdfjsVersion')
+    	pdfjsVersion: document.getElementById('dbv-info-pdfjsVersion'),
+    	/*blockAnnotationInfo: document.getElementById('dbv-av-block-annotation_info'),
+    	blockProductInfo: document.getElementById('dbv-av-block-product_info'),
+    	blockFileInfo: document.getElementById('dbv-av-block-file_info')*/
     },
     printContainer: document.getElementById('printContainer'),
     openFileInputName: 'fileInput',

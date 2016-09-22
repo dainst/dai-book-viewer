@@ -35,6 +35,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="stylesheet" href="viewer.css">
 <!--#if !PRODUCTION-->
     <link rel="resource" type="application/l10n" href="locale/locale.properties">
+    <link rel="resource" type="application/l10n" href="locale-dbv/dbv-locale.properties">
 <!--#endif-->
 
 <!--#if !(MOZCENTRAL || CHROME || MINIFIED)-->
@@ -118,7 +119,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 				<div id="dbv-av-block-file_info" class="dbv-av-block panel panel-default">
 					<div></div>
 	          		<div class="panel-heading">
-	          			<h3 class="panel-title dbv-colors-file_info">About this PDF File<span class="glyphicon glyphicon-info pull-right"></span></h3>
+	          			<h3 data-l10n-id="dbv-file_info-heading" class="panel-title dbv-colors-file_info">About this PDF File<span class="glyphicon glyphicon-info pull-right"></span></h3>
 	          		</div>
 	          		<div class="panel-body">
 						<table>
@@ -147,7 +148,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 	          	
 	          	<div id="dbv-av-block-annotation_info" class="dbv-av-block panel panel-default">
 	          		<div class="panel-heading">
-	          			<h3 class="panel-title dbv-colors-annotation_info">About the Annotations<span class="glyphicon glyphicon-info pull-right"></span></h3>
+	          			<h3 data-l10n-id="dbv-annotation_info-heading" class="panel-title dbv-colors-annotation_info">About the Annotations<span class="glyphicon glyphicon-info pull-right"></span></h3>
 	          		</div>
 	          		<div class="panel-body">
 	          			<table id='dbv-info-annoInfoTable'>
@@ -169,16 +170,24 @@ See https://github.com/adobe-type-tools/cmap-resources
 	          	
           		<div id="dbv-av-block-product_info" class="dbv-av-block panel panel-default">
 	          		<div class="panel-heading">
-	          			<h3 class="panel-title dbv-colors-product_info">About this Viewer<span class="glyphicon glyphicon-info pull-right"></span></h3>
+	          			<h3 data-l10n-id="dbv-product_info-heading" class="panel-title dbv-colors-product_info">About this Viewer<span class="glyphicon glyphicon-info pull-right"></span></h3>
 	          		</div>
 	          		<div class="panel-body">
-	          			<p><b>DAIBookViewer Copyright</b> (C?) 2016 Deutsches Archäologisches Institut <br> developed by Philipp Franck<br> based on pdf.js by Mozilla</p>
+	          			<p><b>DAIBookViewer Copyright</b> (C) 2016 Deutsches Archäologisches Institut <br> developed by Philipp Franck<br> based on pdf.js by Mozilla</p>
 	          			<p class='separator'></p>
 	          			<p><b>Get in contact</b></p>
 	          			<ul>
 	          				<li><a href="https://github.com/dainst/dai-book-viewer" target="_blank">Github</a></li>
 	          				<li><a href="" target="_blank">Email</a></li>
 	          				<li><a href="https://github.com/dainst/dai-book-viewer" target="_blank">Bug Tracker</a></li>
+	          			</ul>
+	          			<p class='separator'></p>
+	          			<p><b>Licence</b></p>
+	          			<ul>
+	          				<li><a href="https://github.com/mozilla/pdf.js/" target="_blank">PDF.js</a> (c) by <a href='https://www.mozilla.org/' target="_blank">Mozilla</a>: <a href='http://www.apache.org/licenses/' target="_blank">Apache Licence 2.0</a></li>
+	          				<li><a href="http://leafletjs.com/" target="_blank">Leaflet.js</a>: <a href="https://github.com/Leaflet/Leaflet/blob/master/LICENSE" target="_blank">(c) 2010-2016, Vladimir Agafonkin; (c) 2010-2011, CloudMade</a></li>
+	          				<li><a href="http://glyphicons.com/" >Glyphicon Font</a> (c) by <a href="http://jankovarik.net/" target="_blank">Jan Kovarik</a>: <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank">MIT License</a> (thanks to Twitter's <a target="_blank" href="http://getbootstrap.com/">Bootstrap</a>)</li>
+	          				<li><a>DAIBookViewer</a>: (c) 2016 Philipp Franck @ <a href="http://dainst.org/" target="_blank">Deutsches Archäologisches Institut</a></li>
 	          			</ul>
 	          			<p class='separator'></p>
 	          			<table>	          			
@@ -412,10 +421,6 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
           </div>
         </div>
-
-<!--#if CHROME-->
-<!--#include viewer-snippet-chrome-overlays.html-->
-<!--#endif-->
       </div>  <!-- overlayContainer -->
 
     </div> <!-- outerContainer -->

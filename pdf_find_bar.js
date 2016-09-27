@@ -40,19 +40,22 @@ var FindStates = pdfFindController.FindStates;
 var PDFFindBar = (function PDFFindBarClosure() {
   function PDFFindBar(options) {
     this.opened = false;
-    this.bar = options.bar || null;
-    this.toggleButton = options.toggleButton || null;
-    this.findField = options.findField || null;
-    this.highlightAll = options.highlightAllCheckbox || null;
-    this.caseSensitive = options.caseSensitiveCheckbox || null;
-    this.findMsg = options.findMsg || null;
-    this.findResultsCount = options.findResultsCount || null;
-    this.findStatusIcon = options.findStatusIcon || null;
-    this.findPreviousButton = options.findPreviousButton || null;
-    this.findNextButton = options.findNextButton || null;
-    this.findController = options.findController || null;
-    this.eventBus = options.eventBus;
+    this.bar = options.elements.bar || null;
+    this.findField = options.elements.findField || null;
+    this.highlightAll = options.elements.highlightAllCheckbox || null;
+    this.caseSensitive = options.elements.caseSensitiveCheckbox || null;
+    this.findMsg = options.elements.findMsg || null;
+    this.findResultsCount = options.elements.findResultsCount || null;
+    this.findStatusIcon = options.elements.findStatusIcon || null;
+    this.findPreviousButton = options.elements.findPreviousButton || null;
+    this.findNextButton = options.elements.findNextButton || null;
+    this.findController = options.elements.findController || null;
+    this.eventBus = options.elements.eventBus;
 
+    this.findController = options.findController;
+    this.pdfSidebar = options.pdfSidebar;
+    this.eventBus = options.eventBus;
+    
     if (this.findController === null) {
       throw new Error('PDFFindBar cannot be used without a ' +
                       'PDFFindController instance.');
@@ -60,9 +63,9 @@ var PDFFindBar = (function PDFFindBarClosure() {
 
     // Add event listeners to the DOM elements.
     var self = this;
-    this.toggleButton.addEventListener('click', function() {
+/*    this.toggleButton.addEventListener('click', function() {
       self.toggle();
-    });
+    });*/
 
     this.findField.addEventListener('input', function() {
       self.dispatchEvent('');
@@ -176,32 +179,28 @@ var PDFFindBar = (function PDFFindBarClosure() {
     },
 
     open: function PDFFindBar_open() {
-      if (!this.opened) {
-        this.opened = true;
-        this.toggleButton.classList.add('toggled');
-        this.bar.classList.remove('hidden');
-      }
+      this.pdfSidebar.switchView('find');
+    	
       this.findField.select();
       this.findField.focus();
     },
 
     close: function PDFFindBar_close() {
       if (!this.opened) {
+    	// show annotation text layer
         return;
       }
-      this.opened = false;
-      this.toggleButton.classList.remove('toggled');
-      this.bar.classList.add('hidden');
+
       this.findController.active = false;
     },
 
-    toggle: function PDFFindBar_toggle() {
+/*    toggle: function PDFFindBar_toggle() {
       if (this.opened) {
         this.close();
       } else {
         this.open();
       }
-    }
+    }*/
   };
   return PDFFindBar;
 })();

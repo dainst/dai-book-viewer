@@ -97,7 +97,8 @@ var PDFFindController = (function PDFFindControllerClosure() {
       
       this.dbvAnnoMatchesReady = {}; // list of annotation allready found on page, in the form {position: {begin:<begin>; length:<length>}, base: <annotation obj>}(paf)
       this.dbvAnnoMatchesPending = {}; // list of annotations waiting to be resolved if the corresponding page is loaded - ordered by page (paf)
-
+      this.searchId = 0;
+      
       this.firstPagePromise = new Promise(function (resolve) {
         this.resolveFirstPage = resolve;
       }.bind(this));
@@ -173,34 +174,31 @@ var PDFFindController = (function PDFFindControllerClosure() {
     
     
     /**
+     * (dbv function)
      * 
-     * paf:
+     * start the finding process of all registered annotations
      * 
-     * sets Annotations in the form
-     * 
-     * 
-     * 
-     * finds begin and length for the term using find  functions
-	 * gehe alle annotationen durch
-	 * lade jede Seite einmal in pageContents (kann dann auch von der Suche verwendet werden)
-	 * erzeuge die annotationen dazu
-	 * kotze ab, wenn es viele sind -> immer nur für die aktuelle Seite!
+     * finds begin and length for the term using find functions
 	 * 
-     * @param annotations
      */
     pSetAnnotations: function PDFFindController_pSetAnntotations() {
-    	//console.log(this.annoRegistry.registry);
 		for (var id in this.annoRegistry.registry) {			
 			this.pSetAnnotation(this.annoRegistry.registry[id]);
 		}
     },
-    
+        
+    /**
+     * find every term from an annotation: theese are different annotations from the perspective of
+     * find-controller / text-layer-builder, but have the same id
+     * 
+     * @param annotation
+     */
     pSetAnnotation: function(annotation) {
     	if (typeof annotation.terms === "undefined" || annotation.terms.length == 0) {
     		console.log('no terms for ', annotation);
     		return;
     	}
-    	if (typeof annotation.pages === "undefined" || annotation.pages.length == 0) {
+    	if (typeof annotation.pages === "undefined" || annotation.pages.length == 0) { // TODO interpretate as all pages
     		console.log('no pages for ', annotation);
     		return;
     	}
@@ -214,8 +212,16 @@ var PDFFindController = (function PDFFindControllerClosure() {
 		}
     },
     
+    /**
+     * (dbv function)
+     * 
+     * finds a annotation term on a page
+     * @param annotation
+     * @param term
+     * @param page
+     */   
     pFindAnnotation: function PDFFindController_pFindAnnotation(annotation, term, page) {
-    	//return; // temp
+
     	var pageIndex = parseInt(page);
     	var self = this;
     	
@@ -224,12 +230,13 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	/**
     	 * after annotation was found on the page call:
     	 */
-    	function resolveAnnotation(annotation, pageIndex, begin, length) {
-    		    		
+    	function resolveAnnotation(annotation, pageIndex, begin, length) {  		    		
     		//console.log('resolving Annotation', annotation, pageIndex, begin, length);
     		    		
     		// put the annotation in a collection, which is ready to be displayed
     		if (typeof self.dbvAnnoMatchesReady[pageIndex] === 'undefined') self.dbvAnnoMatchesReady[pageIndex] = [];
+    		
+    		
     		self.dbvAnnoMatchesReady[pageIndex].push({
     			position: {
     				begin: begin,
@@ -237,22 +244,30 @@ var PDFFindController = (function PDFFindControllerClosure() {
     			},
     			base: annotation
     		});
+    		
+    		
 		    
     	}
     	
     	/**
+    	 * 
     	 * search term which is connection with annotation on page pageIndex
     	 */
-    	function searchOnPage(annotation, pageIndex, term) {
-    		//console.log('search on page ' + pageIndex + ' for: ' + term, annotation);
-        	self.state.query = term;   	
+    	function searchOnPage(annotation, pageIndex, term) { // @ XXX searchOnPage
+    		//console.log('SOP search on page ' + pageIndex + ' for: ' + term, annotation);
 
-	        self.calcFindMatch(pageIndex);
-	        //console.log('and found ' + self.pageMatches[pageIndex].length + ' matches', self.pageMatches[pageIndex]);
-	        for (var i = 0; i < self.pageMatches[pageIndex].length; i++) {
+        	var matches = self.calcFind(term, pageIndex, 'wholeWord');     	
+        	
+        	if (!matches) {
+        		//console.log('SOP no Matches for ', term, matches, annotation, ' on page ', pageIndex);
+        		return;
+        	}
+        	
+	        //console.log('SOP and found:', matches);
+	        for (var i = 0; i < matches.length; i++) {
 	        	var termLength = ((typeof term === "object") ? term[1].length : term.length);
 	    		//console.log('MM:X ', termLength, term);
-				resolveAnnotation(annotation, pageIndex, self.pageMatches[pageIndex][i], termLength);
+				resolveAnnotation(annotation, pageIndex, matches[i], termLength);
 	        }		    
     	}
 
@@ -263,12 +278,6 @@ var PDFFindController = (function PDFFindControllerClosure() {
     		return;
     	}
     	
-    	// prepare self.state
-    	self.state = {
-			query: '',
-			caseSensitive: false,
-			wholeWordSearch: true
-    	}
 
     	// fetch page content if necessary and search
 
@@ -310,6 +319,10 @@ var PDFFindController = (function PDFFindControllerClosure() {
     		    for (var i = 0, len = self.dbvAnnoMatchesPending[pageIndex].length; i < len; i++) {
     		    	searchOnPage(self.dbvAnnoMatchesPending[pageIndex][i].annotation, pageIndex, self.dbvAnnoMatchesPending[pageIndex][i].term);
     		    }
+    		    
+    		    self.updatePage(pageIndex);
+    		    self.dbvAnnoMatchesPending[pageIndex] = [];
+    		    
     		}
     	); /* \ ASYNC */
 
@@ -317,8 +330,18 @@ var PDFFindController = (function PDFFindControllerClosure() {
 
     },
     
-    // paf
-    calcFindWholeWordMatch: function PDFFindController_calcFindWholeWordMatch(query, pageIndex, pageContent) {
+    /**
+     * (dbv function)
+     * 
+     * a find function for whole words (as annotations are usually)
+     * query can have a defined successor and/or predecessor
+     * 
+     * 
+     * @param query
+     * @param pageIndex
+     * @param pageContent
+     */
+    calcFindWholeWordMatch: function PDFFindController_calcFindWholeWordMatch(query, pageIndex, pageContent) { // @ XXX calcFindWholeWordMatch
         var matches = [];
         var match;
         var predecessor = '';
@@ -346,10 +369,17 @@ var PDFFindController = (function PDFFindControllerClosure() {
         	matches.push(match.index + match[1].length + match[2].length);
         }
         //console.log(matches);
-        this.pageMatches[pageIndex] = matches;
+        return matches;
 	},
 
-    calcFindPhraseMatch: function PDFFindController_calcFindPhraseMatch(query, pageIndex, pageContent) {
+	/**
+	 * * default find function for phrase match 
+	 * 
+	 * @param query
+	 * @param pageIndex
+	 * @param pageContent
+	 */
+    calcFindPhraseMatch: function PDFFindController_calcFindPhraseMatch(query, pageIndex, pageContent) { // @ XXX calcFindPhraseMatch
       var matches = [];
       var queryLen = query.length;
       var matchIdx = -queryLen;
@@ -362,11 +392,19 @@ var PDFFindController = (function PDFFindControllerClosure() {
       }
       //console.log(matches);
       
-      this.pageMatches[pageIndex] = matches;
+      
+      return matches;
     },
 
-    calcFindWordMatch: function PDFFindController_calcFindWordMatch(
-      query, pageIndex, pageContent) {
+    /**
+     * default find function for word match 
+     * 
+     * 
+     * @param query
+     * @param pageIndex
+     * @param pageContent
+     */
+    calcFindWordMatch: function PDFFindController_calcFindWordMatch(query, pageIndex, pageContent) {
 
       var matchesWithLength = [];
       // Divide the query into pieces and search for text on each piece.
@@ -398,50 +436,98 @@ var PDFFindController = (function PDFFindControllerClosure() {
       this.pageMatches[pageIndex] = [];
       // Sort matchesWithLength, clean up intersecting terms
       // and put the result into the two arrays.
-      this._prepareMatches(matchesWithLength, this.pageMatches[pageIndex],
-        this.pageMatchesLength[pageIndex]);
+      
+      //this._prepareMatches(matchesWithLength, this.pageMatches[pageIndex],this.pageMatchesLength[pageIndex]);
+      console.log('TO BE IMPLEMENTED');
+      
     },
+    
+    /**
+     * 
+     * calls the selected search method 
+     * used for annotations and searches
+     * 
+     * @param query			- string or array (s. a.)
+     * @param pageIndex		- <int>
+     * @param method 		- 'phraseSearch', 'wordMatch'* or 'wholeWord'
+     * @param caseSensitive	- <bool> true*, false
+     * @returns
+     */
+    calcFind: function (query, pageIndex, method, caseSensitive) { // @ XXX calcFind
+    	//console.log('calcFind', query, pageIndex, method, caseSensitive);
+        var pageContent = this.normalize(this.pageContents[pageIndex]);
+        var query = this.normalize(query);
 
-    calcFindMatch: function PDFFindController_calcFindMatch(pageIndex) {
-      var pageContent = this.normalize(this.pageContents[pageIndex]);
-      var query = this.normalize(this.state.query);
-      var caseSensitive = this.state.caseSensitive;
-      var phraseSearch = this.state.phraseSearch;
-      var queryLen = query.length;
-
-      if (queryLen === 0) {
-        // Do nothing: the matches should be wiped out already.
-        return;
-      }
-
-      if (!caseSensitive) {
-        pageContent = pageContent.toLowerCase();
-        if (!this.state.wholeWordSearch) {
-            query = query.toLowerCase();
+        var queryLen = query.length;
+        if (queryLen === 0) {
+        	console.log('FAILlen', query);
+          // Do nothing: the matches should be wiped out already.
+          return [];
         }
-      }
+        //console.log('calcFind 2', query);
+        if (caseSensitive !== false) {
+          pageContent = pageContent.toLowerCase();
+          if (typeof query.toLowerCase !== "function") {
+        	  console.log('FAIL', query);
+        	  return [];
+          }
+          query = query.toLowerCase();
+        }
+        
+        //console.log('Searching with method "' + method + '" for ', query, ' ( caseSensitive is ', caseSensitive, ')');
+        
+        if (method == 'wholeWord') { // @ XXX search type selector
+        	return this.calcFindWholeWordMatch(query, pageIndex, pageContent);
+        } else if (method == 'phraseSearch') {
+      	  	return this.calcFindPhraseMatch(query, pageIndex, pageContent);
+        } else {
+        	return this.calcFindWordMatch(query, pageIndex, pageContent);
+        }
+    },
+    
+    /**
+     * searches function
+     * 
+     * @param pageIndex
+     */
+    calcFindMatch: function PDFFindController_calcFindMatch(pageIndex) {
+    	console.log('calcFindMatch', pageIndex);
+    	
+    	var method = this.state.phraseSearch ? 'phraseSearch': 'wordMatch';
+    	
+    	this.pageMatches[pageIndex] = this.calcFind(this.state.query, pageIndex, method, this.state.caseSensitive);
 
+    	if (!this.pageMatches[pageIndex]) {
+    		return;
+    	}
+    	
+    	if (typeof this.dbvAnnoMatchesReady[pageIndex] === 'undefined') this.dbvAnnoMatchesReady[pageIndex] = [];
+    	for (var i = 0; i < this.pageMatches[pageIndex].length; i++) {
+    		this.dbvAnnoMatchesReady[pageIndex].push({
+    			position: {
+    				begin: this.pageMatches[pageIndex][i],
+    				length: this.state.query.length
+    			},
+    			base: {
+    				type: '_search',
+    				id: this.searchId,
+    				text: this.state.query
+    			}
+    		});
+    	}
 
-      if (this.state.wholeWordSearch) {
-    	this.calcFindWholeWordMatch(query, pageIndex, pageContent);
-      } else if (phraseSearch) {
-        this.calcFindPhraseMatch(query, pageIndex, pageContent);
-      } else {
-        this.calcFindWordMatch(query, pageIndex, pageContent);
-      }
+    	this.updatePage(pageIndex);
 
-      this.updatePage(pageIndex);
-
-      if (this.resumePageIdx === pageIndex) {
-        this.resumePageIdx = null;
-        this.nextPageMatch();
-      }
-
-      // Update the matches count
-      if (this.pageMatches[pageIndex].length > 0) {
-        this.matchCount += this.pageMatches[pageIndex].length;
-        this.updateUIResultsCount();
-      }
+		if (this.resumePageIdx === pageIndex) {
+			this.resumePageIdx = null;
+			this.nextPageMatch();
+		}
+		
+		// Update the matches count
+		if (this.pageMatches[pageIndex].length > 0) {
+			this.matchCount += this.pageMatches[pageIndex].length;
+			this.updateUIResultsCount();
+		}
 
     },
 
@@ -487,6 +573,9 @@ var PDFFindController = (function PDFFindControllerClosure() {
     executeCommand: function PDFFindController_executeCommand(cmd, state) {
       if (this.state === null || cmd !== 'findagain') {
       	this.dirtyMatch = true;
+      	
+    	this.searchId++;
+    	console.log('NEW SEARCH', this.searchId);
       }
       this.state = state;
       this.updateUIState(FindStates.FIND_PENDING);
@@ -505,34 +594,70 @@ var PDFFindController = (function PDFFindControllerClosure() {
     },
 
     updatePage: function PDFFindController_updatePage(index) {
-      if (this.selected.pageIdx === index) {
+    	console.log('UPDATE PAGE ' + index + '( selected is ' + this.selected.pageIdx + ')');
+      
+    	if (this.selected.pageIdx === index) {
         // If the page is selected, scroll the page into view, which triggers
         // rendering the page, which adds the textLayer. Once the textLayer is
         // build, it will scroll onto the selected match.
         this.pdfViewer.scrollPageIntoView(index + 1);
       }
+      
+      // filter old search results
+      //for(var i = 0; i < this.dbvAnnoMatchesReady[index]; i++) {
+      //var self = this;
+
+      /*
+      this.dbvAnnoMatchesReady[index] = this.dbvAnnoMatchesReady[index].filter(function(x) {
+    	  return (!(x.base.type == '_search') && (x.base.id != self.searchId));
+      });
+      */
+      
+      //this.dbvAnnoMatchesReady[index]  = [];
 
       var page = this.pdfViewer.getPageView(index);
       if (page.textLayer) {
-    	  page.textLayer.updateMatches();
+    	  page.textLayer.pUpdateAnnotations(); 
       }
     },
     
+    /**
+     * reloads a pages text layer 
+     * and DOES recalculate annotations
+     * @param index
+     */
     reloadPageTextLayer: function(index) {
         var page = this.pdfViewer.getPageView(index);
         if (page.textLayer) {
-      	  //page.textLayer.updateMatches();
       	  page.textLayer.pUpdateAnnotations();
         }    	
     },
+    
+    /**
+     *  reloads all text layers
+     * and does NOT recalculate annotations
+     */
+    reloadAllTextLayers: function() {
+    	console.log('reload all text layerz', this.pdfViewer.pdfDocument.numPages);
+    	/*
+    	for (var i = 0; i < this.pdfViewer.pdfDocument.numPages; i++) {
+    		var page = this.pdfViewer.getPageView(i);
+    		if (page.textLayer) {
+    			page.textLayer.doRerender = true;
+    		}
+    	}
+    	 */
+    	
+    },
 
     nextMatch: function PDFFindController_nextMatch() {
+
       var previous = this.state.findPrevious;
       var currentPageIndex = this.pdfViewer.currentPageNumber - 1;
       var numPages = this.pdfViewer.pagesCount;
 
       this.active = true;
-
+ 
       if (this.dirtyMatch) {
         // Need to recalculate the matches, reset everything.
         this.dirtyMatch = false;
@@ -547,10 +672,9 @@ var PDFFindController = (function PDFFindControllerClosure() {
         var self = this;
 
         for (var i = 0; i < numPages; i++) {
-          // Wipe out any previous highlighted matches.
-
-          this.updatePage(i);       		
-
+          
+        	// Wipe out any previous highlighted matches.
+        	
 
           // As soon as the text is extracted start finding the matches.
           if (!(i in this.pendingFindMatches)) {
@@ -721,12 +845,9 @@ var PDFFindController = (function PDFFindControllerClosure() {
     /* annotation control */
     
     showAnnotation: function(annotation) {
-    	console.log('GG:', annotation);
     	var annotation = this.annoRegistry.registerAnnotation(annotation);
-    	console.log('GG:', annotation);
     	this.pSetAnnotation(annotation);
     	for (var i =  0; i < annotation.pages.length; i++) {
-    		console.log('GG:', i, annotation.pages[i]);
 	    	this.reloadPageTextLayer(annotation.pages[i]);
     	}
     }

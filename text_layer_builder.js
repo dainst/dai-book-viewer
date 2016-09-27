@@ -83,10 +83,12 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
      *   for specified amount of ms.
      */
     render: function TextLayerBuilder_render(timeout) {
+    	
       if (!this.divContentDone || this.renderingDone) {
+    	  //console.log('RENDER DIE PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
         return;
       }
-
+      console.log('RENDER PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
       if (this.textLayerRenderTask) {
         this.textLayerRenderTask.cancel();
         this.textLayerRenderTask = null;
@@ -104,8 +106,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
       this.textLayerRenderTask.promise.then(function () {
         this.textLayerDiv.appendChild(textLayerFrag);
         this._finishRendering();
-        this.updateMatches();
-        this.pUpdateAnnotations(); //paf
+        this.pUpdateAnnotations();
       }.bind(this), function (reason) {
         // canceled or failed to render text layer -- skipping errors
       });
@@ -123,7 +124,12 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     convertMatches: function TextLayerBuilder_convertMatches(matches, matchesLength) {
       var i = 0;
       var iIndex = 0;
-
+      
+      if (typeof this.textContent === "undefined") {
+    	  console.warn("convertMatches not possible, this.textContent empty");
+    	  return;
+      }
+      
       var bidiTexts = this.textContent.items;
       var end = bidiTexts.length - 1;
       var queryLen = ((this.findController === null || this.findController.state === null) ? 0 : this.findController.state.query.length); // paf
@@ -187,7 +193,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	var ret = [];
     	var conv;
     	for (var i = 0; i < annotations.length; i++) {
-    		//console.log('UUUU ', JSON.stringify(annotations[i].position));
+    		    		
 	        conv = this.convertMatches([annotations[i].position.begin], [annotations[i].position.length]);
     		if ((typeof conv !== "undefined") && (typeof conv[0] !== "undefined")) {
     			
@@ -197,8 +203,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         				position: {
        						divIdx: row,
         					begin: 	(row == conv[0].begin.divIdx) 	? conv[0].begin.offset	: -1,
-        					end: 	(row == conv[0].end.divIdx) 	? conv[0].end.offset	: 1000000
-        					
+        					end: 	(row == conv[0].end.divIdx) 	? conv[0].end.offset	: 1000000       					
         				}
         			});
     			}
@@ -209,7 +214,19 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	return ret;
     },
    
-    pHighlight: function TextLayerBuilder_pHighlight(annotations) {
+    /**
+     * 
+     * rendering function for annotations
+     * 
+     * parallels renderMatches for matches
+     * 
+     * 
+     * @param annotations
+     */
+    pRenderAnnotations: function TextLayerBuilder_pRenderAnnotations(annotations) {
+    	
+    	console.log('RENDER: ', annotations);
+    	
     	// Early exit if there is nothing to render.
         if (annotations.length === 0) {
           return;
@@ -251,7 +268,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
             	/**
             	 * mouse click / hover of annotation
             	 */
-            	if (typeof annotation.references !== "undefined" && typeof annotation.references[0] !== undefined) {
+            	if (!((Object.keys(annotation.references || {}).length === 0) && ((annotation.text || '') == ''))) {
             		span.addEventListener('mouseover', popupFn);
             		//span.addEventListener('mouseout', popupHideFn);
             		span.addEventListener('click', popupFn);
@@ -269,7 +286,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         }
         
         /**
-         * unfortunately we have to sort this stuff, even it's expensive
+         * unfortunately we have to sort this stuff, although it's expensive
          * @TODO we could implement our own sort and merge / skip overlapping items of same id!
          * (it is NOT possible to just skip them in the next step) 
          * 
@@ -282,9 +299,10 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         //var dur = t2 - t1;
         //console.log('PERF:' + dur);
         //console.log(annotations);
+        //console.log("HERZ UND NIEREN", annotations);
         
         
-        var ann = null;
+        var ann = null; 
         var prev = null;
         var next = null;
         var position = null;
@@ -292,7 +310,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         var begin = 0;
         var tEnd = 0;
         
-        var highlightSuffix = 'dbv-annotation highlight ';
+        var highlightSuffix = '';
         var behindTxtLength = 0;
         
         function nextAnnoSameRow(i) {      	         	
@@ -310,8 +328,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
           position = ann.position;
           next = nextAnnoSameRow(i);
           prev = prevAnnoSameRow(i);
-          highlightSuffix = 'dbv-annotation highlight ' + ann.base.type + ' ';
-          highlightSuffix += ((Object.keys(ann.base.references || {}).length === 0) && ((ann.base.text || '') == '')) ? '' : 'clickable '; 
+          highlightSuffix = 'dbv-annotation ' + ann.base.type + ' ';
           end = position.end == 1000000 ? infinity.offset : position.end;
           begin = position.begin == -1 ? 0 : position.begin;
           tEnd = next ? next.position.begin : infinity.offset;
@@ -339,8 +356,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
 
           // add text again because annotation is position:absolute now!        
           appendTextToDiv(position.divIdx, begin, tEnd);
-          
-          
           
         }
 
@@ -496,33 +511,36 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
       }
 
       
-      this.matches = this.convertMatches(pageMatches, pageMatchesLength);
-      this.renderMatches(this.matches);
+      this.matches = this.pConvertAnnotations(pageMatches, pageMatchesLength);
+      this.pRenderAnnotations(this.matches);
       
     },
     
     /**
-     * extension to show DAI computer generated annotations
+     * dbv extension to show DAI computer generated annotations
      * 
+     * @param dontRecalculate - if set...dontRecalculate annotations positions!
      */
-    pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations() {
-               
-        if (this.findController === null) {
-        	console.log('no findcontroller');
-        	return;
-        }
+    pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations(dontRecalculate) {
+    	
+    	var c = this.findController.dbvAnnoMatchesReady[this.pageIdx] ? this.findController.dbvAnnoMatchesReady[this.pageIdx].length : 'NONE';
+    	console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);
         
+    	
+    	if (this.findController === null) { console.log('no findcontroller');  return; }
         var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;
-        //console.log(this.findController.dbvAnnoMatchesReady);
-        
-        if (dbvAnnotations === null) {
-        	//console.log('no annotations for page ' + this.pageIdx);
-        	return;
+        if (dbvAnnotations === null) {  console.log('no annotations for page ' + this.pageIdx);  return;  }
+        this.dbvAnnoMatchesReady = dontRecalculate ? this.dbvAnnoMatchesReady : this.pConvertAnnotations(dbvAnnotations);
+        if (this.dbvAnnoMatchesReady && (this.dbvAnnoMatchesReady.length > 0)) {
+        	console.log("RENDER THEM ON PAGE " + this.pageIdx, this.dbvAnnoMatchesReady.length);
+            this.pRenderAnnotations(this.dbvAnnoMatchesReady);
+        	
+
+        } else {
+        	console.log('NOTHING TO RENDER ON PAGE ' + this.pageIdx, this.dbvAnnoMatchesReady.length);
+        	//this.renderingDone = false;
+        	//this.render(null, true); // render again
         }
-        //console.log('page ' + this.pageIdx , dbvAnnotations);
-        
-        this.dbvAnnoMatchesReady = this.pConvertAnnotations(dbvAnnotations);      
-        this.pHighlight(this.dbvAnnoMatchesReady);
     },
 
     /**

@@ -292,15 +292,6 @@ var PDFViewerApplication = {
 
     this.pdfViewer.setFindController(this.findController);
 
-    
-
-    
-    // FIXME better PDFFindBar constructor parameters
-    var findBarConfig = Object.create(appConfig.findBar);
-    findBarConfig.findController = this.findController;
-    findBarConfig.eventBus = this.eventBus;
-    this.findBar = new PDFFindBar(findBarConfig);
-
     this.overlayManager = OverlayManager;
 
     this.handTool = new HandTool({
@@ -379,6 +370,17 @@ var PDFViewerApplication = {
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
 
+    
+    
+    this.findBar = new PDFFindBar({
+    	elements: appConfig.findBar,
+        findController: this.findController,
+    	eventBus: this.eventBus,
+    	pdfSidebar: this.pdfSidebar
+    });
+    
+    
+    
     var self = this;
     var PDFJS = pdfjsLib.PDFJS;
     
@@ -1526,16 +1528,9 @@ function webViewerInitialized() {
     
   }
 
-//#if !(FIREFOX || MOZCENTRAL)
+
   mozL10n.setLanguage(PDFJS.locale);
-//#endif
-//#if (FIREFOX || MOZCENTRAL)
-  if (!PDFViewerApplication.supportsDocumentFonts) {
-    PDFJS.disableFontFace = true;
-    console.warn(mozL10n.get('web_fonts_disabled', null,
-      'Web fonts are disabled: unable to use embedded PDF fonts.'));
-  }
-//#endif
+
 
   if (!PDFViewerApplication.supportsPrinting) {
     appConfig.toolbar.print.classList.add('hidden');

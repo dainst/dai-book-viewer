@@ -89,6 +89,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
     this.outlineButton = options.outlineButton;
     this.attachmentsButton = options.attachmentsButton;
     this.annotationsButton = options.annotationsButton;
+    this.findButton = options.findButton;
     this.editAnnotationsButton = options.editAnnotationsButton;
     this.infoButton = options.infoButton;
 
@@ -96,6 +97,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
     this.outlineView = options.outlineView;
     this.attachmentsView = options.attachmentsView;
     this.annotationsView = options.annotationsView;
+    this.findView = options.findView;
     this.editAnnotationsView = options.editAnnotationsView;
     this.infoView = options.infoView;
 
@@ -167,7 +169,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
      */
     switchView: function PDFSidebar_switchView(view, forceOpen) {
     	
-    	//console.log('Switch to view: ' + view);
+    	console.log('Switch to view: ' + view);
       
     	if (view === 'none') {
     		this.close();
@@ -182,6 +184,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
 			'outline',
 			'attachments',
 			'annotations',
+			'find',
 			'editAnnotations',
 			'info'
 		];
@@ -199,18 +202,27 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		this[view + 'Button'].classList.add('toggled');
 		this[view + 'View'].classList.remove('hidden');
 		
-		switch (view) {
-			case 'thumbnail':
-				if (this.isOpen && isViewChanged) {
-					this._updateThumbnailViewer();
-					shouldForceRendering = true;
-				}
-			break;
-			
-			case 'annotations':
-				this.annoViewer.refreshMap();
-			break;
+		if (view == 'thumbnail') {
+			if (this.isOpen && isViewChanged) {
+				this._updateThumbnailViewer();
+				shouldForceRendering = true;
+			}
 		}
+		
+		if (view == 'annotations') {
+			this.annoViewer.refreshMap();
+		}
+		
+		if (view == 'find') {
+			//this.annoViewer.toggleAnnotations(false);
+		}
+		
+		if ((view != 'find') && (this.active == 'find')) {
+			this.annoViewer.redrawAnnotations();
+		}
+			
+			
+
     
 		// Update the active view *after* it has been validated above,
 		// in order to prevent setting it to an invalid state.
@@ -339,6 +351,10 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
       self.annotationsButton.addEventListener('click', function() { // paf dai
           self.switchView('annotations');
+      });
+      
+      self.findButton.addEventListener('click', function() { // paf dai
+          self.switchView('find');
       });
       
       self.editAnnotationsButton.addEventListener('click', function() { // paf dai

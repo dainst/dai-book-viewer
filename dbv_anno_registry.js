@@ -126,6 +126,7 @@
 						continue;
 					}
 					// register items	
+					data[type].items = data[type].items || [];
 					for (var i = 0; i < data[type].items.length; i++) {
 						var annotation = data[type].items[i];
 						annotation.type = type;

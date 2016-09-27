@@ -97,9 +97,10 @@
 				
 				var populationFn = populationFn || 'populate';
 				
-				this[populationFn](block, data.items);
+				if (data && data.items) {
+					this[populationFn](block, data.items);	
+				}
 
-				
 				if (loadMore !== false && data.more) {
 					var loadMoreBtn = this.$.htmlElement('div', {'classes': ['btn', 'btn-default', 'dbv-load-more']}, "Load More");// @ TODO  l10n					
 					loadMoreBtn.addEventListener('click', function(e) {return self.loadMore(id);});
@@ -287,8 +288,6 @@
 				var text = annotation.text || '';
 				var refs = annotation.references || {};
 				
-
-				
 				if ((Object.keys(refs).length === 0) && (text == '')) {
 					return;
 				}
@@ -300,10 +299,10 @@
 				}
 				
 				if (typeof annotation.references !== "undefined" && (annotation.references.length != 0)) {
-					for (var refid in annotation.references) {
-						var ref = annotation.references[refid];
+					for (var i = 0; i < annotation.references.length; i++) {
+						var ref = annotation.references[i];
 						var d = this.$.htmlElement('div');
-						d.appendChild(this.$.htmlElement('a', {"target": "_blank", "href": ref.url || ""}, ref.name || refid));
+						d.appendChild(this.$.htmlElement('a', {"target": "_blank", "href": ref.url || ""}, ref.name || ref.type || ref.url));
 						box.appendChild(d);
 					}
 				}
@@ -322,13 +321,11 @@
 			/**
 			 * toggle the annotation
 			 * 
-			 * @param e
 			 */
 			toggleAnnotationPopup: function() {
 				if (!this.annotationPopupDontHide) {
 					this.annotationPopup.classList.add('hidden');
 				}
-				
 			},
 			
 			
@@ -472,15 +469,29 @@
 		    },
 		    
 		    annotationsVisible: true,
-		    toggleAnnotations: function() {
-		    	this.annotationsVisible = !this.annotationsVisible;
+		    toggleAnnotations: function(to) {
+		    	console.log('toggle annotations to ' , to);
+		    	
+		    	this.annotationsVisible = to || !this.annotationsVisible;
 		    	if (!this.annotationsVisible) {
 		    		this.pdfViewer.container.classList.add('dbv-annotations-hidden');
 		    	} else {
 		    		this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
 		    	}
 		    	
+		    },
+		    
+		    redrawAnnotations: function() {
+		    	console.log('FUNCTION HAS TO BE IMPLEMENTED');
+		    	
+		    	PDFViewerApplication.findController.reloadAllTextLayers();
+		    	this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
+		    	
+		    	// this function shall redraw all annotations! afterwards serach should be working perfectly
+		    	
 		    }
+		    
+		    
 		    
 
 		

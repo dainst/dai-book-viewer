@@ -488,14 +488,15 @@ html[dir='ltr'] .doorHangerRight:before {
 
 #findResultsCount {
   background-color: hsl(0, 0%, 85%);
-  color: hsl(0, 0%, 32%);
+  color: hsl(0, 0%, 20%);
   text-align: center;
-  padding: 3px 4px;
+  padding: 4px 8px;
+  float: right;
 }
 
 #findMsg {
   font-style: italic;
-  color: #A6B7D0;
+  line-height: 30px;
 }
 
 #findInput.notFound {
@@ -554,6 +555,8 @@ html[dir='rtl'] .splitToolbarButton > .toolbarButton {
   border-radius: 0;
   float: right;
 }
+
+
 
 .toolbarButton,
 .secondaryToolbarButton,
@@ -774,7 +777,7 @@ html[dir='ltr'] .splitToolbarButton:last-child,
 html[dir='ltr'] .toolbarButton:last-child,
 html[dir='rtl'] .splitToolbarButton:first-child,
 html[dir='rtl'] .toolbarButton:first-child {
-  margin-right: 8px !important;
+  margin-right: 8px;
 }
 
 .toolbarButtonSpacer {
@@ -922,9 +925,7 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   content: "\e042";
 }
 
-#viewFind.toolbarButton::before {
-  content: "\E003";
-}
+
 
 .secondaryToolbarButton {
   position: relative;
@@ -1552,7 +1553,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 }
 #buttonPaf:before {
-	content: "";
+	content: "\e042"";
 	font-family: "Glyphicons Halflings";
 	font-weight: 400;
 	line-height: 1;
@@ -1582,6 +1583,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-th-large:before 		{content: "\e010"}
 .glyphicon-info:before 			{content: "\E086"}
 .glyphicon-download-alt:before 	{content: "\E025"}
+.glyphicon-search:before 	 	{content: "\E003";}
 
 
 
@@ -1673,6 +1675,10 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 .dbv-colors-map {
 	background-color: rgba(93, 144, 93, 0.3);
+}
+
+.dbv-colors-find {
+	background: rgba(180, 0, 170,0.3);
 }
 
 .panel-body {
@@ -1787,18 +1793,18 @@ html[dir='rtl'] .pull-right {
 	width: 100%
 }
 
-.dbv-edit-types-list input:not([type="radio"]):not([type="checkbox"]) {
+.panel-body input:not([type="radio"]):not([type="checkbox"]) {
 	border: 1px solid silver;
 	border-radius: 2px;
 	background-color: #F5F5F5
 }
 
-.dbv-edit-types-list label {
+.panel-body label {
 	font-size: small;
 	margin-top: 4px
 }
 
-.dbv-edit-types-list label + input:[type="radio"][type="checkbox"] {
+.panel-body label + input:[type="radio"][type="checkbox"] {
 	display: inline;
 }
 
@@ -1852,10 +1858,33 @@ html[dir='rtl'] .pull-right {
 	border-top: 1px dotted rgba(1,1,1,0.3);
 }
 
+.panel-body .btn-group {
+	line-height: 25px;
+
+}
+
+.panel-body .btn-group .splitToolbarButton {
+	margin: 0px !important;
+}
+
 .panel-body .btn-group button {
 	position: relative;
 	background: rgba(0,0,0,0.1);
 	color: black;
+
+}
+
+.panel-body .btn-group-left,
+.panel-body .btn-group-right {
+	display: inline-block;
+}
+
+.panel-body .btn-group-right {
+	float: right
+}
+
+.panel-body .btn-group-right button:last-of-type {
+	margin-right: 0px !important;
 }
 
 .panel-body .btn-group button:hover {

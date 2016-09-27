@@ -87,6 +87,7 @@ function getViewerConfiguration() {
       outlineButton: document.getElementById('viewOutline'),
       attachmentsButton: document.getElementById('viewAttachments'),
       annotationsButton: document.getElementById('dbv-viewAnnotations'), // dai paf
+      findButton: document.getElementById('dbv-viewFind'),// dai paf
       editAnnotationsButton: document.getElementById('dbv-editAnnotations'), // dai paf
       infoButton: document.getElementById('dbv-info'), // dai paf
       // Views
@@ -94,6 +95,7 @@ function getViewerConfiguration() {
       outlineView: document.getElementById('outlineView'),
       attachmentsView: document.getElementById('attachmentsView'),
       annotationsView: document.getElementById('dbv-annotationsView'),// dai paf
+      findView: document.getElementById('dbv-findView'),// dai paf
       editAnnotationsView: document.getElementById('dbv-editAnnotationsView'),// dai paf
       infoView: document.getElementById('dbv-infoView'),// dai paf
     },

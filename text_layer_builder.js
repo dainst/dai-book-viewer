@@ -215,6 +215,32 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     },
    
     /**
+     * clears all textlayers
+     */
+    clearRows: function() {
+    	console.log('CLEAR CANVAS');
+    	for(var i = 0; i < this.textDivs.length; i++) {
+      	  this.textDivs[i].textContent = '';
+    	}
+    },
+    
+    /**
+     * fills all empty rows with hidden text
+     * 
+     * @param true* - if set true, it will fill even filled rows
+     */
+    fillRows: function(force) {
+    	for(var i = 0; i < this.textDivs.length; i++) {
+      	  if ((this.textDivs[i].textContent == '') || (force === true)) {
+              var div = this.textDivs[i];
+              var content = this.textContent.items[i].str; // .substring(0, undefined)
+              var node = document.createTextNode(content);
+              div.appendChild(node);
+      	  }
+    	}
+    },
+    
+    /**
      * 
      * rendering function for annotations
      * 
@@ -226,6 +252,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     pRenderAnnotations: function TextLayerBuilder_pRenderAnnotations(annotations) {
     	
     	console.log('RENDER: ', annotations);
+    	
+    	this.clearRows();
     	
     	// Early exit if there is nothing to render.
         if (annotations.length === 0) {
@@ -258,8 +286,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         	
         	
           var div = textDivs[divIdx];
-          var content = bidiTexts[divIdx].str.substring(fromOffset, toOffset);//console.trace();console.log(content);
-          
+          var content = bidiTexts[divIdx].str.substring(fromOffset, toOffset);        
           var node = document.createTextNode(content);
           if (className) {
             var span = document.createElement('span');
@@ -323,8 +350,10 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         }
         
         for (var i = 0; i < annotations.length; i++) {
-        	
           ann = annotations[i];
+          
+          console.log('RENDERING ', ann.base.lemma);
+          
           position = ann.position;
           next = nextAnnoSameRow(i);
           prev = prevAnnoSameRow(i);
@@ -339,7 +368,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
           
           // first annotation or first annotation in new row
           if (!prev) {
-        	  textDivs[position.divIdx].textContent = '';
         	  appendTextToDiv(position.divIdx, 0, position.begin);
           }
           
@@ -358,7 +386,11 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
           appendTextToDiv(position.divIdx, begin, tEnd);
           
         }
-
+        
+        
+        // fill remaining text layers
+        this.fillRows();
+        
 
     },
 
@@ -472,7 +504,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         appendTextToDiv(prevEnd.divIdx, prevEnd.offset, infinity.offset);
       }
     },
-
+/*
     updateMatches: function TextLayerBuilder_updateMatches() {
       // Only show matches when all rendering is done.
       if (!this.renderingDone) {
@@ -515,7 +547,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
       this.pRenderAnnotations(this.matches);
       
     },
-    
+    */
     /**
      * dbv extension to show DAI computer generated annotations
      * 
@@ -530,16 +562,12 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	if (this.findController === null) { console.log('no findcontroller');  return; }
         var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;
         if (dbvAnnotations === null) {  console.log('no annotations for page ' + this.pageIdx);  return;  }
-        this.dbvAnnoMatchesReady = dontRecalculate ? this.dbvAnnoMatchesReady : this.pConvertAnnotations(dbvAnnotations);
+        this.dbvAnnoMatchesReady = this.pConvertAnnotations(dbvAnnotations); // dontRecalculate ? this.dbvAnnoMatchesReady : 
         if (this.dbvAnnoMatchesReady && (this.dbvAnnoMatchesReady.length > 0)) {
-        	console.log("RENDER THEM ON PAGE " + this.pageIdx, this.dbvAnnoMatchesReady.length);
+        	console.log("RENDER THEM ON PAGE " + this.pageIdx, this.dbvAnnoMatchesReady.length, this.dbvAnnoMatchesReady);
             this.pRenderAnnotations(this.dbvAnnoMatchesReady);
-        	
-
         } else {
         	console.log('NOTHING TO RENDER ON PAGE ' + this.pageIdx, this.dbvAnnoMatchesReady.length);
-        	//this.renderingDone = false;
-        	//this.render(null, true); // render again
         }
     },
 

@@ -72,7 +72,7 @@
 				
 				var restprams = restparams || [];
 				var source = source || 'https://nlp.dainst.org:3000/';
-				var url = source + '/' + restparams.join('/');
+				var url = source + '/' + restparams.join('/') + '?cachekiller' + Date.now();
 				var get = post ? 'POST': 'GET';
 				
 				//console.log('fetch', get, url);

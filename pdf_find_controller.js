@@ -491,7 +491,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
      * @param pageIndex
      */
     calcFindMatch: function PDFFindController_calcFindMatch(pageIndex) {
-    	console.log('calcFindMatch', pageIndex);
+    	//console.log('calcFindMatch', pageIndex);
     	
     	var method = this.state.phraseSearch ? 'phraseSearch': 'wordMatch';
     	
@@ -511,7 +511,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
     			base: {
     				type: '_search',
     				id: this.searchId,
-    				text: this.state.query
+    				lemma: this.state.query
     			}
     		});
     	}
@@ -604,16 +604,14 @@ var PDFFindController = (function PDFFindControllerClosure() {
       }
       
       // filter old search results
-      //for(var i = 0; i < this.dbvAnnoMatchesReady[index]; i++) {
-      //var self = this;
-
-      /*
-      this.dbvAnnoMatchesReady[index] = this.dbvAnnoMatchesReady[index].filter(function(x) {
-    	  return (!(x.base.type == '_search') && (x.base.id != self.searchId));
-      });
-      */
       
-      //this.dbvAnnoMatchesReady[index]  = [];
+    	var c = this.dbvAnnoMatchesReady[index].length;   	
+      var self = this;
+      this.dbvAnnoMatchesReady[index] = this.dbvAnnoMatchesReady[index].filter(function(x) {
+    	  return (!((x.base.type == '_search') && (x.base.id != self.searchId)));
+      });
+      var f = c - this.dbvAnnoMatchesReady[index].length;
+      console.log('FILTA PAGE ' + index + ' FILTARED ' + f + ' thigs');
 
       var page = this.pdfViewer.getPageView(index);
       if (page.textLayer) {

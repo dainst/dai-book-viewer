@@ -102,6 +102,11 @@
 	background-color: rgba(0, 107, 0, 1);
 }
 
+.textLayer .dbv-annotation._search.overlap:hover,
+.textLayer .dbv-annotation._search {
+	background-color: rgba(180, 0, 170,1);
+}
+	
 .textLayer .dbv-annotation:hover {
 	z-index: 10;
 }

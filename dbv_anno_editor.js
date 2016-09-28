@@ -100,7 +100,6 @@
 				block.appendChild(typesList);
 				this.editorElements.result = block.appendChild(this.$.htmlElement('pre', {id: 'dbv-edit-annotation-result'}));
 				this.editorElements.submit = block.appendChild(this.$.htmlElement('a', {}, 'Save Annotation', {'click': 'saveAnnotation'}));
-				console.log(this.editorElements);
 				
 			},
 			

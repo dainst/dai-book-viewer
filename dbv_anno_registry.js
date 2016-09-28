@@ -32,7 +32,9 @@
 }(this, function (exports, pdfjsLib) {
 
 	var AnnoRegistry = (function AnnoRegistryClosure() {
-		function AnnoRegistry() {};
+		function AnnoRegistry() {
+			this.reset();
+		};
 	
 		AnnoRegistry.prototype = {
 				
@@ -50,13 +52,43 @@
 				'wait': 0, 
 				'loading': 1, 
 				'ready': 2,
-				'error': -1
+				'error': 9
 			},
 			statusDiv: null,
 			
 			/* data loader functions */
 			successFn: {},
 			errorFn: function() {},
+			
+			loadingPromise: null,
+			loadingPromiseResolver: null,
+			
+			reset: function() {
+				this.url = '';
+				this.filename = '';
+				this.state = 'wait';
+				this.registry = {};
+				this.metadata = {};
+				
+				this.loadingPromiseReset();
+			},
+			
+			loadingPromiseReset: function() {
+				this.loadingPromise = new Promise(function(resolve) {
+					this.loadingPromiseResolver = resolve;
+				}.bind(this), function (reason) {
+					this.error(reason);
+			    }.bind(this));
+				
+				this.loadingPromise.then(function(data) {
+					console.log('ADS Resolve', data, this.successFn);
+					this.registerSet(data);
+					for (var fn in this.successFn) {
+						this.successFn[fn](data);
+					}
+					this.setState('ready');
+				}.bind(this));
+			},
 			
 			/**
 			 * 
@@ -79,7 +111,10 @@
 				
 				this.setState('loading');
 				
+				this.loadingPromiseReset();
+				
 				var request = new XMLHttpRequest();
+				//request.timeout = 5000;
 				request.open('get', url, true);
 				request.onload = function() {
 					if (request.status >= 200 && request.status < 400) {
@@ -88,12 +123,13 @@
 						} catch (e) {
 							return self.error(e, request);
 						}
-						console.log('ADS Success', data, self.successFn);
-						self.registerSet(data);
-						for (var fn in self.successFn) {
-							self.successFn[fn](data);
-						}
-						self.setState('ready');
+						console.log('ADS Success');
+						
+						setTimeout(function(){ 
+							self.loadingPromiseResolver(data);
+						}, 10000);
+						
+
 					} else {
 						return self.error('404 not found: ' + url, request);
 					}
@@ -101,12 +137,16 @@
 				request.onerror = function(e) {
 					return self.error(e, request);
 				};
+				request.ontimeout = function(e) {
+					console.log("ADS timeout");
+					return self.error(e, request);
+				}
 	
 				request.send();
 			},
 			
 			/**
-			 * registers a function, wich get called after data loading
+			 * registers a function, which get called after data loading
 			 * @param fn
 			 */
 			onGetAnnotations: function(fn) {				
@@ -204,15 +244,9 @@
 					div.classList.remove(st);
 				}
 				div.classList.add(state);
-			},
-			
-			reset: function() {
-				this.url = '';
-				this.filename = '';
-				this.state = 'wait';
-				this.registry = {};
-				this.metadata = {};
 			}
+			
+
 				
 				
 		}

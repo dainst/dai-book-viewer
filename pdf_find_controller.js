@@ -102,6 +102,13 @@ var PDFFindController = (function PDFFindControllerClosure() {
       this.firstPagePromise = new Promise(function (resolve) {
         this.resolveFirstPage = resolve;
       }.bind(this));
+      
+      
+      var self = this;
+      this.annoRegistry.onGetAnnotations(function onGetAnnotations_pSetAnnotations() {
+    	  return self.pSetAnnotations();
+      });
+      
     },
 
     normalize: function PDFFindController_normalize(text) {  
@@ -179,21 +186,26 @@ var PDFFindController = (function PDFFindControllerClosure() {
      * start the finding process of all registered annotations
      * 
      * finds begin and length for the term using find functions
+     * 
+     * (gets called by app.js)
 	 * 
      */
     pSetAnnotations: function PDFFindController_pSetAnntotations() {
+    	console.log('PSETANNOS');
 		for (var id in this.annoRegistry.registry) {			
 			this.pSetAnnotation(this.annoRegistry.registry[id]);
 		}
     },
         
     /**
-     * find every term from an annotation: theese are different annotations from the perspective of
+     * find every term from an annotation: these are different annotations from the perspective of
      * find-controller / text-layer-builder, but have the same id
      * 
      * @param annotation
      */
     pSetAnnotation: function(annotation) {
+    	console.log('PSETANNO', annotation);
+    	
     	if (typeof annotation.terms === "undefined" || annotation.terms.length == 0) {
     		console.log('no terms for ', annotation);
     		return;
@@ -225,18 +237,17 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	var pageIndex = parseInt(page);
     	var self = this;
     	
-    	//console.log('find: ' + term + ' on page ' + pageIndex, annotation);
+    	console.log('find: ' + term + ' on page ' + pageIndex, annotation);
       	
     	/**
     	 * after annotation was found on the page call:
     	 */
     	function resolveAnnotation(annotation, pageIndex, begin, length) {  		    		
-    		//console.log('resolving Annotation', annotation, pageIndex, begin, length);
+    		console.log('resolving Annotation', annotation, pageIndex, begin, length);
     		    		
     		// put the annotation in a collection, which is ready to be displayed
     		if (typeof self.dbvAnnoMatchesReady[pageIndex] === 'undefined') self.dbvAnnoMatchesReady[pageIndex] = [];
-    		
-    		
+    		    		
     		self.dbvAnnoMatchesReady[pageIndex].push({
     			position: {
     				begin: begin,
@@ -244,9 +255,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
     			},
     			base: annotation
     		});
-    		
-    		
-		    
+
     	}
     	
     	/**
@@ -320,8 +329,15 @@ var PDFFindController = (function PDFFindControllerClosure() {
     		    	searchOnPage(self.dbvAnnoMatchesPending[pageIndex][i].annotation, pageIndex, self.dbvAnnoMatchesPending[pageIndex][i].term);
     		    }
     		    
-    		    self.updatePage(pageIndex);
     		    self.dbvAnnoMatchesPending[pageIndex] = [];
+    		    
+    		    var page = self.pdfViewer.getPageView(pageIndex);
+    		    var hasTextLayer = page.textLayer ? 'YES' : 'NO';
+    		    console.log("FINISHED WITH PAGE " + pageIndex + " HAS TEXTLAYER? " + hasTextLayer);
+    		    if (page.textLayer) {
+    		    	page.textLayer.pUpdateAnnotations();
+    		    }
+    		    
     		    
     		}
     	); /* \ ASYNC */
@@ -582,7 +598,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
 
       this.firstPagePromise.then(function() {
         this.extractText();
-
+                
         clearTimeout(this.findTimeout);
         if (cmd === 'find') {
           // Only trigger the find action after 250ms of silence.

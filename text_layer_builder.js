@@ -61,6 +61,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     
     this.annoRegistry = options.annoRegistry;
     this.annoViewer = options.annoViewer;
+    
   }
 
   TextLayerBuilder.prototype = {
@@ -88,7 +89,9 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	  //console.log('RENDER DIE PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
         return;
       }
-      console.log('RENDER PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
+      
+      //console.log('RENDER PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
+
       if (this.textLayerRenderTask) {
         this.textLayerRenderTask.cancel();
         this.textLayerRenderTask = null;
@@ -103,10 +106,12 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         textDivs: this.textDivs,
         timeout: timeout
       });
-      this.textLayerRenderTask.promise.then(function () {
+      
+      Promise.all([this.textLayerRenderTask.promise, this.annoRegistry.loadingPromise])      
+      .then(function textLayerRenderTaskPromiseThen() {
         this.textLayerDiv.appendChild(textLayerFrag);
-        this._finishRendering();
         this.pUpdateAnnotations();
+        this._finishRendering();
       }.bind(this), function (reason) {
         // canceled or failed to render text layer -- skipping errors
       });
@@ -411,7 +416,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	
     	
     },
-    
+ /*   
     renderMatches: function TextLayerBuilder_renderMatches(matches) {
       // Early exit if there is nothing to render.
       if (matches.length === 0) {
@@ -504,6 +509,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         appendTextToDiv(prevEnd.divIdx, prevEnd.offset, infinity.offset);
       }
     },
+*/
 /*
     updateMatches: function TextLayerBuilder_updateMatches() {
       // Only show matches when all rendering is done.
@@ -551,13 +557,12 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     /**
      * dbv extension to show DAI computer generated annotations
      * 
-     * @param dontRecalculate - if set...dontRecalculate annotations positions!
      */
-    pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations(dontRecalculate) {
+    pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations() {
     	
     	var c = this.findController.dbvAnnoMatchesReady[this.pageIdx] ? this.findController.dbvAnnoMatchesReady[this.pageIdx].length : 'NONE';
     	console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);
-        
+        console.trace();
     	
     	if (this.findController === null) { console.log('no findcontroller');  return; }
         var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;

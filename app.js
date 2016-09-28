@@ -1021,13 +1021,8 @@ var PDFViewerApplication = {
       // For documents with different page sizes,
       // ensure that the correct location becomes visible on load.
       pagesPromise.then(function resolved() {
-    	
-	      
-	    // load annotations (dai paf)
-	    self.findController.pSetAnnotations(); //!  paf goil
     	  
-        if (!initialParams.destination && !initialParams.bookmark &&
-            !initialParams.hash) {
+        if (!initialParams.destination && !initialParams.bookmark && !initialParams.hash) {
           return;
         }
         if (self.hasEqualPageSizes) {
@@ -1038,10 +1033,7 @@ var PDFViewerApplication = {
 
         self.pdfViewer.currentScaleValue = self.pdfViewer.currentScaleValue;
         self.setInitialView(initialParams.hash);
-        
-
-
-        
+         
       });
     });
 
@@ -1067,14 +1059,16 @@ var PDFViewerApplication = {
       }
     });
 
-    Promise.all([onePageRendered, this.animationStartedPromise]).then(
-        function() {
+    Promise.all([onePageRendered, this.animationStartedPromise]).then(function() {
       pdfDocument.getOutline().then(function(outline) {
         self.pdfOutlineViewer.render({ outline: outline });
       });
       pdfDocument.getAttachments().then(function(attachments) {
         self.pdfAttachmentViewer.render({ attachments: attachments });
       });
+      
+	    // load annotations (dai paf)
+	  //self.findController.pSetAnnotations(); //!  paf goil
       self.annoViewer.refreshMap();
     });
 

@@ -125,9 +125,9 @@
 						}
 						console.log('ADS Success');
 						
-						setTimeout(function(){ 
+						//setTimeout(function(){ 
 							self.loadingPromiseResolver(data);
-						}, 10000);
+						//}, 10000);
 						
 
 					} else {

@@ -86,7 +86,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     render: function TextLayerBuilder_render(timeout) {
     	
       if (!this.divContentDone || this.renderingDone) {
-    	  //console.log('RENDER DIE PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
         return;
       }
       
@@ -256,7 +255,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
      */
     pRenderAnnotations: function TextLayerBuilder_pRenderAnnotations(annotations) {
     	
-    	console.log('RENDER: ', annotations);
+    	//console.log('RENDER: ', annotations);
     	
     	this.clearRows();
     	
@@ -355,10 +354,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         }
         
         for (var i = 0; i < annotations.length; i++) {
-          ann = annotations[i];
-          
-          console.log('RENDERING ', ann.base.lemma);
-          
+          ann = annotations[i];          
           position = ann.position;
           next = nextAnnoSameRow(i);
           prev = prevAnnoSameRow(i);
@@ -416,6 +412,23 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	
     	
     },
+    
+    /**
+     * highlights one search match on this page
+     * @param matchIdx
+     * 
+     * @return the row div with this match
+     */
+    highlightMatch: function(matchIdx) {
+    	var spans = this.textLayerDiv.querySelectorAll('.dbv-annotation');
+    	for (var i = 0; i < spans.length; i++) {
+    		spans[i].classList.remove('blink');
+    	}
+    	var spans = this.textLayerDiv.querySelectorAll('.dbv-annotation[data-id="_searchresult_' + matchIdx + '"]');
+    	spans[0].classList.add('blink');
+    	return spans[0].parentNode;
+    },
+    
  /*   
     renderMatches: function TextLayerBuilder_renderMatches(matches) {
       // Early exit if there is nothing to render.
@@ -561,18 +574,18 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations() {
     	
     	var c = this.findController.dbvAnnoMatchesReady[this.pageIdx] ? this.findController.dbvAnnoMatchesReady[this.pageIdx].length : 'NONE';
-    	console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);
-        console.trace();
+    	//console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);console.trace();
+        
     	
     	if (this.findController === null) { console.log('no findcontroller');  return; }
         var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;
         if (dbvAnnotations === null) {  console.log('no annotations for page ' + this.pageIdx);  return;  }
         this.dbvAnnoMatchesReady = this.pConvertAnnotations(dbvAnnotations); // dontRecalculate ? this.dbvAnnoMatchesReady : 
         if (this.dbvAnnoMatchesReady && (this.dbvAnnoMatchesReady.length > 0)) {
-        	console.log("RENDER THEM ON PAGE " + this.pageIdx, this.dbvAnnoMatchesReady.length, this.dbvAnnoMatchesReady);
+        	//console.log("RENDER THEM ON PAGE " + this.pageIdx, this.dbvAnnoMatchesReady.length, this.dbvAnnoMatchesReady);
             this.pRenderAnnotations(this.dbvAnnoMatchesReady);
         } else {
-        	console.log('NOTHING TO RENDER ON PAGE ' + this.pageIdx, this.dbvAnnoMatchesReady.length);
+        	//console.log('NOTHING TO RENDER ON PAGE ' + this.pageIdx, this.dbvAnnoMatchesReady.length);
         }
     },
 

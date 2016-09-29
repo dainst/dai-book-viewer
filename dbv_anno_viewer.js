@@ -65,6 +65,8 @@
 				
 				this.$.clear();
 				
+				this.$.block('annotations_wait', 'Waiting for Annotations', 'tags');
+				
 				this.annotationPopup = document.getElementById('dbv-ao'); // @ TODO do better blah
 				document.getElementsByTagName('html')[0].addEventListener('click', function(e) {
 					self.annotationPopup.classList.add('hidden');
@@ -85,6 +87,7 @@
 			 * @param data
 			 */
 			buildBlocks: function(data) {
+				this.$.clear();
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
 				this.block('places', 'Places', 'map-marker', data.locations);
 				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false);
@@ -93,6 +96,11 @@
 			
 
 			block: function(id, title, glyphicon, data, populationFn, loadMore) {
+				
+				if (!data) {
+					return;
+				}
+				
 				var block = this.$.block(id, title, glyphicon, true);
 				
 				var populationFn = populationFn || 'populate';
@@ -410,7 +418,7 @@
 			
 			/**
 			 * Don't show any highlighted annotations in text
-			 * @param e Event
+			 * @param annotation
 			 */
 			highlightsHide:  function(annotation) {
 			    var spans = document.querySelectorAll('.dbv-annotation[data-id="' + annotation.id + '"]');

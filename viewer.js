@@ -103,13 +103,14 @@ function getViewerConfiguration() {
       bar: document.getElementById('findbar'),
       toggleButton: document.getElementById('viewFind'),
       findField: document.getElementById('findInput'),
-      highlightAllCheckbox: document.getElementById('findHighlightAll'),
+      phraseSearchCheckbox: document.getElementById('findPhraseSearch'),
       caseSensitiveCheckbox: document.getElementById('findMatchCase'),
       findMsg: document.getElementById('findMsg'),
       findResultsCount: document.getElementById('findResultsCount'),
       findStatusIcon: document.getElementById('findStatusIcon'),
       findPreviousButton: document.getElementById('findPrevious'),
-      findNextButton: document.getElementById('findNext')
+      findNextButton: document.getElementById('findNext'),
+      findDeleteButton: document.getElementById('findDelete')
     },
     passwordOverlay: {
       overlayName: 'passwordOverlay',

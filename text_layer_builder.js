@@ -222,7 +222,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
      * clears all textlayers
      */
     clearRows: function() {
-    	console.log('CLEAR CANVAS');
+    	//console.log('CLEAR CANVAS PAGE ' + this.pageIdx);
     	for(var i = 0; i < this.textDivs.length; i++) {
       	  this.textDivs[i].textContent = '';
     	}
@@ -425,9 +425,13 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     		spans[i].classList.remove('blink');
     	}
     	var spans = this.textLayerDiv.querySelectorAll('.dbv-annotation[data-id="_searchresult_' + matchIdx + '"]');
-    	spans[0].classList.add('blink');
+    	for (var i = 0; i < spans.length; i++) {
+    		spans[i].classList.add('blink');	
+    	}
     	return spans[0].parentNode;
     },
+    
+    
     
  /*   
     renderMatches: function TextLayerBuilder_renderMatches(matches) {
@@ -586,6 +590,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
             this.pRenderAnnotations(this.dbvAnnoMatchesReady);
         } else {
         	//console.log('NOTHING TO RENDER ON PAGE ' + this.pageIdx, this.dbvAnnoMatchesReady.length);
+        	this.clearRows();
+        	this.fillRows(true);
         }
     },
 

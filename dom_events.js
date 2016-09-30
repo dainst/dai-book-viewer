@@ -90,7 +90,6 @@
         query: e.query,
         phraseSearch: e.phraseSearch,
         caseSensitive: e.caseSensitive,
-        highlightAll: e.highlightAll,
         findPrevious: e.findPrevious
       });
       window.dispatchEvent(event);

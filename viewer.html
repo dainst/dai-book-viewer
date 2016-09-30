@@ -128,24 +128,30 @@ See https://github.com/adobe-type-tools/cmap-resources
 							<div class="btn-group-left">
 								<label for="findInput" data-l10n-id="find_label">Find:</label>
 								<input id="findInput" tabindex="91">
-
+								<button class="toolbarButton findDelete" title="" id="findDelete" tabindex="92" data-l10n-id="find_delete">
+										<span data-l10n-id="find_delete_label">Delete Search</span>
+								</button>
 							</div>	
+							
+
+							
+							
 							<div class="btn-group-right splitToolbarButton">
 								
-								<button class="toolbarButton findPrevious" title="" id="findPrevious" tabindex="92" data-l10n-id="find_previous">
+								<button class="toolbarButton findPrevious" title="" id="findPrevious" tabindex="93" data-l10n-id="find_previous">
 									<span data-l10n-id="find_previous_label">Previous</span>
 								</button>
 								<div class="splitToolbarButtonSeparator"></div>
-								<button class="toolbarButton findNext" title="" id="findNext" tabindex="93" data-l10n-id="find_next">
+								<button class="toolbarButton findNext" title="" id="findNext" tabindex="94" data-l10n-id="find_next">
 									<span data-l10n-id="find_next_label">Next</span>
 								</button>
 							</div>
 						</div>
 						<div style="cslear:both"></div>
 						
-						<input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94">
-						<label for="findHighlightAll" data-l10n-id="find_highlight">Highlight all</label>
-						<input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95">
+						<input type="checkbox" id="findPhraseSearch" class="toolbarField" tabindex="95">
+						<label for="findPhraseSearch" data-l10n-id="find_noPhraseSearch">Whole word</label>
+						<input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="96">
 						<label for="findMatchCase"  data-l10n-id="find_match_case_label">Match case</label>
 						
 						
@@ -159,6 +165,8 @@ See https://github.com/adobe-type-tools/cmap-resources
 	          		
 	          		</div>
 				</div>
+				
+				
 			</div>
 			
 			

@@ -60,8 +60,6 @@
 			 * 
 			 */
 			block: function(id, title, glyphicon, minimizable) {
-				var self = this;
-				
 				var block = document.getElementById('dbv-av-block-' + id);
 				if (block) {
 					block.innerHTML = '';
@@ -82,7 +80,10 @@
 				
 				this.blocks[id] = {
 					opened: true,
-					block: block
+					block: block,
+					body: blockbody,
+					headline: blockh3,
+					icon: icon
 				}
 				
 				return blockbody;

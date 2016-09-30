@@ -40,21 +40,27 @@ var FindStates = pdfFindController.FindStates;
 var PDFFindBar = (function PDFFindBarClosure() {
   function PDFFindBar(options) {
     this.opened = false;
+    
+    //elements
     this.bar = options.elements.bar || null;
     this.findField = options.elements.findField || null;
-    this.highlightAll = options.elements.highlightAllCheckbox || null;
+    this.phraseSearch = options.elements.phraseSearchCheckbox || null;
     this.caseSensitive = options.elements.caseSensitiveCheckbox || null;
     this.findMsg = options.elements.findMsg || null;
     this.findResultsCount = options.elements.findResultsCount || null;
     this.findStatusIcon = options.elements.findStatusIcon || null;
     this.findPreviousButton = options.elements.findPreviousButton || null;
     this.findNextButton = options.elements.findNextButton || null;
+    this.findDeleteButton = options.elements.findDeleteButton || null;
     this.findController = options.elements.findController || null;
-    this.eventBus = options.elements.eventBus;
-
+    
+    // controller
     this.findController = options.findController;
     this.pdfSidebar = options.pdfSidebar;
     this.eventBus = options.eventBus;
+    this.$ = options.annoSidebar;
+    console.log(this.$);
+    this.$.parent = this;
     
     if (this.findController === null) {
       throw new Error('PDFFindBar cannot be used without a ' +
@@ -63,15 +69,12 @@ var PDFFindBar = (function PDFFindBarClosure() {
 
     // Add event listeners to the DOM elements.
     var self = this;
-/*    this.toggleButton.addEventListener('click', function() {
-      self.toggle();
-    });*/
 
     this.findField.addEventListener('input', function() {
       self.dispatchEvent('');
     });
 
-    this.bar.addEventListener('keydown', function(evt) {
+    this.bar.addEventListener('keyup', function(evt) {
       switch (evt.keyCode) {
         case 13: // Enter
           if (evt.target === self.findField) {
@@ -79,7 +82,8 @@ var PDFFindBar = (function PDFFindBarClosure() {
           }
           break;
         case 27: // Escape
-          self.close();
+        	self.findField.value = '';
+        	self.dispatchEvent('instant');
           break;
       }
     });
@@ -92,13 +96,21 @@ var PDFFindBar = (function PDFFindBarClosure() {
       self.dispatchEvent('again', false);
     });
 
-    this.highlightAll.addEventListener('click', function() {
-      self.dispatchEvent('highlightallchange');
+    this.findDeleteButton.addEventListener('click', function() {
+    	self.findField.value = '';
+        self.dispatchEvent('instant');
     });
-
+    
     this.caseSensitive.addEventListener('click', function() {
       self.dispatchEvent('casesensitivitychange');
     });
+    
+    this.phraseSearch.addEventListener('click', function() {
+        self.dispatchEvent('phrasesearchchange');
+    });
+    
+    this.$.block('findHistory', 'Previous Searches', 'search', true);
+    
   }
 
   PDFFindBar.prototype = {
@@ -112,14 +124,12 @@ var PDFFindBar = (function PDFFindBarClosure() {
         type: type,
         query: this.findField.value,
         caseSensitive: this.caseSensitive.checked,
-        phraseSearch: true,
-        highlightAll: this.highlightAll.checked,
+        phraseSearch: !this.phraseSearch.checked,
         findPrevious: findPrev
       });
     },
 
-    updateUIState:
-        function PDFFindBar_updateUIState(state, previous, matchCount) {
+    updateUIState: function PDFFindBar_updateUIState(state, previous, matchCount) {
       var notFound = false;
       var findMsg = '';
       var status = '';
@@ -184,7 +194,48 @@ var PDFFindBar = (function PDFFindBarClosure() {
       this.findField.select();
       this.findField.focus();
     },
+    
+    addToHistory: function(searchId) {
+    	if (searchId == 0) {
+    		return;
+    	}
+    	
+    	console.log('ATH: ' , searchId, this.findController.searchHistory);
+    	var search = this.findController.searchHistory[searchId - 1];
+    	if (search == null || search.query == '') {
+    		return;
+    	}
+    	
+		var entry = this.$.htmlElement('div', {'classes': ['dbv-av-block-entry']});
+		var caption = this.$.htmlElement('span', {'classes': ['dbv-av-block-entry-caption']}, search.query, {'click': ['revertSearch', search.id]});
+		entry.appendChild(caption);
+		entry.appendChild(this.$.htmlElement('span', {'classes': ['badge', 'pull-right']}, search.results));
+    	
+    	console.log(this.$.blocks);
+    	this.$.blocks.findHistory.body.appendChild(entry);
+    	
+    	
+    	
+    },
+    
+    revertSearch: function(event, searchId) {
+    	console.log('TBI',event, searchId);
 
+    	var search = this.findController.searchHistory[searchId];
+    	
+    	this.updateUIState(search, false, search.results);
+    	this.findField.value = search.query;
+    	
+        this.eventBus.dispatch('find', {
+            source: this,
+            type: 'instant',
+            query: search.query,
+            caseSensitive: search.caseSensitive,
+            phraseSearch: search.phraseSearch,
+            findPrevious: false
+        });
+    }
+/*
     close: function PDFFindBar_close() {
       if (!this.opened) {
     	// show annotation text layer
@@ -193,7 +244,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
 
       this.findController.active = false;
     },
-
+*/
 /*    toggle: function PDFFindBar_toggle() {
       if (this.opened) {
         this.close();

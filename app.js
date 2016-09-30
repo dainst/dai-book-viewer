@@ -273,7 +273,8 @@ var PDFViewerApplication = {
         
     this.findController = new PDFFindController({
       annoRegistry: this.annoRegistry,
-      pdfViewer: this.pdfViewer
+      pdfViewer: this.pdfViewer,
+      eventBus: this.eventBus,
     });
     this.findController.onUpdateResultsCount = function (matchCount) {
       if (this.supportsIntegratedFind) {
@@ -365,8 +366,8 @@ var PDFViewerApplication = {
     sidebarConfig.pdfThumbnailViewer = this.pdfThumbnailViewer;
     sidebarConfig.pdfOutlineViewer = this.pdfOutlineViewer;
     sidebarConfig.eventBus = this.eventBus;
-    sidebarConfig.annoViewer = this.annoViewer; // paf dai
-    sidebarConfig.annoEditor = this.annoEditor; // paf dai
+    sidebarConfig.annoViewer = this.annoViewer;
+    sidebarConfig.annoEditor = this.annoEditor;
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
 
@@ -376,7 +377,8 @@ var PDFViewerApplication = {
     	elements: appConfig.findBar,
         findController: this.findController,
     	eventBus: this.eventBus,
-    	pdfSidebar: this.pdfSidebar
+    	pdfSidebar: this.pdfSidebar,
+    	annoSidebar: new annoSidebar({container: appConfig.sidebar.findView}),
     });
     
     
@@ -1349,18 +1351,18 @@ var PDFViewerApplication = {
     eventBus.on('rotateccw', webViewerRotateCcw);
     eventBus.on('find', webViewerFind);
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
+    eventBus.on('fileinputchange', webViewerFileInputChange);
     
+    eventBus.on('newsearch', webViewerFindNewSearch)  
     eventBus.on('pafEvent', dbvToggleAnnotations);
     
-//#if GENERIC
-    eventBus.on('fileinputchange', webViewerFileInputChange);
-//#endif
+    
+
   }
 };
 
 //#if GENERIC
-var HOSTED_VIEWER_ORIGINS = ['null',
-  'http://mozilla.github.io', 'https://mozilla.github.io'];
+var HOSTED_VIEWER_ORIGINS = ['null', 'http://mozilla.github.io', 'https://mozilla.github.io'];
 function validateFileURL(file) {
   try {
     var viewerOrigin = new URL(window.location.href).origin || 'null';
@@ -2009,7 +2011,6 @@ function webViewerFind(e) {
     query: e.query,
     phraseSearch: e.phraseSearch,
     caseSensitive: e.caseSensitive,
-    highlightAll: e.highlightAll,
     findPrevious: e.findPrevious
   });
 }
@@ -2019,9 +2020,13 @@ function webViewerFindFromUrlHash(e) {
     query: e.query,
     phraseSearch: e.phraseSearch,
     caseSensitive: false,
-    highlightAll: true,
     findPrevious: false
   });
+}
+
+
+function webViewerFindNewSearch(e) {
+	PDFViewerApplication.findBar.addToHistory(PDFViewerApplication.findController.searchId);
 }
 
 function webViewerScaleChanging(e) {
@@ -2174,7 +2179,6 @@ window.addEventListener('keydown', function keydown(evt) {
               query: findState.query,
               phraseSearch: findState.phraseSearch,
               caseSensitive: findState.caseSensitive,
-              highlightAll: findState.highlightAll,
               findPrevious: cmd === 5 || cmd === 12
             });
           }

@@ -485,15 +485,18 @@ var PDFFindController = (function PDFFindControllerClosure() {
     },
 
     executeCommand: function PDFFindController_executeCommand(cmd, state) {
+      console.log('WHAT ', cmd, state, this.matchCount);
       
-      var newSearch = false;
       if (this.state === null || cmd !== 'findagain') {
       	this.dirtyMatch = true;
-      	newSearch = true; // becuase dirtyMtach can be changed in the 2500ms
-      	this.searchId++;
       }
+
       this.state = state;
       this.updateUIState(FindStates.FIND_PENDING);
+      
+      var newSearch = this.isNewSearch()  ? this.matchCount : -1; // because dirtyMatch can be changed in the 2500ms
+      console.log('PLZ ' + newSearch + ' | ' + cmd);
+      var oldSearch = (cmd == 'findold');
 
       this.firstPagePromise.then(function() {
         this.extractText();
@@ -501,25 +504,15 @@ var PDFFindController = (function PDFFindControllerClosure() {
         clearTimeout(this.findTimeout);
         if (cmd === 'find') {         
           this.findTimeout = setTimeout(function() { // Only trigger the find action after 2500ms of silence.
-        	  this.nextMatch(newSearch);       	  
+        	  this.nextMatch(newSearch, oldSearch);       	  
           }.bind(this), 2500);
         } else {
-          this.nextMatch(newSearch);
+          this.nextMatch(newSearch, oldSearch);
         }
       }.bind(this));
     },
     
-    stateToSearch: function(id, state, results) {
-    	if (state == null) {
-    		return {
-    			id: -1,
-    			results: 195,
-                query: 'IDUFSLIDSKF',
-                caseSensitive: true,
-                phraseSearch: false,
-    		};
-    	}
-    	
+    stateToSearch: function(id, state, results) {   	
     	return {
 			id: id,
 			results: results,
@@ -527,6 +520,20 @@ var PDFFindController = (function PDFFindControllerClosure() {
             caseSensitive: state.caseSensitive,
             phraseSearch: state.phraseSearch,
 		};
+    },
+    
+    isNewSearch: function() {
+    	console.log(this.searchHistory.length > 0 ? 'PLZ compare ' + this.state.query + ' vs ' + this.searchHistory[this.searchHistory.length -1].query : 'PLZ 10829');
+
+    	if (this.searchHistory.length == 0) {
+    		return true;
+    	}
+    	var lastSearch = this.searchHistory[this.searchHistory.length -1]
+    	return (
+			(this.state.query != lastSearch.query) ||
+			(this.state.caseSensitive != lastSearch.caseSensitive) ||
+			(this.state.phraseSearch != lastSearch.phraseSearch)
+    	);
     },
     
     /**
@@ -599,7 +606,13 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	
     },
 
-    nextMatch: function PDFFindController_nextMatch(newSearch) {
+    /**
+     * the next to be shown
+     * 
+     * @param newSearch - is this the first match of a newly entered query / number of matches of the search before
+     * @param oldSearch - is this search reverted from search history? 
+     */
+    nextMatch: function PDFFindController_nextMatch(newSearch, oldSearch) {
 
       var previous = this.state.findPrevious;
       var currentPageIndex = this.pdfViewer.currentPageNumber - 1;
@@ -607,21 +620,23 @@ var PDFFindController = (function PDFFindControllerClosure() {
 
       this.active = true;
     
-      if (newSearch) {
-        // STAND: Verhält sich noch sehr sehr buggy
-    	  /*
-    	   * - event wird nicht immer korrekt dispatched
-    	   * - trefferzahlen stimmen nicht
-    	   */
-    	  
-    	//this.lastSearch = this.stateToSearch(this.searchId, this.state, this.resultCount);
-          	
-  	 	console.log('NEW SEARCH ' + this.searchId);
-	  	var s = this.stateToSearch(this.searchId, this.state, this.matchCount);
-    	console.log('NEW SEARCH DISPATCHED', s);
-    	this.searchHistory[s.id] = s;
-		this.eventBus.dispatch('newsearch');
-		
+      if (newSearch !== -1) {
+
+        this.searchId++;  	
+  	 	console.log('NEW SEARCH ' + oldSearch + ' | ' + newSearch);
+  	 	
+  	 	if (typeof this.searchHistory[this.searchId -1] !== "undefined") {
+  	 		console.log("update match cunt");
+  	 		this.searchHistory[this.searchId -1].results = newSearch;
+  	 	}
+  	 	
+  	 	if (!oldSearch) {
+  		  	var s = this.stateToSearch(this.searchId, this.state, '?'); //
+  	    	this.searchHistory[s.id] = s;
+  			this.eventBus.dispatch('newsearch');
+  			console.log('NEW SEARCH DISPATCHED', s);
+  	 	}
+  	 	
       }
       
       if (this.dirtyMatch) {

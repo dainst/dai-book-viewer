@@ -57,15 +57,20 @@
 			 * @param title 		<string>		headline @ TODO i10n
 			 * @param glyphicon 	<string> 		icon code
 			 * @param minimizable 	<boolean> 		is minimizable
+			 * @param minimized 	<boolean> 		is minimized from da beginning
 			 * 
 			 */
-			block: function(id, title, glyphicon, minimizable) {
+			block: function(id, title, glyphicon, minimizable, minimized) {
 				var block = document.getElementById('dbv-av-block-' + id);
 				if (block) {
 					block.innerHTML = '';
 				} else {
 					block		= this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
 					this.container.appendChild(block);
+				}
+				
+				if (minimized) {
+					block.classList.add('dbv-hidden');
 				}
 				
 				var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
@@ -79,7 +84,7 @@
 				block.appendChild(blockbody);
 				
 				this.blocks[id] = {
-					opened: true,
+					opened: (typeof minimized === "undefined") ? false : !minimized,
 					block: block,
 					body: blockbody,
 					headline: blockh3,

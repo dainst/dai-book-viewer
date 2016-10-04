@@ -428,7 +428,10 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	for (var i = 0; i < spans.length; i++) {
     		spans[i].classList.add('blink');	
     	}
-    	return spans[0].parentNode;
+    	if (spans.length > 0) {
+    		return spans[0].parentNode;	
+    	}
+    	
     },
     
     

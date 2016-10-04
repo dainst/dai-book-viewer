@@ -109,7 +109,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
         self.dispatchEvent('phrasesearchchange');
     });
     
-    this.$.block('findHistory', 'Previous Searches', 'search', true);
+    this.$.block('findHistory', 'Previous Searches', 'search', true, true);
     
   }
 
@@ -125,7 +125,8 @@ var PDFFindBar = (function PDFFindBarClosure() {
         query: this.findField.value,
         caseSensitive: this.caseSensitive.checked,
         phraseSearch: !this.phraseSearch.checked,
-        findPrevious: findPrev
+        findPrevious: findPrev,
+        isOldSearch: false
       });
     },
 
@@ -211,7 +212,6 @@ var PDFFindBar = (function PDFFindBarClosure() {
 		entry.appendChild(caption);
 		entry.appendChild(this.$.htmlElement('span', {'classes': ['badge', 'pull-right']}, search.results));
     	
-    	console.log(this.$.blocks);
     	this.$.blocks.findHistory.body.appendChild(entry);
     	
     	
@@ -228,7 +228,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
     	
         this.eventBus.dispatch('find', {
             source: this,
-            type: 'instant',
+            type: 'old',
             query: search.query,
             caseSensitive: search.caseSensitive,
             phraseSearch: search.phraseSearch,

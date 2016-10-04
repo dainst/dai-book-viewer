@@ -49,8 +49,6 @@
 		}
 	
 		AnnoEditor.prototype = {
-
-			
 				
 			editorElements: {
 				input: {},
@@ -65,12 +63,12 @@
 			},
 			
 			displayEditor: function() {
-				var self = this;				
+				var self = this;
 				
 				this.editorContentEditor();
 				this.editorContentOverview();
 				
-				document.getElementById('viewer').addEventListener('mouseup', function(e) {return self.getSelection(e)});				
+				//document.getElementById('viewer').addEventListener('mouseup', function(e) {return self.getSelection(e)});				
 			},
 			
 			editorContentEditor: function() {
@@ -108,13 +106,8 @@
 				this.editorElements.overview = block.appendChild(this.$.htmlElement('pre', {id: 'dbv-edit-annotation-overview'}));
 			},
 			
-			getSelection: function(e) {
-			    var text = "";
-			    if (window.getSelection) {
-			        text = window.getSelection().toString();
-			    } else if (document.selection && document.selection.type != "Control") {
-			        text = document.selection.createRange().text;
-			    }
+			onTextmarker: function(text) {
+
 	
 			    if (text != '') {
 				    this.updateNewAnnotation('terms', text);

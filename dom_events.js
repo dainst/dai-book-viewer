@@ -138,6 +138,7 @@
       });
       e.source.container.dispatchEvent(event);
     });
+
   }
 
   var globalEventBus = null;

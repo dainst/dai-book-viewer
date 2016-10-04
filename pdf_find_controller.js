@@ -537,8 +537,6 @@ var PDFFindController = (function PDFFindControllerClosure() {
     },
     
     isNewSearch: function() {
-    	console.log(this.searchHistory.length > 0 ? 'PLZ compare ' + this.state.query + ' vs ' + this.searchHistory[this.searchHistory.length -1].query : 'PLZ 10829');
-
     	if (this.searchHistory.length == 0) {
     		return true;
     	}
@@ -641,7 +639,6 @@ var PDFFindController = (function PDFFindControllerClosure() {
   	 	//console.log('NEW SEARCH ' + oldSearch + ' | ' + newSearch);
   	 	
   	 	if (typeof this.searchHistory[this.searchId -1] !== "undefined") {
-  	 		console.log("update match cunt");
   	 		this.searchHistory[this.searchId -1].results = newSearch;
   	 	}
   	 	

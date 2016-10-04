@@ -212,17 +212,6 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		if (view == 'annotations') {
 			this.annoViewer.refreshMap();
 		}
-		
-		if (view == 'find') {
-			//this.annoViewer.toggleAnnotations(false);
-		}
-		
-		if ((view != 'find') && (this.active == 'find')) {
-			this.annoViewer.redrawAnnotations();
-		}
-			
-			
-
     
 		// Update the active view *after* it has been validated above,
 		// in order to prevent setting it to an invalid state.

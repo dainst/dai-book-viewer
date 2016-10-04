@@ -195,8 +195,6 @@ var PDFFindBar = (function PDFFindBarClosure() {
       this.findResultsCount.classList.remove('hidden');
       
       // show details
-      console.log(matchDetails);
-      
       this.$.blocks.findResults.clear();
       for (var i = 0; i < matchDetails.length; i++) {
     	  if (matchDetails[i] > 0) {
@@ -254,7 +252,11 @@ var PDFFindBar = (function PDFFindBarClosure() {
             regex: search.regex,
             findPrevious: false
         });
-    }
+    },
+    
+	onTextmarker: function(text) {
+		this.findField.value = text;
+	}
 
   };
   return PDFFindBar;

@@ -198,15 +198,12 @@
 						).addTo(map);						
 						
 						marker.on('click', function(e) {
-							//console.log('MAP:CLICK ', e);
 							self.eventHandler(e, 'marker');
 						});
 						marker.on('mouseover', function(e) {
-							//console.log('MAP:mouseover ', e);
 							self.eventHandler(e, 'marker');
 						});
 						marker.on('mouseout', function(e) {
-							//console.log('MAP:mouseout ', e);
 							self.eventHandler(e, 'marker');
 						});
 						//marker.bindPopup(unit.lemma + '<span class="badge">' +  unit.count + "</span>");
@@ -274,13 +271,9 @@
 				};
 			},
 			
-
-			
-			
 			/* annotation popup  */
 			
 			annotationPopup: false,
-
 			
 			/**
 			 * shows the annotationPopup with content of the annotations (reference links and text)
@@ -336,11 +329,7 @@
 				}
 			},
 			
-			
-
-			
-
-			
+				
 			/**
 			 * takes uniqueUnits - array and counts the max and min occuance in one set of units
 			 * @param units - an array of "units" - annotations of one type
@@ -486,16 +475,6 @@
 		    	} else {
 		    		this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
 		    	}
-		    	
-		    },
-		    
-		    redrawAnnotations: function() {
-		    	console.log('FUNCTION HAS TO BE IMPLEMENTED');
-		    	
-		    	PDFViewerApplication.findController.reloadAllTextLayers();
-		    	this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
-		    	
-		    	// this function shall redraw all annotations! afterwards serach should be working perfectly
 		    	
 		    }
 		    

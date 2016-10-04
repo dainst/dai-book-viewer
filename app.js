@@ -1354,8 +1354,7 @@ var PDFViewerApplication = {
     
     eventBus.on('newsearch', webViewerFindNewSearch)  
     eventBus.on('pafEvent', dbvToggleAnnotations);
-    
-    
+    eventBus.on('textmarker', dbvTextmarker);
 
   }
 };
@@ -1615,10 +1614,12 @@ function webViewerInitialized() {
   });
   
   appConfig.toolbar.pafButton.addEventListener('click', function (e) {
-	    PDFViewerApplication.eventBus.dispatch('pafEvent');
+	  PDFViewerApplication.eventBus.dispatch('pafEvent');
   });
 
-
+  appConfig.viewerContainer.addEventListener('mouseup', function(e) {
+	  PDFViewerApplication.eventBus.dispatch('textmarker');
+  });
   
   Promise.all(waitForBeforeOpening).then(function () {
     webViewerOpenFileViaURL(file);
@@ -2080,6 +2081,22 @@ function webViewerPageChanging(e) {
 function dbvToggleAnnotations() {
 	console.log('toggle annotations');
 	PDFViewerApplication.annoViewer.toggleAnnotations();
+}
+
+function dbvTextmarker() {	
+    var text = "";
+    if (window.getSelection) {
+        text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        text = document.selection.createRange().text;
+    }
+    
+    if (PDFViewerApplication.pdfSidebar.active == 'find') {
+    	PDFViewerApplication.findBar.onTextmarker(text);
+    } else if (PDFViewerApplication.pdfSidebar.active == 'editAnnotations') {
+    	PDFViewerApplication.annoEditor.onTextmarker(text);
+    }
+    
 }
 
 var zoomDisabled = false, zoomDisabledTimeout;

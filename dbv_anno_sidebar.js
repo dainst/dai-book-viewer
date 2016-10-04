@@ -88,10 +88,21 @@
 					block: block,
 					body: blockbody,
 					headline: blockh3,
-					icon: icon
+					icon: icon,
+					add: function(attr, content, eventListeners) {return this.blockEntry(attr, content, eventListeners, id)}.bind(this),
+					clear: function() {blockbody.textContent = ''}
 				}
 				
 				return blockbody;
+			},
+			
+			blockEntry: function(captionText, badgeText, eventListeners, blockId) {
+				var entry = this.htmlElement('div', {'classes': ['dbv-av-block-entry']});
+				var caption = this.htmlElement('span', {'classes': ['dbv-av-block-entry-caption']}, captionText, eventListeners);
+				entry.appendChild(caption);
+				entry.appendChild(this.htmlElement('span', {'classes': ['badge', 'pull-right']}, badgeText));
+		    	
+		    	this.blocks[blockId].body.appendChild(entry);
 			},
 			
 			/**

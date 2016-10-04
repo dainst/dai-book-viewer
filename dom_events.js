@@ -85,9 +85,7 @@
       if (e.source === window) {
         return; // event comes from FirefoxCom, no need to replicate
       }
-      var event = document.createEvent('CustomEvent');
-      console.log('EIN HOCH AUF DEN BUSFAHRER ', e);;
-      
+      var event = document.createEvent('CustomEvent');      
       event.initCustomEvent('find' + e.type, true, true, {
         query: e.query,
         phraseSearch: e.phraseSearch,

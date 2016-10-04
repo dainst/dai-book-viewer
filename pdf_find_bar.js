@@ -60,7 +60,6 @@ var PDFFindBar = (function PDFFindBarClosure() {
     this.pdfSidebar = options.pdfSidebar;
     this.eventBus = options.eventBus;
     this.$ = options.annoSidebar;
-    console.log(this.$);
     this.$.parent = this;
     
     if (this.findController === null) {
@@ -90,16 +89,17 @@ var PDFFindBar = (function PDFFindBarClosure() {
     });
 
     this.findPreviousButton.addEventListener('click', function() {
-      self.dispatchEvent('again', true);
+    	self.dispatchEvent('again', true);
     });
 
     this.findNextButton.addEventListener('click', function() {
-      self.dispatchEvent('again', false);
+    	self.dispatchEvent('again', false);
     });
 
     this.findDeleteButton.addEventListener('click', function() {
     	self.findField.value = '';
-        self.dispatchEvent('instant');
+        self.dispatchEvent('clear');
+        self.$.blocks.findResults.clear();
     });
     
     this.caseSensitive.addEventListener('click', function() {
@@ -114,7 +114,9 @@ var PDFFindBar = (function PDFFindBarClosure() {
     	self.dispatchEvent('regexchange');
     });
     
+    this.$.block('findResults', 'Find Results', 'search', true);
     this.$.block('findHistory', 'Previous Searches', 'search', true, true);
+    
     
   }
 
@@ -135,7 +137,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
       });
     },
 
-    updateUIState: function PDFFindBar_updateUIState(state, previous, matchCount) {
+    updateUIState: function PDFFindBar_updateUIState(state, previous, matchCount, matchDetails) {
       var notFound = false;
       var findMsg = '';
       var status = '';
@@ -155,17 +157,16 @@ var PDFFindBar = (function PDFFindBarClosure() {
 
         case FindStates.FIND_WRAPPED:
           if (previous) {
-            findMsg = mozL10n.get('find_reached_top', null,
-              'Reached top of document, continued from bottom');
+            findMsg = mozL10n.get('find_reached_top', null, 'Reached top of document, continued from bottom');
           } else {
-            findMsg = mozL10n.get('find_reached_bottom', null,
-              'Reached end of document, continued from top');
+            findMsg = mozL10n.get('find_reached_bottom', null, 'Reached end of document, continued from top');
           }
           break;
       }
 
       if (notFound) {
         this.findField.classList.add('notFound');
+        this.$.blocks.findResults.clear();
       } else {
         this.findField.classList.remove('notFound');
       }
@@ -173,10 +174,10 @@ var PDFFindBar = (function PDFFindBarClosure() {
       this.findField.setAttribute('data-status', status);
       this.findMsg.textContent = findMsg;
 
-      this.updateResultsCount(matchCount);
+      this.updateResultsCount(matchCount, matchDetails);
     },
 
-    updateResultsCount: function(matchCount) {
+    updateResultsCount: function(matchCount, matchDetails) {
       if (!this.findResultsCount) {
         return; // no UI control is provided
       }
@@ -192,8 +193,27 @@ var PDFFindBar = (function PDFFindBarClosure() {
 
       // Show the counter
       this.findResultsCount.classList.remove('hidden');
+      
+      // show details
+      console.log(matchDetails);
+      
+      this.$.blocks.findResults.clear();
+      for (var i = 0; i < matchDetails.length; i++) {
+    	  if (matchDetails[i] > 0) {
+        	  this.$.blocks.findResults.add(mozL10n.get('Page', false, 'Page') + ' ' + (i + 1).toString(), matchDetails[i], {'click': ['jumpToResultPage', i]});
+    	  }
+      }
+      
+      
     },
 
+    
+    jumpToResultPage: function(e, page) {
+    	this.findController.selected.matchIdx = 0;
+    	this.findController.selected.pageIdx = page;
+    	this.findController.updatePage(page);
+    },
+    
     open: function PDFFindBar_open() {
       this.pdfSidebar.switchView('find');
     	
@@ -206,25 +226,16 @@ var PDFFindBar = (function PDFFindBarClosure() {
     		return;
     	}
     	
-    	console.log('ATH: ' , searchId, this.findController.searchHistory);
     	var search = this.findController.searchHistory[searchId - 1];
     	if (search == null || search.query == '') {
     		return;
     	}
     	
-		var entry = this.$.htmlElement('div', {'classes': ['dbv-av-block-entry']});
-		var caption = this.$.htmlElement('span', {'classes': ['dbv-av-block-entry-caption']}, search.query, {'click': ['revertSearch', search.id]});
-		entry.appendChild(caption);
-		entry.appendChild(this.$.htmlElement('span', {'classes': ['badge', 'pull-right']}, search.results));
-    	
-    	this.$.blocks.findHistory.body.appendChild(entry);
-    	
-    	
-    	
+    	this.$.blocks.findHistory.add(search.query, search.results, {'click': ['revertSearch', search.id]});
     },
     
     revertSearch: function(event, searchId) {
-    	console.log('TBI',event, searchId);
+    	//console.log('TBI',event, searchId);
 
     	var search = this.findController.searchHistory[searchId];
     	

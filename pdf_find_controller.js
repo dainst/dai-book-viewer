@@ -500,7 +500,6 @@ var PDFFindController = (function PDFFindControllerClosure() {
     },
 
     executeCommand: function PDFFindController_executeCommand(cmd, state) {
-      console.log('WHAT ', cmd, state, this.matchCount);
       
       if (this.state === null || cmd !== 'findagain') {
       	this.dirtyMatch = true;
@@ -510,7 +509,6 @@ var PDFFindController = (function PDFFindControllerClosure() {
       this.updateUIState(FindStates.FIND_PENDING);
       
       var newSearch = this.isNewSearch()  ? this.matchCount : -1; // because dirtyMatch can be changed in the 2500ms
-      console.log('PLZ ' + newSearch + ' | ' + cmd);
       var oldSearch = (cmd == 'findold');
 
       this.firstPagePromise.then(function() {
@@ -640,7 +638,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
       if (newSearch !== -1) {
 
         this.searchId++;  	
-  	 	console.log('NEW SEARCH ' + oldSearch + ' | ' + newSearch);
+  	 	//console.log('NEW SEARCH ' + oldSearch + ' | ' + newSearch);
   	 	
   	 	if (typeof this.searchHistory[this.searchId -1] !== "undefined") {
   	 		console.log("update match cunt");
@@ -651,7 +649,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
   		  	var s = this.stateToSearch(this.searchId, this.state, '?'); //
   	    	this.searchHistory[s.id] = s;
   			this.eventBus.dispatch('newsearch');
-  			console.log('NEW SEARCH DISPATCHED', s);
+  			//console.log('NEW SEARCH DISPATCHED', s);
   	 	}
   	 	
       }
@@ -810,16 +808,25 @@ var PDFFindController = (function PDFFindControllerClosure() {
       }
     },
 
+    resultDetails: function() {
+    	var resultDetails = [];
+    	for (var i = 0; i < this.pageMatches.length; i++) {
+    		resultDetails[i] = this.pageMatches[i].length;
+    	}
+    	return resultDetails;
+    },
+    
     updateUIState: function PDFFindController_updateUIState(state, previous) {
         if (this.onUpdateState) {
-          this.onUpdateState(state, previous, this.matchCount);
+          this.onUpdateState(state, previous, this.matchCount, this.resultDetails());
         }
     },
     
-    updateUIResultsCount:
-        function PDFFindController_updateUIResultsCount() {
+    updateUIResultsCount: function PDFFindController_updateUIResultsCount() {
       if (this.onUpdateResultsCount) {
-        this.onUpdateResultsCount(this.matchCount);
+
+    	  
+        this.onUpdateResultsCount(this.matchCount, this.resultDetails());
       }
     },
     

@@ -276,18 +276,17 @@ var PDFViewerApplication = {
       pdfViewer: this.pdfViewer,
       eventBus: this.eventBus,
     });
-    this.findController.onUpdateResultsCount = function (matchCount) {
+    this.findController.onUpdateResultsCount = function (matchCount, matchDetails) {
       if (this.supportsIntegratedFind) {
         return;
       }
-      this.findBar.updateResultsCount(matchCount);
+      this.findBar.updateResultsCount(matchCount, matchDetails);
     }.bind(this);
-    this.findController.onUpdateState = function (state, previous, matchCount) {
+    this.findController.onUpdateState = function (state, previous, matchCount, matchDetails) {
       if (this.supportsIntegratedFind) {
-        this.externalServices.updateFindControlState(
-          {result: state, findPrevious: previous});
+        this.externalServices.updateFindControlState({result: state, findPrevious: previous});
       } else {
-        this.findBar.updateUIState(state, previous, matchCount);
+        this.findBar.updateUIState(state, previous, matchCount, matchDetails);
       }
     }.bind(this);
 

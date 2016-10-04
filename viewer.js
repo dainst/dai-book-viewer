@@ -105,6 +105,7 @@ function getViewerConfiguration() {
       findField: document.getElementById('findInput'),
       phraseSearchCheckbox: document.getElementById('findPhraseSearch'),
       caseSensitiveCheckbox: document.getElementById('findMatchCase'),
+      regexCheckbox: document.getElementById('findRegex'),
       findMsg: document.getElementById('findMsg'),
       findResultsCount: document.getElementById('findResultsCount'),
       findStatusIcon: document.getElementById('findStatusIcon'),

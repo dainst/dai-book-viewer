@@ -46,6 +46,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
     this.findField = options.elements.findField || null;
     this.phraseSearch = options.elements.phraseSearchCheckbox || null;
     this.caseSensitive = options.elements.caseSensitiveCheckbox || null;
+    this.regex = options.elements.regexCheckbox || null;
     this.findMsg = options.elements.findMsg || null;
     this.findResultsCount = options.elements.findResultsCount || null;
     this.findStatusIcon = options.elements.findStatusIcon || null;
@@ -109,6 +110,10 @@ var PDFFindBar = (function PDFFindBarClosure() {
         self.dispatchEvent('phrasesearchchange');
     });
     
+    this.regex.addEventListener('click', function() {
+    	self.dispatchEvent('regexchange');
+    });
+    
     this.$.block('findHistory', 'Previous Searches', 'search', true, true);
     
   }
@@ -118,15 +123,15 @@ var PDFFindBar = (function PDFFindBarClosure() {
       this.updateUIState();
     },
 
-    dispatchEvent: function PDFFindBar_dispatchEvent(type, findPrev) {
+    dispatchEvent: function PDFFindBar_dispatchEvent(type, findPrev) { 	
       this.eventBus.dispatch('find', {
         source: this,
         type: type,
         query: this.findField.value,
         caseSensitive: this.caseSensitive.checked,
         phraseSearch: !this.phraseSearch.checked,
-        findPrevious: findPrev,
-        isOldSearch: false
+        regex: this.regex.checked, 
+        findPrevious: findPrev
       });
     },
 
@@ -223,8 +228,11 @@ var PDFFindBar = (function PDFFindBarClosure() {
 
     	var search = this.findController.searchHistory[searchId];
     	
-    	this.updateUIState(search, false, search.results);
+    	//this.updateUIState(search, false, search.results);
     	this.findField.value = search.query;
+        this.caseSensitive.checked = search.caseSensitive;
+        this.phraseSearch.checked = !search.phraseSearch;
+        this.regex.checked = search.regex; 
     	
         this.eventBus.dispatch('find', {
             source: this,
@@ -232,26 +240,11 @@ var PDFFindBar = (function PDFFindBarClosure() {
             query: search.query,
             caseSensitive: search.caseSensitive,
             phraseSearch: search.phraseSearch,
+            regex: search.regex,
             findPrevious: false
         });
     }
-/*
-    close: function PDFFindBar_close() {
-      if (!this.opened) {
-    	// show annotation text layer
-        return;
-      }
 
-      this.findController.active = false;
-    },
-*/
-/*    toggle: function PDFFindBar_toggle() {
-      if (this.opened) {
-        this.close();
-      } else {
-        this.open();
-      }
-    }*/
   };
   return PDFFindBar;
 })();

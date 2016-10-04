@@ -189,7 +189,8 @@ var PDFLinkService = (function PDFLinkServiceClosure() {
           this.eventBus.dispatch('findfromurlhash', {
             source: this,
             query: params['search'].replace(/"/g, ''),
-            phraseSearch: (params['phrase'] === 'true')
+            phraseSearch: (params['phrase'] !== 'false'),
+            regex: (params['regex'] === 'true')
           });
         }
         // borrowing syntax from "Parameters for Opening PDF Files"

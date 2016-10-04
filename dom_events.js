@@ -86,11 +86,14 @@
         return; // event comes from FirefoxCom, no need to replicate
       }
       var event = document.createEvent('CustomEvent');
+      console.log('EIN HOCH AUF DEN BUSFAHRER ', e);;
+      
       event.initCustomEvent('find' + e.type, true, true, {
         query: e.query,
         phraseSearch: e.phraseSearch,
         caseSensitive: e.caseSensitive,
-        findPrevious: e.findPrevious
+        findPrevious: e.findPrevious,
+        regex: e.regex
       });
       window.dispatchEvent(event);
     });

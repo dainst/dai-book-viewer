@@ -2011,6 +2011,7 @@ function webViewerFind(e) {
     query: e.query,
     phraseSearch: e.phraseSearch,
     caseSensitive: e.caseSensitive,
+    regex: e.regex,
     findPrevious: e.findPrevious
   });
 }
@@ -2020,7 +2021,8 @@ function webViewerFindFromUrlHash(e) {
     query: e.query,
     phraseSearch: e.phraseSearch,
     caseSensitive: false,
-    findPrevious: false
+    findPrevious: false,
+    regex: false
   });
 }
 
@@ -2179,6 +2181,7 @@ window.addEventListener('keydown', function keydown(evt) {
               query: findState.query,
               phraseSearch: findState.phraseSearch,
               caseSensitive: findState.caseSensitive,
+              regex: findState.regex,
               findPrevious: cmd === 5 || cmd === 12
             });
           }

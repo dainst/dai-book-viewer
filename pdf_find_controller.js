@@ -116,7 +116,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
       
     },
 
-    normalize: function PDFFindController_normalize(text) {  
+    normalize: function PDFFindController_normalize(text, isQuery) {  
     	if (typeof text === 'object') { // paf
     		var ret = [];
     		for (var i = 0; i < text.length; i++) {
@@ -126,9 +126,20 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	}
     	
     	
-      return text.replace(this.normalizationRegex, function (ch) {
+      var normalized = text.replace(this.normalizationRegex, function (ch) {
         return CHARACTERS_TO_NORMALIZE[ch];
       });
+      
+      
+      if (isQuery) {
+    	  // if it's a query, then 
+    	  // 1. escape regex cahracters
+    	  // 2. normalize groups of white spaces
+    	  normalized = normalized.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/\s+/g, '\\s+')
+      }
+      
+      return normalized; 
+      
     },  
     
     /**
@@ -196,7 +207,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	function searchOnPage(annotation, pageIndex, term) {
     		//console.log('SOP search on page ' + pageIndex + ' for: ' + term, annotation);
 
-        	var matches = self.calcFind(term, pageIndex, {'phraseSearch': false, 'caseSensitive': false});     	
+        	var matches = self.calcFind(term, pageIndex, {'phraseSearch': false, 'caseSensitive': false, 'regex': false});     	
         	
         	if (!matches) {
         		//console.log('SOP no Matches for ', term, matches, annotation, ' on page ', pageIndex);
@@ -339,8 +350,10 @@ var PDFFindController = (function PDFFindControllerClosure() {
         }
         
         var ci = settings.caseSensitive ? '' : 'i';
+        //
         
-        var regexp = new RegExp(query.replace(/\s+/g, '\\s+'), 'g' + ci);
+        
+        var regexp = new RegExp(query, 'g' + ci);
         //console.log('MM: ', regexp);
         
         while ((match = regexp.exec(pageContent)) !== null) {
@@ -366,6 +379,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
      * @param settings 		- <object> {
      * 							caseSensitive: 	<bool>: false*,
      * 							phraseSearch:	<bool>: true*
+     * 							regex:			<bool>: false*
      * 						}
      * @returns <array> of <position>
      */
@@ -381,16 +395,17 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	// apply default settings
         var searchsettings = {};
     	var defaults = {
-    		caseSensitive: false,
-    		phraseSearch: true
+    		caseSensitive: 	false,
+    		phraseSearch: 	true,
+    		regex:			false
     	};
     	for (var setting in defaults) {
     		searchsettings[setting] = (typeof settings[setting] === "undefined") ? defaults[setting] : settings[setting];
     	}
     	
-    	// normalize page content
-    	var pageContent = this.normalize(this.pageContents[pageIndex]);
-        var query = this.normalize(query);
+    	// normalize page content and query
+    	var pageContent = this.normalize(this.pageContents[pageIndex], false);
+        query = (settings.regex) ? query : this.normalize(query, true);
         
         //console.log('FIND ', query, pageIndex, searchsettings);
              
@@ -519,6 +534,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
             query: state.query,
             caseSensitive: state.caseSensitive,
             phraseSearch: state.phraseSearch,
+            regex: state.regex
 		};
     },
     
@@ -532,7 +548,8 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	return (
 			(this.state.query != lastSearch.query) ||
 			(this.state.caseSensitive != lastSearch.caseSensitive) ||
-			(this.state.phraseSearch != lastSearch.phraseSearch)
+			(this.state.phraseSearch != lastSearch.phraseSearch) || 
+			(this.state.regex != lastSearch.regex)
     	);
     },
     

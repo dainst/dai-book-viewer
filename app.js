@@ -1618,7 +1618,7 @@ function webViewerInitialized() {
   });
 
   appConfig.viewerContainer.addEventListener('mouseup', function(e) {
-	  PDFViewerApplication.eventBus.dispatch('textmarker');
+	  PDFViewerApplication.eventBus.dispatch('textmarker', e);
   });
   
   Promise.all(waitForBeforeOpening).then(function () {
@@ -2083,18 +2083,28 @@ function dbvToggleAnnotations() {
 	PDFViewerApplication.annoViewer.toggleAnnotations();
 }
 
-function dbvTextmarker() {	
+function dbvTextmarker(e) {	
+	
     var text = "";
     if (window.getSelection) {
         text = window.getSelection().toString();
     } else if (document.selection && document.selection.type != "Control") {
         text = document.selection.createRange().text;
     }
+        
+	function hasClass(el, className) {
+		return el ? ((el.classList) ? el.classList.contains(className): new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className)) : false;
+	}
+	var parent = e.target.parentNode;
+	while (parent && !hasClass(parent, 'page')) {parent = parent.parentNode;}
+	if (parent) {
+		var pageIdx = parseInt(parent.dataset.pageNumber);
+	}
     
     if (PDFViewerApplication.pdfSidebar.active == 'find') {
-    	PDFViewerApplication.findBar.onTextmarker(text);
+    	PDFViewerApplication.findBar.onTextmarker(text, pageIdx);
     } else if (PDFViewerApplication.pdfSidebar.active == 'editAnnotations') {
-    	PDFViewerApplication.annoEditor.onTextmarker(text);
+    	PDFViewerApplication.annoEditor.onTextmarker(text, pageIdx);
     }
     
 }

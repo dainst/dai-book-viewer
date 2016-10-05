@@ -139,6 +139,15 @@
       e.source.container.dispatchEvent(event);
     });
 
+    
+    eventBus.on('outlineloaded', function (e) {
+        var event = document.createEvent('CustomEvent');
+        event.initCustomEvent('outlineloaded', true, true, {
+          outlineCount: e.outlineCount
+        });
+        e.source.container.dispatchEvent(event);
+      });
+
   }
 
   var globalEventBus = null;

@@ -106,23 +106,16 @@
 				this.editorElements.overview = block.appendChild(this.$.htmlElement('pre', {id: 'dbv-edit-annotation-overview'}));
 			},
 			
-			onTextmarker: function(text) {
+			onTextmarker: function(text, pageIdx) {
 
-	
 			    if (text != '') {
 				    this.updateNewAnnotation('terms', text);
 				    this.updateNewAnnotation('lemma', text);
 			    }
-	
 				
-				// find page number
-				function hasClass(el, className) {
-					return el ? ((el.classList) ? el.classList.contains(className): new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className)) : false;
-				}
-				var parent = e.target.parentNode;
-				while (parent && !hasClass(parent, 'page')) {parent = parent.parentNode;}
-				if (parent) {
-					var page = parseInt(parent.dataset.pageNumber) - 1;
+
+				if (pageIdx) {
+					var page = pageIdx - 1;
 					if (this.editorNewAnnotation.pages.indexOf(page) === -1) {
 						this.editorNewAnnotation.pages.push(page);
 					}

@@ -100,6 +100,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
     this.findView = options.findView;
     this.editAnnotationsView = options.editAnnotationsView;
     this.infoView = options.infoView;
+    
+    this.editorMode = options.editorMode;
 
     this._addEventListeners();
   }
@@ -144,6 +146,10 @@ var PDFSidebar = (function PDFSidebarClosure() {
       }
       this.isInitialViewSet = true;
 
+      if (this.editorMode) {
+    	  this.editAnnotationsButton.classList.remove('hidden');
+      }
+      
       if (this.isOpen && view === 'none') {
         this._dispatchEvent();
         // If the user has already manually opened the sidebar,
@@ -152,7 +158,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
       }
       var isViewPreserved = (view === this.visibleView);
       this.switchView(view, /* forceOpen */ true);
-
+      
       if (isViewPreserved) {
         // Prevent dispatching two back-to-back `sidebarviewchanged` events,
         // since `this.switchView` dispatched the event if the view changed.

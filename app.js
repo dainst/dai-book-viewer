@@ -212,10 +212,16 @@ var PDFViewerApplication = {
   isViewerEmbedded: (window.parent !== window),
   url: '',
   externalServices: DefaultExernalServices,
+  
+  editorMode: false,
 
   // called once when the document is loaded
   initialize: function pdfViewInitialize(appConfig) {
 
+	var queryString = document.location.search.substring(1);
+	var params = parseQueryString(queryString);
+	this.editorMode = 'editormode' in params ? (params.editormode === 'true') : false;
+console.log('EM: ', this.editorMode, params);
     configure(pdfjsLib.PDFJS);
     this.appConfig = appConfig;
 
@@ -307,12 +313,12 @@ var PDFViewerApplication = {
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView})
     });
-    //this.annoViewer.setViewer(this.pdfViewer);
-    this.annoEditor = new annoEditor({
+    this.annoEditor = this.editorMode ? new annoEditor({
         findController: this.findController,
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
-    });
+    }) : null;
+    console.log('EM: ',typeof this.editorMode , this.editorMode );
     this.annoInfo = new annoInfo({
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.infoView}),
@@ -367,6 +373,7 @@ var PDFViewerApplication = {
     sidebarConfig.eventBus = this.eventBus;
     sidebarConfig.annoViewer = this.annoViewer;
     sidebarConfig.annoEditor = this.annoEditor;
+    sidebarConfig.editorMode = this.editorMode;
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
 
@@ -958,7 +965,9 @@ var PDFViewerApplication = {
 
 	  // paf dai
     	console.log('DBV initalize Editor & Info');
-	  this.annoEditor.load(); // TODO check editor mode
+	  if (this.editorMode) {
+		  this.annoEditor.load();
+	  }
 	  this.annoInfo.load();
     
     
@@ -991,7 +1000,7 @@ var PDFViewerApplication = {
       };
 
       store.initializedPromise.then(function resolved() {
-        var storedHash = null, sidebarView = null;
+        var storedHash = null, sidebarView = null, editorMode = false;
         if (self.preferenceShowPreviousViewOnLoad && store.get('exists', false)) {
           var pageNum = store.get('page', '1');
           var zoom = self.preferenceDefaultZoomValue || store.get('zoom', DEFAULT_SCALE_VALUE);
@@ -1001,11 +1010,13 @@ var PDFViewerApplication = {
           storedHash = 'page=' + pageNum + '&zoom=' + zoom + ',' + left + ',' + top;
 
           sidebarView = store.get('sidebarView', 'none');
+          
+          editorMode  = store.get('editorMode', false);
 
         } else if (self.preferenceDefaultZoomValue) {
           storedHash = 'page=1&zoom=' + self.preferenceDefaultZoomValue;
         }
-        self.setInitialView(storedHash,{ scale: scale, sidebarView: sidebarView });
+        self.setInitialView(storedHash,{ scale: scale, sidebarView: sidebarView, editorMode: editorMode});
 
         initialParams.hash = storedHash;
 
@@ -1155,6 +1166,8 @@ var PDFViewerApplication = {
     this.appConfig.toolbar.pageNumber.value = this.pdfViewer.currentPageNumber;
 
     this.pdfSidebar.setInitialView(this.preferenceSidebarViewOnLoad || (sidebarView || 'none'));
+    console.log('HASH ', storedHash, options);
+    this.editorMode = options.editorMode;
 
     if (this.initialDestination) {
       this.pdfLinkService.navigateTo(this.initialDestination);
@@ -1408,22 +1421,15 @@ function loadAndEnablePDFBug(enabledTabs) {
 }
 
 function webViewerInitialized() {
-//#if GENERIC
   var queryString = document.location.search.substring(1);
   var params = parseQueryString(queryString);
   var file = 'file' in params ? params.file : DEFAULT_URL;
+
   validateFileURL(file);
-//#endif
-//#if (FIREFOX || MOZCENTRAL)
-//var file = window.location.href.split('#')[0];
-//#endif
-//#if CHROME
-//var file = DEFAULT_URL;
-//#endif
+
 
   var waitForBeforeOpening = [];
   var appConfig = PDFViewerApplication.appConfig;
-//#if GENERIC
   var fileInput = document.createElement('input');
   fileInput.id = appConfig.openFileInputName;
   fileInput.className = 'fileInput';
@@ -1438,10 +1444,7 @@ function webViewerInitialized() {
     fileInput.value = null;
   }
 
-//#else
-//appConfig.toolbar.openFile.setAttribute('hidden', 'true');
-//appConfig.secondaryToolbar.openFileButton.setAttribute('hidden', 'true');
-//#endif
+
   
 
   
@@ -2103,7 +2106,7 @@ function dbvTextmarker(e) {
     
     if (PDFViewerApplication.pdfSidebar.active == 'find') {
     	PDFViewerApplication.findBar.onTextmarker(text, pageIdx);
-    } else if (PDFViewerApplication.pdfSidebar.active == 'editAnnotations') {
+    } else if (PDFViewerApplication.pdfSidebar.active == 'editAnnotations' && PDFViewerApplication.annoEditor) {
     	PDFViewerApplication.annoEditor.onTextmarker(text, pageIdx);
     }
     

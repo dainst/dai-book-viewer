@@ -61,6 +61,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
     this.eventBus = options.eventBus;
     this.$ = options.annoSidebar;
     this.$.parent = this;
+    this.editorMode = options.editorMode;
     
     if (this.findController === null) {
       throw new Error('PDFFindBar cannot be used without a ' +
@@ -116,7 +117,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
     
     this.$.block('findResults', 'Find Results', 'search', true);
     this.$.block('findHistory', 'Previous Searches', 'search', true, true);
-    
+
     
   }
 
@@ -201,9 +202,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
         	  this.$.blocks.findResults.add(mozL10n.get('Page', false, 'Page') + ' ' + (i + 1).toString(), matchDetails[i], {'click': ['jumpToResultPage', i]});
     	  }
       }
-      
-      
-    },
+     },
 
     
     jumpToResultPage: function(e, page) {
@@ -256,7 +255,13 @@ var PDFFindBar = (function PDFFindBarClosure() {
     
 	onTextmarker: function(text) {
 		this.findField.value = text;
-	}
+	},
+    
+    searchToAnnotation: function() {
+    	this.eventBus.dispatch('searchToAnnotation', {
+    		
+    	});
+    }
 
   };
   return PDFFindBar;

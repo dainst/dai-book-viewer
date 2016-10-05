@@ -77,20 +77,24 @@
 				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
 				var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
 				var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
+				var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
 				
 				blockh3.appendChild(icon);
 				blocktitle.appendChild(blockh3);
 				block.appendChild(blocktitle);
 				block.appendChild(blockbody);
+				block.appendChild(blockfooter);
 				
 				this.blocks[id] = {
 					opened: (typeof minimized === "undefined") ? false : !minimized,
 					block: block,
 					body: blockbody,
 					headline: blockh3,
+					footer: blockfooter,
 					icon: icon,
 					add: function(attr, content, eventListeners) {return this.blockEntry(attr, content, eventListeners, id)}.bind(this),
-					clear: function() {blockbody.textContent = ''}
+					clear: function() {blockbody.textContent = ''},
+					
 				}
 				
 				return blockbody;

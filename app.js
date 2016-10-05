@@ -221,7 +221,7 @@ var PDFViewerApplication = {
 	var queryString = document.location.search.substring(1);
 	var params = parseQueryString(queryString);
 	this.editorMode = 'editormode' in params ? (params.editormode === 'true') : false;
-console.log('EM: ', this.editorMode, params);
+
     configure(pdfjsLib.PDFJS);
     this.appConfig = appConfig;
 
@@ -318,7 +318,6 @@ console.log('EM: ', this.editorMode, params);
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
     }) : null;
-    console.log('EM: ',typeof this.editorMode , this.editorMode );
     this.annoInfo = new annoInfo({
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.infoView}),
@@ -376,19 +375,16 @@ console.log('EM: ', this.editorMode, params);
     sidebarConfig.editorMode = this.editorMode;
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
-
-    
-    
+  
     this.findBar = new PDFFindBar({
     	elements: appConfig.findBar,
         findController: this.findController,
     	eventBus: this.eventBus,
     	pdfSidebar: this.pdfSidebar,
     	annoSidebar: new annoSidebar({container: appConfig.sidebar.findView}),
+    	editorMode: this.editorMode
     });
-    
-    
-    
+      
     var self = this;
     var PDFJS = pdfjsLib.PDFJS;
     

@@ -54,7 +54,7 @@ function getViewerConfiguration() {
       presentationModeButton: document.getElementById('presentationMode'),
       download: document.getElementById('download'),
       viewBookmark: document.getElementById('viewBookmark'),
-      pafButton: document.getElementById('buttonPaf')
+      toggleAnnotations: document.getElementById('toggleAnnotations')
     },
     secondaryToolbar: {
       toolbar: document.getElementById('secondaryToolbar'),
@@ -149,6 +149,7 @@ function getViewerConfiguration() {
     	annoInfoTable: document.getElementById('dbv-info-annoInfoTable'),
     	dlAnnotationsJson: document.getElementById('dbv-info-dlAnnotationsJson'),
     	dlAnnotationsPdf: document.getElementById('dbv-info-dlAnnotationsPdf'),
+    	openAnnotationsFile: document.getElementById('dbv-info-loadAnnotationFile'),
     	version: document.getElementById('dbv-info-version'),
     	pdfjsVersion: document.getElementById('dbv-info-pdfjsVersion'),
     	/*blockAnnotationInfo: document.getElementById('dbv-av-block-annotation_info'),

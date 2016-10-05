@@ -1162,8 +1162,6 @@ var PDFViewerApplication = {
     this.appConfig.toolbar.pageNumber.value = this.pdfViewer.currentPageNumber;
 
     this.pdfSidebar.setInitialView(this.preferenceSidebarViewOnLoad || (sidebarView || 'none'));
-    console.log('HASH ', storedHash, options);
-    this.editorMode = options.editorMode;
 
     if (this.initialDestination) {
       this.pdfLinkService.navigateTo(this.initialDestination);
@@ -1362,7 +1360,7 @@ var PDFViewerApplication = {
     eventBus.on('fileinputchange', webViewerFileInputChange);
     
     eventBus.on('newsearch', webViewerFindNewSearch)  
-    eventBus.on('pafEvent', dbvToggleAnnotations);
+    eventBus.on('toggleannotations', dbvToggleAnnotations);
     eventBus.on('textmarker', dbvTextmarker);
 
   }
@@ -1612,8 +1610,8 @@ function webViewerInitialized() {
     PDFViewerApplication.eventBus.dispatch('download');
   });
   
-  appConfig.toolbar.pafButton.addEventListener('click', function (e) {
-	  PDFViewerApplication.eventBus.dispatch('pafEvent');
+  appConfig.toolbar.toggleAnnotations.addEventListener('click', function (e) {
+	  PDFViewerApplication.eventBus.dispatch('toggleannotations');
   });
 
   appConfig.viewerContainer.addEventListener('mouseup', function(e) {
@@ -2315,11 +2313,6 @@ window.addEventListener('keydown', function keydown(evt) {
       case 27: // esc key
         if (PDFViewerApplication.secondaryToolbar.isOpen) {
           PDFViewerApplication.secondaryToolbar.close();
-          handled = true;
-        }
-        if (!PDFViewerApplication.supportsIntegratedFind &&
-            PDFViewerApplication.findBar.opened) {
-          PDFViewerApplication.findBar.close();
           handled = true;
         }
         break;

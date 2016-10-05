@@ -101,7 +101,7 @@
 			 */
 			getAnnotations: function(restparams, source, post) {
 				var self = this;
-				
+
 				var restprams = restparams || [];
 				var source = source || 'https://nlp.dainst.org:3000/';
 				var url = source + '/' + restparams.join('/') + '?cachekiller' + Date.now();
@@ -143,6 +143,55 @@
 				}
 	
 				request.send();
+			},
+			
+			getFromLocalFile: function() {
+				this.setState('loading');
+				var fileInput = document.createElement('input');
+				fileInput.id = 'tmpfileopener';
+				fileInput.setAttribute('type', 'file');
+				//document.body.appendChild(fileInput); // <- never ever enable this
+				
+				fileInput.addEventListener('change', function(e) {
+			        var files = fileInput.files;
+			        var len = files.length;
+
+			    	var file = files[0];
+			    	
+			    	if (!file) {
+			    		console.log("No File Selected");
+			    		return;
+			    	}
+			    	
+			        console.log("Filename: " + file.name + " | Type: " + file.type + " | Size: " + file.size + " bytes");
+			        
+			        if (file.type !== "text/json") {
+			        	this.error("Wrong filetype " +  file.type);
+			        	return;
+			        }
+			        			        
+			        this.loadingPromiseReset();
+			        var reader = new FileReader();
+
+			        reader.onload = function(e) {
+			              try {				            	  
+			            	  var result = JSON.parse(e.target.result);
+			              } catch (e) {
+			            	  return this.error(e);
+			              }
+			              this.loadingPromiseResolver(result);
+			        }.bind(this);
+
+			        reader.onerror = function(e){
+			        	return this.error(e);
+			        }.bind(this);
+			        
+			        reader.readAsText(file);
+
+				    
+				}.bind(this));
+				fileInput.click();
+
 			},
 			
 			/**
@@ -195,7 +244,32 @@
 				
 			},
 			
-	
+			/**
+			 * Returns all registered annotations in the very same form we get them
+			 * 
+			 * @returns <object>
+			 */
+			dump: function() {
+				var ret = {};
+				
+				for (var id in this.registry) {
+					var type = this.registry[id].type;
+					if (typeof ret[type] === "undefined") {
+						ret[type] = {
+								"items": []
+						}
+					}
+					ret[type].items.push(this.registry[id]);
+				}
+				
+				ret.meta = this.metadata;
+				
+				ret.meta['downloaded_at'] = Date.now();
+				
+				
+				return ret;
+			},
+			
 			
 			/**
 			 * display Error with errorFn

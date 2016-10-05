@@ -29,6 +29,9 @@
 				this.showInfoFile();				
 				this.showInfoProduct();				
 				this.annoRegistry.onGetAnnotations(function showInfoAnnotations(data){return this.showInfoAnnotations(data)}.bind(this));
+				this.elements.dlAnnotationsJson.addEventListener('click', this.dlAnnotationsJson.bind(this));
+				this.elements.openAnnotationsFile.addEventListener('click', this.openAnnotationsFile.bind(this));
+				this.elements.dlAnnotationsJson.classList.add('MORCHEEBA');
 			},
 		
 			showInfoProduct: function() {
@@ -46,6 +49,22 @@
 			
 			showInfoFile: function() {
 				this.pdfDocumentProperties.refresh();
+			},
+			
+			dlAnnotationsJson: function() {
+				
+				var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.annoRegistry.dump()));
+				var dlAnchorElem = document.createElement('a');
+				dlAnchorElem.setAttribute("href",     dataStr     );
+				dlAnchorElem.setAttribute("download", "annotations_" + this.annoRegistry.filename  + ".json");
+				this.$.container.appendChild(dlAnchorElem);
+				dlAnchorElem.click();
+				console.log(dlAnchorElem);
+			},
+			
+			openAnnotationsFile: function() {
+				console.log("load annotations");
+				this.annoRegistry.getFromLocalFile();
 			}
 		
 		}

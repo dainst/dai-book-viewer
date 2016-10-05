@@ -925,7 +925,7 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   content: "\E010";
 }
 
-
+#toggleAnnotations::before,
 #dbv-viewAnnotations.toolbarButton::before {
   content: "\e042";
 }
@@ -1589,6 +1589,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-info:before 			{content: "\E086"}
 .glyphicon-download-alt:before 	{content: "\E025"}
 .glyphicon-search:before 	 	{content: "\E003";}
+.glyphicon-open:before 	 		{content: "\E167";}
+.glyphicon-save:before 	 		{content: "\E166";}
 
 
 

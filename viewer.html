@@ -215,11 +215,18 @@ See https://github.com/adobe-type-tools/cmap-resources
 	          			<p class='separator'></p>
 	          			<div class="btn-group">
 	          				<span data-l10n-id="dbv-info-dlAnnotations_label">Download Annotations</span>
-		          			<button id="dbv-info-dlAnnotationsJson" class="toolbarButton glyphicon-download-alt" title="Download Annotations as JSON" tabindex="101" data-l10n-id="dbv-info-dlAnnotationsJson">
+		          			<button id="dbv-info-dlAnnotationsJson" class="toolbarButton glyphicon-save" title="Download Annotations as JSON" tabindex="101" data-l10n-id="dbv-info-dlAnnotationsJson">
 	              				<span data-l10n-id="dbv-info-dlAnnotationsJson_label">Download Annotations as JSON</span>
 	            			</button>
-	            			<button id="dbv-info-dlAnnotationsPdf" class="toolbarButton glyphicon-download-alt" title="Download Annotations in human readable form as PDF" tabindex="101" data-l10n-id="dbv-info-dlAnnotationsPdf">
+	            			<button id="dbv-info-dlAnnotationsPdf" class="toolbarButton glyphicon-download-alt" title="Download Annotations in human readable form as PDF" tabindex="102" data-l10n-id="dbv-info-dlAnnotationsPdf">
 	              				<span data-l10n-id="dbv-info-dlAnnotationsPdf_label">Download Annotations in human readable form as PDF</span>
+	            			</button>
+	          			</div>
+	          			
+	          			<div class="btn-group">
+	          				<span data-l10n-id="dbv-info-loadAnnotations_label">Load other Annotations</span>
+		          			<button id="dbv-info-loadAnnotationFile" class="toolbarButton glyphicon-open" title="From File" tabindex="103" data-l10n-id="dbv-info-loadAnnotationFile">
+	              				<span data-l10n-id="dbv-info-loadAnnotationFile_label">From File</span>
 	            			</button>
 	          			</div>
 
@@ -352,11 +359,12 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
                   <span data-l10n-id="download_label">Download</span>
                 </button>
+                
                 <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
                   <span data-l10n-id="bookmark_label">Current View</span>
                 </a>
 
-                <button id="buttonPaf" class="toolbarButton" title="Togggle Annotations" tabindex="36">
+                <button id="toggleAnnotations" class="toolbarButton" title="Togggle Annotations" tabindex="36">
               		<span>Togggle Annotations</span>
             	</button>
 

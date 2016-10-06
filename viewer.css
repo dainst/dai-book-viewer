@@ -1543,6 +1543,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     font-family: 'Glyphicons Halflings';
     font-style: normal;
     font-weight: normal;
+       font-size: medium;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -1636,39 +1637,21 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	padding: 10px 10px 7px 10px;
 	color: black;
 	font-weight: normal;
+	font-size: medium;
 }
 
 .dbv-colors-places, /* @ TODO eleminate places */
-.dbv-colors-locations {
-	background-color: rgba(0, 107, 0, 0.3);
-}
-
-.dbv-colors-persons {
-	background-color: rgba(255, 0, 0, 0.3);
-}
-
-.dbv-colors-keyterms {
-	background-color: rgba(0, 0, 255, 0.3);
-}
-
-.dbv-colors-error {
-	background-color: rgba(129, 0, 0, 0.5);
-}
-
-.dbv-colors-map {
-	background-color: rgba(93, 144, 93, 0.3);
-}
-
-.dbv-colors-find {
-	background: rgba(180, 0, 170, 0.3);
-}
-
-.dbv-colors-findResults {
-	background: rgba(180, 0, 170, 0.2);
-}
-.dbv-colors-findHistory {
-	background: rgba(180, 0, 170, 0.1);
-}
+.dbv-colors-locations { 		background-color: rgba(0, 107, 0, 0.3);}
+.dbv-colors-persons {			background-color: rgba(255, 0, 0, 0.3);}
+.dbv-colors-keyterms {			background-color: rgba(0, 0, 255, 0.3);}
+.dbv-colors-error {				background-color: rgba(129, 0, 0, 0.5);}
+.dbv-colors-map {				background-color: rgba(93, 144, 93, 0.3);}
+.dbv-colors-find {				background: rgba(180, 0, 170, 0.3);}
+.dbv-colors-findResults {		background: rgba(180, 0, 170, 0.2);}
+.dbv-colors-findHistory {		background: rgba(180, 0, 170, 0.1);}
+.dbv-colors-file_info {			background: rgba(85, 114, 161, 0.6);}
+.dbv-colors-annotation_info {	background: rgba(85, 114, 161, 0.45);}
+.dbv-colors-product_info {		background: rgba(85, 114, 161, 0.3);}
 
 .panel-body {
 	border-bottom-left-radius: 2px;

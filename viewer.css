@@ -882,7 +882,7 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 .secondaryToolbarButton.presentationMode::before {
   content: "\E140";
 }
-
+/*
 .toolbarButton.print::before,
 .secondaryToolbarButton.print::before {
   content: "\E045";
@@ -896,9 +896,8 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 .toolbarButton.download::before,
 .secondaryToolbarButton.download::before {
   content: "\E025";
-}
+}*/
 
-.toolbarButton.bookmark,
 .secondaryToolbarButton.bookmark {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -906,6 +905,7 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   outline: none;
   padding-top: 4px;
   text-decoration: none;
+  display: block;
 }
 .secondaryToolbarButton.bookmark {
   padding-top: 5px;
@@ -1137,25 +1137,7 @@ a:focus:hover > .thumbnail > .thumbnailSelectionRing,
 	background-color: rgba(185, 185, 185, 0.75);
 	color: hsla(0,0%,100%,1);
 }
-/*
-#annotationsView,
-#outlineView,
-#attachmentsView {
-  position: absolute;
-  width: 400px;
-  top: 0;
-  bottom: 0;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-}
-*/
-/*
-#thumbnailView {
-	margin-top: 14px;
-}
-*/
+
 
 
 html[dir='ltr'] .outlineWithDeepNesting > .outlineItem,
@@ -1281,18 +1263,7 @@ html[dir='rtl'] .outlineItemToggler::before {
    see https://bugzilla.mozilla.org/show_bug.cgi?id=706209 */
 ::selection { background: rgba(0,0,255,0.3); }
 ::-moz-selection { background: rgba(0,0,255,0.3); }
-/*
-#errorWrapper {
-  background: none repeat scroll 0 0 #FF5555;
-  color: white;
-  left: 0;
-  position: absolute;
-  right: 0;
-  z-index: 1000;
-  padding: 3px;
-  font-size: 0.8em;
-}
-*/
+
 .loadingInProgress #errorWrapper {
   top: 37px;
 }
@@ -1577,20 +1548,24 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.glyphicon-user:before 			{content: "\e008"}
-.glyphicon-map-marker:before 	{content: "\e062"}
-.glyphicon-tags:before 			{content: "\e042"}
 .glyphicon-alert:before 		{content: "\e209"}
-.glyphicon-pencil:before 		{content: "\270f"}
-.glyphicon-list-alt:before 		{content: "\E032"}
-.glyphicon-paperclip:before 	{content: "\E142"}
-.glyphicon-wrench:before 		{content: "\E136"}
-.glyphicon-th-large:before 		{content: "\e010"}
-.glyphicon-info:before 			{content: "\E086"}
 .glyphicon-download-alt:before 	{content: "\E025"}
-.glyphicon-search:before 	 	{content: "\E003";}
-.glyphicon-open:before 	 		{content: "\E167";}
-.glyphicon-save:before 	 		{content: "\E166";}
+.glyphicon-folder-open:before 	{content: "\E118"}
+.glyphicon-info:before 			{content: "\E086"}
+.glyphicon-list-alt:before 		{content: "\E032"}
+.glyphicon-map-marker:before 	{content: "\e062"}
+.glyphicon-open:before 	 		{content: "\E167"}
+.glyphicon-paperclip:before 	{content: "\E142"}
+.glyphicon-pencil:before 		{content: "\270f"}
+.glyphicon-print:before 		{content: "\E045"}
+.glyphicon-save:before 	 		{content: "\E166"}
+.glyphicon-save-file:before 	{content: "\E202"}
+.glyphicon-search:before 	 	{content: "\E003"}
+.glyphicon-tags:before 			{content: "\e042"}
+.glyphicon-th-large:before 		{content: "\e010"}
+.glyphicon-user:before 			{content: "\e008"}
+.glyphicon-wrench:before 		{content: "\E136"}
+
 
 
 
@@ -1878,8 +1853,11 @@ html[dir='rtl'] .pull-right {
 }
 
 .panel-body .btn-group {
-	line-height: 25px;
+	line-height: 32px;
+}
 
+.panel-body .btn-group + .btn-group {
+	margin-top: 0px
 }
 
 .panel-body .btn-group .splitToolbarButton {
@@ -2036,7 +2014,7 @@ html[dir='rtl'] .pull-right {
   display: none;
 }
 
-@media all and (max-width: 960px) {
+@media all and (max-width: 1160px) {
   html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,
   html[dir='ltr'] #outerContainer.sidebarOpen .outerCenter {
     float: left;
@@ -2047,9 +2025,10 @@ html[dir='rtl'] .pull-right {
     float: right;
     right: 205px;
   }
+  
 }
 
-@media all and (max-width: 900px) {
+@media all and (max-width: 1100px) {
   .sidebarOpen .hiddenLargeView {
     display: none;
   }
@@ -2058,16 +2037,17 @@ html[dir='rtl'] .pull-right {
   }
 }
 
-@media all and (max-width: 860px) {
+@media all and (max-width: 1060px) {
   .sidebarOpen .hiddenMediumView {
     display: none;
   }
   .sidebarOpen .visibleMediumView {
     display: inherit;
   }
+
 }
 
-@media all and (max-width: 770px) {
+@media all and (max-width: 970px) {
   #sidebarContainer {
     top: 32px;
     z-index: 100;
@@ -2115,27 +2095,33 @@ html[dir='rtl'] .pull-right {
   #outerContainer .visibleMediumView {
     display: none;
   }
+  
+
 }
 
-@media all and (max-width: 700px) {
+@media all and (max-width: 900px) {
   #outerContainer .hiddenLargeView {
     display: none;
   }
   #outerContainer .visibleLargeView {
     display: inherit;
   }
+  
+
 }
 
-@media all and (max-width: 660px) {
+@media all and (max-width: 860px) {
   #outerContainer .hiddenMediumView {
     display: none;
   }
   #outerContainer .visibleMediumView {
     display: inherit;
   }
+  
+
 }
 
-@media all and (max-width: 600px) {
+@media all and (max-width: 800px) {
   .hiddenSmallView {
     display: none;
   }
@@ -2155,12 +2141,15 @@ html[dir='rtl'] .pull-right {
   .toolbarButtonSpacer {
     width: 0;
   }
+  
+
 }
 
-@media all and (max-width: 510px) {
+@media all and (max-width: 710px) {
   #scaleSelectContainer, #pageNumberLabel {
     display: none;
   }
+
 }
 
 

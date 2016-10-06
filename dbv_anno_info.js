@@ -9,6 +9,13 @@
   }
 }(this, function (exports, pdfjsLib) {
 
+	var mozL10n = (typeof uiUtils !== "undefined") ? uiUtils.mozL10n : {
+		get: function(w) {
+			console.log('no UIUtils error fpr get ' + w);
+			return "{{" + w + "}}";
+		}
+	};
+	
 	var AnnoInfo = (function AnnoInfoClosure() {
 	
 		function AnnoInfo(options) {
@@ -31,7 +38,6 @@
 				this.annoRegistry.onGetAnnotations(function showInfoAnnotations(data){return this.showInfoAnnotations(data)}.bind(this));
 				this.elements.dlAnnotationsJson.addEventListener('click', this.dlAnnotationsJson.bind(this));
 				this.elements.openAnnotationsFile.addEventListener('click', this.openAnnotationsFile.bind(this));
-				this.elements.dlAnnotationsJson.classList.add('MORCHEEBA');
 			},
 		
 			showInfoProduct: function() {
@@ -42,6 +48,7 @@
 			showInfoAnnotations: function() {					
 				this.elements.annoInfoTable.innerHTML = '';				
 				for (var row in this.annoRegistry.metadata) {
+					var name = mozL10n.get(row, false, row);
 					this.elements.annoInfoTable.appendChild(this.$.htmlTableRow([row, this.annoRegistry.metadata[row]]));	
 				}
 					

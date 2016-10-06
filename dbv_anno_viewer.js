@@ -39,6 +39,7 @@
 		function AnnoViewer(options) {
 			this.pdfViewer = options.pdfViewer;
 			this.annoRegistry = options.annoRegistry;
+			this.toggleAnnotationButton = options.toggleAnnotationButton;
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
 			
@@ -472,8 +473,10 @@
 		    	this.annotationsVisible = to || !this.annotationsVisible;
 		    	if (!this.annotationsVisible) {
 		    		this.pdfViewer.container.classList.add('dbv-annotations-hidden');
+		    		this.toggleAnnotationButton.classList.remove('toggled');
 		    	} else {
 		    		this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
+		    		this.toggleAnnotationButton.classList.add('toggled');
 		    	}
 		    	
 		    }

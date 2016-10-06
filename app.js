@@ -311,7 +311,8 @@ var PDFViewerApplication = {
     this.annoViewer = new annoViewer({ 
         pdfViewer: this.pdfViewer,
         annoRegistry: this.annoRegistry,
-        annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView})
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView}),
+        toggleAnnotationButton: appConfig.toolbar.toggleAnnotations
     });
     this.annoEditor = this.editorMode ? new annoEditor({
         findController: this.findController,
@@ -1529,7 +1530,6 @@ function webViewerInitialized() {
   }
 
   if (!PDFViewerApplication.supportsFullscreen) {
-    appConfig.toolbar.presentationModeButton.classList.add('hidden');
     appConfig.secondaryToolbar.presentationModeButton.classList.add('hidden');
   }
 
@@ -1590,12 +1590,6 @@ function webViewerInitialized() {
       return;
     }
     PDFViewerApplication.pdfViewer.currentScaleValue = this.value;
-  });
-
-  appConfig.toolbar.presentationModeButton.addEventListener('click',
-      function (e) {
-    PDFViewerApplication.eventBus.dispatch('presentationmode');
-
   });
 
   appConfig.toolbar.openFile.addEventListener('click', function (e) {
@@ -1821,15 +1815,11 @@ function webViewerUpdateViewarea(e) {
       }).catch(function() { /* unable to write to storage */ });
     });
   }
-  var href =
-    PDFViewerApplication.pdfLinkService.getAnchorUrl(location.pdfOpenParams);
-  PDFViewerApplication.appConfig.toolbar.viewBookmark.href = href;
-  PDFViewerApplication.appConfig.secondaryToolbar.viewBookmarkButton.href =
-    href;
+  var href =PDFViewerApplication.pdfLinkService.getAnchorUrl(location.pdfOpenParams);
+  PDFViewerApplication.appConfig.secondaryToolbar.viewBookmarkButton.href = href;
 
   // Update the current bookmark in the browsing history.
-  PDFViewerApplication.pdfHistory.updateCurrentBookmark(location.pdfOpenParams,
-                                                        location.pageNumber);
+  PDFViewerApplication.pdfHistory.updateCurrentBookmark(location.pdfOpenParams, location.pageNumber);
 
   // Show/hide the loading indicator in the page number input element.
   var pageNumberInput = PDFViewerApplication.appConfig.toolbar.pageNumber;
@@ -2076,7 +2066,6 @@ function webViewerPageChanging(e) {
 }
 
 function dbvToggleAnnotations() {
-	console.log('toggle annotations');
 	PDFViewerApplication.annoViewer.toggleAnnotations();
 }
 

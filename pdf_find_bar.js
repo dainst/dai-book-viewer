@@ -115,13 +115,16 @@ var PDFFindBar = (function PDFFindBarClosure() {
     	self.dispatchEvent('regexchange');
     });
     
-    this.$.block('findResults', 'Find Results', 'search', true);
-    this.$.block('findHistory', 'Previous Searches', 'search', true, true);
-
     
   }
 
   PDFFindBar.prototype = {
+		  
+	load: function() {
+	    this.$.block('findResults', 'Find Results', 'search', true);
+	    this.$.block('findHistory', 'Previous Searches', 'search', true, true);
+	},  
+	
     reset: function PDFFindBar_reset() {
       this.updateUIState();
     },

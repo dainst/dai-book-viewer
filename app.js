@@ -82,7 +82,7 @@
 ) {
 
 var PDFJS_VERSION = "1.5";
-var DBV_VERSION = "0.5";
+var DBV_VERSION = "0.6";
 	
 	
 var UNKNOWN_SCALE = uiUtilsLib.UNKNOWN_SCALE;
@@ -191,10 +191,9 @@ var PDFViewerApplication = {
   /** @type {PDFAttachmentViewer} */
   pdfAttachmentViewer: null,
   
-  /** dai paf */
+  /** dbv */
   annoViewer: null,
-  
-  annoViewer: null,
+  editorMode: false,
   
   /** @type {ViewHistory} */
   store: null,
@@ -212,8 +211,6 @@ var PDFViewerApplication = {
   isViewerEmbedded: (window.parent !== window),
   url: '',
   externalServices: DefaultExernalServices,
-  
-  editorMode: false,
 
   // called once when the document is loaded
   initialize: function pdfViewInitialize(appConfig) {
@@ -720,8 +717,13 @@ var PDFViewerApplication = {
     	// @ TODO what if file is binary data...
     	console.log('RESC try to get annotations!', parameters);
     	self.annoViewer.load(parameters.filename || parameters.url);
-    	  
-        self.load(pdfDocument, scale);
+    	self.annoInfo.load();
+    	self.findBar.load();
+
+    	
+    	
+    	self.load(pdfDocument, scale);
+    	
       },
       function getDocumentError(exception) {
         var message = exception && exception.message;
@@ -965,7 +967,7 @@ var PDFViewerApplication = {
 	  if (this.editorMode) {
 		  this.annoEditor.load();
 	  }
-	  this.annoInfo.load();
+	  
     
     
     firstPagePromise.then(function(pdfPage) {

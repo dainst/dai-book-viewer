@@ -217,7 +217,8 @@
 				attr.id = attr.id || 'input.' + Math.random();				
 				attr.type = attr.type || 'text';
 				attr.data = attr.data || {};
-				var label = this.htmlElement('label', {'classes':['a'], 'for': attr.id, 'data': attr.data}, label, eventListeners); //@ TODO l10n
+				label = mozL10n.get(label, false, label);
+				var label = this.htmlElement('label', {'classes':['a'], 'for': attr.id, 'data': attr.data}, label, eventListeners);
 				var input = this.htmlElement('input', attr, '', eventListeners);	
 				
 				if ((attr.type == 'checkbox') || (attr.type == 'radio')) {

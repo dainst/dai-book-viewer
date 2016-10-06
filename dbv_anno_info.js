@@ -1,20 +1,15 @@
 'use strict';
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-dbv/dbv_anno_info', ['exports', 'pdfjs-dbv/pdfjs'], factory);
+    define('pdfjs-dbv/dbv_anno_info', ['exports', 'pdfjs-dbv/pdfjs', 'pdfjs-dbv/ui_utils'], factory);
   } else if (typeof exports !== 'undefined') {
-    factory(exports, require('./pdfjs.js'));
+    factory(exports, require('./pdfjs.js'), require('./ui_utils.js'));
   } else {
-    factory((root.pdfjsWebAnnoInfo = {}), root.pdfjsWebPDFJS);
+    factory((root.pdfjsWebAnnoInfo = {}), root.pdfjsWebPDFJS, root.pdfjsWebUIUtils);
   }
-}(this, function (exports, pdfjsLib) {
+}(this, function (exports, pdfjsLib, uiUtils) {
 
-	var mozL10n = (typeof uiUtils !== "undefined") ? uiUtils.mozL10n : {
-		get: function(w) {
-			console.log('no UIUtils error fpr get ' + w);
-			return "{{" + w + "}}";
-		}
-	};
+	var mozL10n = uiUtils.mozL10n;
 	
 	var AnnoInfo = (function AnnoInfoClosure() {
 	
@@ -49,7 +44,7 @@
 				this.elements.annoInfoTable.innerHTML = '';				
 				for (var row in this.annoRegistry.metadata) {
 					var name = mozL10n.get(row, false, row);
-					this.elements.annoInfoTable.appendChild(this.$.htmlTableRow([row, this.annoRegistry.metadata[row]]));	
+					this.elements.annoInfoTable.appendChild(this.$.htmlTableRow([name + ':', this.annoRegistry.metadata[row]]));	
 				}
 					
 			},

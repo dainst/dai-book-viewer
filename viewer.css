@@ -1839,6 +1839,11 @@ html[dir='rtl'] .pull-right {
 	line-height: 32px;
 }
 
+.panel-body .btn-group .toolbarButton {
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+
 .panel-body .btn-group + .btn-group {
 	margin-top: 0px
 }

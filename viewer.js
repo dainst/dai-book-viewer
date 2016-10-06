@@ -67,7 +67,8 @@ function getViewerConfiguration() {
       lastPageButton: document.getElementById('lastPage'),
       pageRotateCwButton: document.getElementById('pageRotateCw'),
       pageRotateCcwButton: document.getElementById('pageRotateCcw'),
-      toggleHandToolButton: document.getElementById('toggleHandTool')
+      toggleHandToolButton: document.getElementById('toggleHandTool'),
+      viewNativeButton: document.getElementById('viewNative')
     },
     fullscreen: {
       contextFirstPage: document.getElementById('contextFirstPage'),

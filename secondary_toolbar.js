@@ -69,20 +69,17 @@ var SecondaryToolbar = (function SecondaryToolbarClosure() {
     this.toolbar = options.toolbar;
     this.toggleButton = options.toggleButton;
     this.buttons = [
-      { element: options.presentationModeButton, eventName: 'presentationmode',
-        close: true },
+      { element: options.presentationModeButton, eventName: 'presentationmode',close: true },
       { element: options.openFileButton, eventName: 'openfile', close: true },
       { element: options.printButton, eventName: 'print', close: true },
       { element: options.downloadButton, eventName: 'download', close: true },
       { element: options.viewBookmarkButton, eventName: null, close: true },
       { element: options.firstPageButton, eventName: 'firstpage', close: true },
       { element: options.lastPageButton, eventName: 'lastpage', close: true },
-      { element: options.pageRotateCwButton, eventName: 'rotatecw',
-        close: false },
-      { element: options.pageRotateCcwButton, eventName: 'rotateccw',
-        close: false },
-      { element: options.toggleHandToolButton, eventName: 'togglehandtool',
-        close: true }
+      { element: options.pageRotateCwButton, eventName: 'rotatecw', close: false },
+      { element: options.pageRotateCcwButton, eventName: 'rotateccw', close: false },
+      { element: options.toggleHandToolButton, eventName: 'togglehandtool', close: true },
+      { element: options.viewNativeButton, eventName: 'viewNative', close: true }
 
     ];
 
@@ -173,6 +170,10 @@ var SecondaryToolbar = (function SecondaryToolbarClosure() {
       } else {
         this.open();
       }
+    },
+    
+    viewNative: function SecondaryToolbar_viewNative() {
+    	this.eventBus.dispatch('viewNative');
     },
 
     setMaxHeight: function SecondaryToolbar_setMaxHeight(container) {

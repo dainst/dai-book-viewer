@@ -1363,6 +1363,7 @@ var PDFViewerApplication = {
     eventBus.on('newsearch', webViewerFindNewSearch)  
     eventBus.on('toggleannotations', dbvToggleAnnotations);
     eventBus.on('textmarker', dbvTextmarker);
+    eventBus.on('viewNative', dbvViewNative);
 
   }
 };
@@ -2093,6 +2094,10 @@ function dbvTextmarker(e) {
     	PDFViewerApplication.annoEditor.onTextmarker(text, pageIdx);
     }
     
+}
+
+function dbvViewNative(e) {
+	window.location.href = PDFViewerApplication.url;
 }
 
 var zoomDisabled = false, zoomDisabledTimeout;

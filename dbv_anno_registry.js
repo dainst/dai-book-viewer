@@ -91,6 +91,25 @@
 			},
 			
 			/**
+			 * get annotation for file from default source
+			 * 
+			 * @param identifier	<object>	{<filename|daiPubId>: <string>} 
+			 */
+			get: function(identifier) {
+				if (identifier.daiPubId) {
+					console.warn("get Annotations by daiPubId is not implemented right now");
+				}
+				
+				if (identifier.filename) {
+					this.setFilename(identifier.filename);
+					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
+					return;
+				}
+				
+				
+			},
+			
+			/**
 			 * 
 			 * get annotations from annotation API
 			 * 

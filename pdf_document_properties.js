@@ -17,23 +17,19 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('pdfjs-dbv/pdf_document_properties', ['exports',
-      'pdfjs-dbv/ui_utils', 'pdfjs-dbv/overlay_manager'], factory);
+    define('pdfjs-dbv/pdf_document_properties', ['exports', 'pdfjs-dbv/ui_utils'], factory);
   } else if (typeof exports !== 'undefined') {
-    factory(exports, require('./ui_utils.js'), require('./overlay_manager.js'));
+    factory(exports, require('./ui_utils.js'));
   } else {
-    factory((root.pdfjsWebPDFDocumentProperties = {}), root.pdfjsWebUIUtils,
-      root.pdfjsWebOverlayManager);
+    factory((root.pdfjsWebPDFDocumentProperties = {}), root.pdfjsWebUIUtils);
   }
-}(this, function (exports, uiUtils, overlayManager) {
+}(this, function (exports, uiUtils) {
 
 var getPDFFileNameFromURL = uiUtils.getPDFFileNameFromURL;
 var mozL10n = uiUtils.mozL10n;
-var OverlayManager = overlayManager.OverlayManager;
 
 /**
  * @typedef {Object} PDFDocumentPropertiesOptions
- * @property {string} overlayName - Name/identifier for the overlay.
  * @property {Object} fields - Names and elements of the overlay's fields.
  * @property {HTMLButtonElement} closeButton - Button for closing the overlay.
  */
@@ -127,7 +123,8 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
       }.bind(this));
       
       // Get the document properties.
-      this.pdfDocument.getMetadata().then(function(data) { 
+      this.pdfDocument.getMetadata().then(function(data) {
+    	var dbvData =  this._dbvLinks(this.pdfDocument.dbvMetadata);
         var content = {
           'fileName': getPDFFileNameFromURL(this.url),
           'fileSize': this._parseFileSize(),
@@ -140,7 +137,9 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
           'creator': data.info.Creator,
           'producer': data.info.Producer,
           'version': data.info.PDFFormatVersion,
-          'pageCount': this.pdfDocument.numPages
+          'pageCount': this.pdfDocument.numPages,
+          'daiPubId': dbvData.daiPubId,
+          'zenonId': dbvData.zenonId
         };
         // Show the properties in the dialog.
         for (var identifier in content) {
@@ -162,7 +161,9 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
 	        'creator',
 	        'producer',
 	        'version',
-	        'pageCount'
+	        'pageCount',
+	        'daiPubId',
+	        'zenonId'
     	];
 
 		for (var i = 0; i < content.length; i++) {			
@@ -170,12 +171,19 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
 		}
     },
 
+    _dbvLinks: function(data) {
+    	return {
+    		daiPubId: 	data.daiPubId ? '<a target="blank" href="https://journals.dainst.org/publication/' + data.daiPubId + '">e-Journals</a>' 	: '-', // @ TODO richtig machen
+    		zenonId: 	data.zenonId ? 	'<a target="blank" href="http://zenon.dainst.org/Record/' + data.zenonId + '">Zenon</a>' 					: '-'
+    	}
+    },
+    
     /**
      * @private
      */
     _updateUI: function PDFDocumentProperties_updateUI(field, content) {
       if (field && content !== undefined && content !== '') {
-        field.textContent = content;
+        field.innerHTML = content;
       }
     },
 

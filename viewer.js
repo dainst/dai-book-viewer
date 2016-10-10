@@ -133,7 +133,9 @@ function getViewerConfiguration() {
         'creator': document.getElementById('creatorField'),
         'producer': document.getElementById('producerField'),
         'version': document.getElementById('versionField'),
-        'pageCount': document.getElementById('pageCountField')
+        'pageCount': document.getElementById('pageCountField'),
+        'daiPubId': document.getElementById('daiPubIdField'),
+        'zenonId': document.getElementById('zenonIdField')
       }
     },
     errorWrapper: {

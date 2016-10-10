@@ -714,14 +714,12 @@ var PDFViewerApplication = {
     var result = loadingTask.promise.then(
       function getDocumentCallback(pdfDocument) {
     	  
-    	// @ TODO what if file is binary data...
-    	console.log('RESC try to get annotations!', parameters);
-    	self.annoViewer.load(parameters.filename || parameters.url);
+    	console.log('RESC try to get annotations!', self);
+    	self.annoViewer.load();
     	self.annoInfo.load();
     	self.findBar.load();
+    	self.annoRegistry.get({filename: parameters.filename || parameters.url}); // @ TODO if no annotations found, try again later with daiPubId if present
 
-    	
-    	
     	self.load(pdfDocument, scale);
     	
       },
@@ -933,22 +931,14 @@ var PDFViewerApplication = {
 
     var pagesCount = pdfDocument.numPages;
     var toolbarConfig = this.appConfig.toolbar;
-    toolbarConfig.numPages.textContent =
-      mozL10n.get('page_of', {pageCount: pagesCount}, 'of {{pageCount}}');
+    toolbarConfig.numPages.textContent = mozL10n.get('page_of', {pageCount: pagesCount}, 'of {{pageCount}}');
     toolbarConfig.pageNumber.max = pagesCount;
 
     var id = this.documentFingerprint = pdfDocument.fingerprint;
     var store = this.store = new ViewHistory(id);
 
-//#if GENERIC
     var baseDocumentUrl = null;
-//#endif
-//#if (FIREFOX || MOZCENTRAL)
-//  var baseDocumentUrl = this.url.split('#')[0];
-//#endif
-//#if CHROME
-//  var baseDocumentUrl = location.href.split('#')[0];
-//#endif
+
     this.pdfLinkService.setDocument(pdfDocument, baseDocumentUrl);
 
     var pdfViewer = this.pdfViewer;
@@ -963,7 +953,7 @@ var PDFViewerApplication = {
     this.pdfThumbnailViewer.setDocument(pdfDocument);
 
 	  // paf dai
-    	console.log('DBV initalize Editor & Info');
+      console.log('DBV initalize Editor & Info');
 	  if (this.editorMode) {
 		  this.annoEditor.load();
 	  }
@@ -1084,6 +1074,7 @@ var PDFViewerApplication = {
     });
 
     pdfDocument.getMetadata().then(function(data) {
+    	
       var info = data.info, metadata = data.metadata;
       self.documentInfo = info;
       self.metadata = metadata;
@@ -1096,6 +1087,27 @@ var PDFViewerApplication = {
                   (!pdfjsLib.PDFJS.disableWebGL ? ' [WebGL]' : '') + ')');
 
       var pdfTitle;
+      
+      pdfDocument.dbvMetadata = {};
+      
+      // serach XMP dataset for DAI specific data
+      if (metadata) {
+    	  
+    	  if (window.parent) {// @ TODO remove
+        	  var oSerializer = new XMLSerializer();
+        	  var sXML = oSerializer.serializeToString(metadata.metaDocument);
+        	  window.parent.postMessage({message: sXML}, 'http://195.37.232.186');
+    	  }
+    	  
+    	  var res;
+    	  res = metadata.metaDocument.getElementsByTagNameNS('xml.dainst.org', 'pubid');
+    	  pdfDocument.dbvMetadata.daiPubId = (res && res.length > 0) ? res[0].textContent : false;
+    	  res = metadata.metaDocument.getElementsByTagNameNS('xml.dainst.org', 'zenonid');
+    	  pdfDocument.dbvMetadata.zenonId = (res && res.length > 0) ? res[0].textContent : false;
+    	  console.log('dbvMetadata detected: ', pdfDocument.dbvMetadata);
+    	  
+      }
+      
       if (metadata && metadata.has('dc:title')) {
         var title = metadata.get('dc:title');
         // Ghostscript sometimes return 'Untitled', sets the title to 'Untitled'
@@ -1117,39 +1129,7 @@ var PDFViewerApplication = {
         self.fallback(pdfjsLib.UNSUPPORTED_FEATURES.forms);
       }
 
-//#if !PRODUCTION
-      if (true) {
-        return;
-      }
-//#endif
-//#if (FIREFOX || MOZCENTRAL)
-      var versionId = String(info.PDFFormatVersion).slice(-1) | 0;
-      var generatorId = 0;
-      var KNOWN_GENERATORS = [
-        'acrobat distiller', 'acrobat pdfwriter', 'adobe livecycle',
-        'adobe pdf library', 'adobe photoshop', 'ghostscript', 'tcpdf',
-        'cairo', 'dvipdfm', 'dvips', 'pdftex', 'pdfkit', 'itext', 'prince',
-        'quarkxpress', 'mac os x', 'microsoft', 'openoffice', 'oracle',
-        'luradocument', 'pdf-xchange', 'antenna house', 'aspose.cells', 'fpdf'
-      ];
-      if (info.Producer) {
-        KNOWN_GENERATORS.some(function (generator, s, i) {
-          if (generator.indexOf(s) < 0) {
-            return false;
-          }
-          generatorId = i + 1;
-          return true;
-        }.bind(null, info.Producer.toLowerCase()));
-      }
-      var formType = !info.IsAcroFormPresent ? null : info.IsXFAPresent ?
-                     'xfa' : 'acroform';
-      self.externalServices.reportTelemetry({
-        type: 'documentInfo',
-        version: versionId,
-        generator: generatorId,
-        formType: formType
-      });
-//#endif
+
     });
   },
 
@@ -1911,7 +1891,6 @@ function webViewerFileInputChange(e) {
 
   // URL does not reflect proper document location - hiding some icons.
   var appConfig = PDFViewerApplication.appConfig;
-  appConfig.toolbar.viewBookmark.setAttribute('hidden', 'true');
   appConfig.secondaryToolbar.viewBookmarkButton.setAttribute('hidden', 'true');
   appConfig.toolbar.download.setAttribute('hidden', 'true');
   appConfig.secondaryToolbar.downloadButton.setAttribute('hidden', 'true');

@@ -54,15 +54,15 @@
 			map: false,
 			
 			/**
+			 * prepares the anno viewer controller
+			 * 
 			 * 
 			 * @param file
 			 */
-			load: function AnnoViewerLoad(file) { // @ TODO move to registry!? 
+			load: function AnnoViewerLoad() { 
 				var self = this;		
 				this.annoRegistry.onGetAnnotations(function(data) {return self.buildBlocks(data)});
 				this.annoRegistry.errorFn 		= function(e) {return self.$.displayError(e)};
-				this.annoRegistry.setFilename(file);
-				this.annoRegistry.getAnnotations(['testdata', 'digest_' + this.annoRegistry.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
 				
 				this.$.clear();
 				

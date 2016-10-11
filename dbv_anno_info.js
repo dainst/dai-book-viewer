@@ -34,8 +34,7 @@
 				this.annoRegistry.onGetAnnotations(function showInfoAnnotations(data){return this.showInfoAnnotations(data)}.bind(this));
 				this.elements.dlAnnotationsJson.addEventListener('click', this.dlAnnotationsJson.bind(this));
 				this.elements.openAnnotationsFile.addEventListener('click', this.openAnnotationsFile.bind(this));
-				this.$.block('annotations_info');
-				console.log(this.$.blocks);
+				this.$.block('annotation_info');
 			},
 		
 			showInfoProduct: function() {
@@ -74,9 +73,9 @@
 			
 			checkAnnotationFeatures: function() {
 				if (this.annoRegistry.count() == 0) {
-					this.$.blocks.annotations_info.block.classList.add('dbv-noAnnotations');
+					this.$.blocks.annotation_info.block.classList.add('dbv-noAnnotations');
 				} else {
-					this.$.blocks.annotations_info.block.classList.remove('dbv-noAnnotations');
+					this.$.blocks.annotation_info.block.classList.remove('dbv-noAnnotations');
 				}
 				
 

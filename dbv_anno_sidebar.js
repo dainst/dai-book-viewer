@@ -64,28 +64,26 @@
 			 */
 			block: function(id, title, glyphicon, minimizable, minimized) {
 				var block = document.getElementById('dbv-av-block-' + id);
-				if (block) {
-					block.innerHTML = '';
-				} else {
+				if (!block) {
 					block		= this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
 					this.container.appendChild(block);
+								
+					var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
+					var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
+					var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
+					var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
+					var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
+					
+					blockh3.appendChild(icon);
+					blocktitle.appendChild(blockh3);
+					block.appendChild(blocktitle);
+					block.appendChild(blockbody);
+					block.appendChild(blockfooter);
 				}
 				
 				if (minimized) {
 					block.classList.add('dbv-hidden');
 				}
-				
-				var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
-				var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
-				var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
-				var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
-				var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
-				
-				blockh3.appendChild(icon);
-				blocktitle.appendChild(blockh3);
-				block.appendChild(blocktitle);
-				block.appendChild(blockbody);
-				block.appendChild(blockfooter);
 				
 				this.blocks[id] = {
 					opened: (typeof minimized === "undefined") ? false : !minimized,

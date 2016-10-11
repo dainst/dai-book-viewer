@@ -74,36 +74,45 @@ var PDFSidebar = (function PDFSidebarClosure() {
      * the viewers (PDFViewer/PDFThumbnailViewer) are updated correctly.
      */
     this.onToggled = null;
-
-    this.pdfViewer = options.pdfViewer;
-    this.pdfThumbnailViewer = options.pdfThumbnailViewer;
-    this.pdfOutlineViewer = options.pdfOutlineViewer;
-    this.annoViewer = options.annoViewer;
-
-    this.mainContainer = options.mainContainer;
-    this.outerContainer = options.outerContainer;
-    this.eventBus = options.eventBus;
-    this.toggleButton = options.toggleButton;
-
-    this.thumbnailButton = options.thumbnailButton;
-    this.outlineButton = options.outlineButton;
-    this.attachmentsButton = options.attachmentsButton;
-    this.annotationsButton = options.annotationsButton;
-    this.findButton = options.findButton;
-    this.editAnnotationsButton = options.editAnnotationsButton;
-    this.infoButton = options.infoButton;
-
-    this.thumbnailView = options.thumbnailView;
-    this.outlineView = options.outlineView;
-    this.attachmentsView = options.attachmentsView;
-    this.annotationsView = options.annotationsView;
-    this.findView = options.findView;
-    this.editAnnotationsView = options.editAnnotationsView;
-    this.infoView = options.infoView;
     
-    this.editorMode = options.editorMode;
+    // controllers
+    this.pdfViewer 				= options.pdfViewer;
+    this.pdfThumbnailViewer 	= options.pdfThumbnailViewer;
+    this.pdfOutlineViewer 		= options.pdfOutlineViewer;
+    this.annoViewer 			= options.annoViewer;
+    this.annoRegistry 			= options.annoRegistry;
+    this.eventBus 				= options.eventBus;
+
+    // containers
+    this.mainContainer 			= options.mainContainer;
+    this.outerContainer 		= options.outerContainer;
+    
+    // buttons
+    this.toggleButton 			= options.toggleButton;
+    
+    this.thumbnailButton 		= options.thumbnailButton;
+    this.outlineButton 			= options.outlineButton;
+    this.attachmentsButton 		= options.attachmentsButton;
+    this.annotationsButton 		= options.annotationsButton;
+    this.findButton 			= options.findButton;
+    this.editAnnotationsButton 	= options.editAnnotationsButton;
+    this.infoButton 			= options.infoButton;
+
+    // views
+    this.thumbnailView 			= options.thumbnailView;
+    this.outlineView 			= options.outlineView;
+    this.attachmentsView 		= options.attachmentsView;
+    this.annotationsView 		= options.annotationsView;
+    this.findView 				= options.findView;
+    this.editAnnotationsView 	= options.editAnnotationsView;
+    this.infoView 				= options.infoView;
+    
+    // mode
+    this.editorMode 			= options.editorMode;
 
     this._addEventListeners();
+    
+    options.annoRegistry.onGetAnnotations(function(e, x) {this.checkAnnotationFeatures()}.bind(this), function(e, x) {this.checkAnnotationFeatures()}.bind(this));
   }
 
   PDFSidebar.prototype = {
@@ -234,6 +243,20 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		if (isViewChanged) {
 			this._dispatchEvent();
 		}
+    },
+    
+    checkAnnotationFeatures: function() {
+    	this.toggleAnnotationFeatures(this.editorMode || this.annoRegistry.count() > 0);
+    },
+    
+    toggleAnnotationFeatures:  function(to) {
+    	this.annotationsButton.disabled = !to; 	
+    	if (to === false) {
+    		if ((this.active === 'annotations') || (this.active === 'editAnnotations')) {
+    			this.switchView('thumbnail');
+    		}
+    	}
+    	
     },
 
     open: function PDFSidebar_open() {

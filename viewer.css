@@ -1876,6 +1876,11 @@ html[dir='rtl'] .pull-right {
 	color: #223657;
 }
 
+.dbv-noAnnotations  .dbv-hideOnNoAnnotations { 
+	display: none;
+}
+
+
 /* small screen */
 
 @media screen and (min-resolution: 2dppx) {

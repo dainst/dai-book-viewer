@@ -61,8 +61,10 @@
 			 */
 			load: function AnnoViewerLoad() { 
 				var self = this;		
-				this.annoRegistry.onGetAnnotations(function(data) {return self.buildBlocks(data)});
-				this.annoRegistry.errorFn 		= function(e) {return self.$.displayError(e)};
+				this.annoRegistry.onGetAnnotations(
+						function(data) 	{return self.buildBlocks(data)},
+						function(e) 	{return self.$.displayError(e)}
+				);
 				
 				this.$.clear();
 				
@@ -96,9 +98,15 @@
 			},
 			
 
-			block: function(id, title, glyphicon, data, populationFn, loadMore) {
-				
+			block: function(id, title, glyphicon, data, populationFn, loadMore) {				
 				if (!data) {
+					return;
+				}
+				
+				var hasData = (data.items && (data.items.length > 0));
+				var hasMore = (loadMore !== false && data.more);
+				
+				if (!hasData && !hasMore) {
 					return;
 				}
 				
@@ -106,14 +114,14 @@
 				
 				var populationFn = populationFn || 'populate';
 				
-				if (data && data.items) {
-					this[populationFn](block, data.items);	
-				}
+				if (hasData) {
+					this[populationFn](block, data.items) === false;
+				} 
 
-				if (loadMore !== false && data.more) {
+				if (hasMore) {
 					var loadMoreBtn = this.$.htmlElement('div', {'classes': ['btn', 'btn-default', 'dbv-load-more']}, "Load More");// @ TODO  l10n					
 					loadMoreBtn.addEventListener('click', function(e) {return self.loadMore(id);});
-					block.appendChild(loadMoreBtn); 
+					block.appendChild(loadMoreBtn);
 				}
 			},
 			
@@ -210,6 +218,7 @@
 						//marker.bindPopup(unit.lemma + '<span class="badge">' +  unit.count + "</span>");
 						
 						markers.push(marker);
+						window.Xmap = map;
 						this.map = map;
 					} catch (err) {
 						console.log('MAP:ERR', err);

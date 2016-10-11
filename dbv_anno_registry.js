@@ -6,15 +6,6 @@
  * it can fetch annotations frm nlp database or other sources and know wich are already displayed 
  * 
  * 
- * registry structure is:
- * 
- * {
- * 	<page>: 
- * 	 [
- * 		<type:lemma>:
- * 			{
- * 				term: ...,
- * 				
  * 
  * 
  * @param root
@@ -45,6 +36,7 @@
 			
 			/* registry for loaded annotations ordered by ID */
 			registry: {},
+			mayloadmore: false,
 			
 			/* status view */
 			state: 'wait',  
@@ -57,8 +49,8 @@
 			statusDiv: null,
 			
 			/* data loader functions */
-			successFn: {},
-			errorFn: function() {},
+			successFn: 	{},
+			errorFn: 	{},
 			
 			loadingPromise: null,
 			loadingPromiseResolver: null,
@@ -69,6 +61,7 @@
 				this.state = 'wait';
 				this.registry = {};
 				this.metadata = {};
+				this.mayloadmore = false;
 				
 				this.loadingPromiseReset();
 			},
@@ -105,8 +98,6 @@
 					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
 					return;
 				}
-				
-				
 			},
 			
 			/**
@@ -119,6 +110,11 @@
 			 * @param post			<boolean>		true: use POST; false (or omit) use GET
 			 */
 			getAnnotations: function(restparams, source, post) {
+				
+				if (this.state == 'loading') {
+					return;
+				}
+				
 				var self = this;
 
 				var restprams = restparams || [];
@@ -164,7 +160,15 @@
 				request.send();
 			},
 			
+			/**
+			 * open local file and get annotations from there
+			 */
 			getFromLocalFile: function() {
+				
+				if (this.state == 'loading') {
+					return;
+				}
+				
 				this.setState('loading');
 				var fileInput = document.createElement('input');
 				fileInput.id = 'tmpfileopener';
@@ -215,11 +219,20 @@
 			
 			/**
 			 * registers a function, which get called after data loading
+			 * this is something wich exactly works like a promise, and actually I just realized that too late...
 			 * @param fn
+			 * @param errorFn
 			 */
-			onGetAnnotations: function(fn) {				
-				var name = 'fn__' + Object.keys(this.successFn).length;
-				this.successFn[fn.name || name] = fn;
+			onGetAnnotations: function(fn, errorFn) {
+				if (typeof fn === 'function') {
+					var name = 'fn__' + Object.keys(this.successFn).length;
+					this.successFn[fn.name || name] = fn;
+				}
+
+				if (typeof errorFn === 'function') {
+					var name = 'fn__' + Object.keys(this.errorFn).length;
+					this.errorFn[errorFn.name || name] = errorFn;
+				}
 			},
 			
 			/**
@@ -239,6 +252,10 @@
 						var annotation = data[type].items[i];
 						annotation.type = type;
 						this.registerAnnotation(annotation);
+					}
+					// may load more
+					if (data[type].more) {
+						this.mayloadmore = true;
 					}
 				}
 			},
@@ -300,7 +317,9 @@
 			error: function(e, x) {
 				console.log('Error: ', e, x);
 				this.setState('error');
-				this.errorFn(e);
+				for (var fn in this.errorFn) {
+					this.errorFn[fn](e, x);
+				}
 			},
 			
 			setFilename: function(url) {
@@ -308,6 +327,18 @@
 				this.filename = url.split('/').pop();
 			},
 			
+			
+			/**
+			 * return 0 if there are annotations, and no hint for more, otherwise the number of loaded annotations
+			 * @returns <int>
+			 */
+			count: function() {
+				var len = Object.keys(this.registry).length;
+				if (len > 0 || this.mayloadmore) {
+					return len;
+				}
+				return 0;
+			},
 			
 			/**
 			 * 

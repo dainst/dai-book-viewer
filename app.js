@@ -370,6 +370,7 @@ var PDFViewerApplication = {
     sidebarConfig.eventBus = this.eventBus;
     sidebarConfig.annoViewer = this.annoViewer;
     sidebarConfig.annoEditor = this.annoEditor;
+    sidebarConfig.annoRegistry = this.annoRegistry;
     sidebarConfig.editorMode = this.editorMode;
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);

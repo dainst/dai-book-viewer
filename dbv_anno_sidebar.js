@@ -41,12 +41,14 @@
 		function AnnoSidebar(options) {
 			this.container = options.container;
 			this.parent = options.parent;
+			
+
+			this.blocks = {};
 		}
 		
 		AnnoSidebar.prototype = {
 				
-			/* registry for content blocks in the sidebar */
-			blocks: {}, 
+
 				
 			/**
 			 * 

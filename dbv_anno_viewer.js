@@ -398,8 +398,10 @@
 			 * center map on annotation
 			 */
 			mapCenter: function(annotation) {
-				if (annotation.coordinates.length == 2) {
-					this.map.panTo(new L.LatLng(annotation.coordinates[0], annotation.coordinates[1]));
+				if (annotation.coordinates && annotation.coordinates.length == 2) {
+					if (!annotation.coordinates[0] !== "" && annotation.coordinates[1] !== "") {
+						this.map.panTo(new L.LatLng(annotation.coordinates[0], annotation.coordinates[1]));
+					}
 				}
 				
 			},

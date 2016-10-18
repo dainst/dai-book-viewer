@@ -133,7 +133,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
       
       if (isQuery) {
     	  // if it's a query, then 
-    	  // 1. escape regex cahracters
+    	  // 1. escape regex characters
     	  // 2. normalize groups of white spaces
     	  normalized = normalized.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/\s+/g, '\\s+')
       }
@@ -297,7 +297,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
      * @param pageIndex
      * @param pageContent
      */
-    calcFindWholeWordMatch: function PDFFindController_calcFindWholeWordMatch(query, pageIndex, pageContent, settings) {
+    calcFindWholeWordMatch: function PDFFindController_calcFindWholeWordMatch(query, termLength, pageIndex, pageContent, settings) {
         var matches = [];
         var match;
         
@@ -327,7 +327,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         	//console.log('MM:' + match.index + ' | ' + match[1] + ' (' + match[1].length + ') | ' + match[2] + ' (' + match[2].length + ')');
         	matches.push({
         		'begin': match.index + match[1].length + match[2].length,
-        		'length': term.length 
+        		'length': termLength 
         	});
         }
         //console.log(matches);
@@ -341,7 +341,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
 	 * @param pageIndex
 	 * @param pageContent
 	 */
-    calcFindPhraseMatch: function PDFFindController_calcFindPhraseMatch(query, pageIndex, pageContent, settings) {
+    calcFindPhraseMatch: function PDFFindController_calcFindPhraseMatch(query, termLength, pageIndex, pageContent, settings) {
         var matches = [];
         var match;
     	
@@ -404,15 +404,16 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	}
     	
     	// normalize page content and query
+    	var termLength = (typeof query === 'object') ? query[1].length : query.length;
     	var pageContent = this.normalize(this.pageContents[pageIndex], false);
         query = (settings.regex) ? query : this.normalize(query, true);
         
         //console.log('FIND ', query, pageIndex, searchsettings);
              
         if (settings.phraseSearch) {
-        	return this.calcFindPhraseMatch(query, pageIndex, pageContent, searchsettings);
+        	return this.calcFindPhraseMatch(query, termLength, pageIndex, pageContent, searchsettings);
         } else {
-        	return this.calcFindWholeWordMatch(query, pageIndex, pageContent, searchsettings);
+        	return this.calcFindWholeWordMatch(query, termLength, pageIndex, pageContent, searchsettings);
         }
     },
     

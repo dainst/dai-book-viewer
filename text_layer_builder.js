@@ -128,9 +128,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     convertMatches: function TextLayerBuilder_convertMatches(matches, matchesLength) {
       var i = 0;
       var iIndex = 0;
-      
       if (typeof this.textContent === "undefined") {
-    	  console.warn("convertMatches not possible, this.textContent empty");
+    	  //console.warn("convertMatches not possible, this.textContent empty");
     	  return;
       }
       
@@ -196,8 +195,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     pConvertAnnotations: function TextLayerBuilder_pConvertAnnotations(annotations) {
     	var ret = [];
     	var conv;
-    	for (var i = 0; i < annotations.length; i++) {
-    		    		
+    	for (var i = 0; i < annotations.length; i++) {   		
 	        conv = this.convertMatches([annotations[i].position.begin], [annotations[i].position.length]);
     		if ((typeof conv !== "undefined") && (typeof conv[0] !== "undefined")) {
     			
@@ -316,22 +314,68 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
           div.appendChild(node);
         }
         
-        /**
-         * unfortunately we have to sort this stuff, although it's expensive
-         * @TODO we could implement our own sort and merge / skip overlapping items of same id!
-         * (it is NOT possible to just skip them in the next step) 
-         * 
-         */
-        //var t1 = performance.now();
+        // unfortunately we have to sort this stuff twice and iterate a lot over it, although it's expensive
+
+        //var t1 = performance.now(); 
+        
+        // step 1: sprt by divIdx, id, begin
         annotations.sort(function(a, b) {
-        	return ((a.position.divIdx * 10000 + a.position.begin) - (b.position.divIdx * 10000 + b.position.begin));
+            if (a.position.divIdx < b.position.divIdx) 	{return -1}
+            if (a.position.divIdx > b.position.divIdx) 	{return 1}
+            if (a.base.id < b.base.id) 					{return -1}
+            if (a.base.id > b.base.id) 					{return 1}
+            if (a.position.begin < b.position.begin) 	{return -1}
+            if (a.position.begin > b.position.begin) 	{return 1}
+            return 0;
         });
+ 
+        // step 2: sprt by eliminate annotation wich overlap with themselves
+        var i = 0;
+        var a,b;
+        while(i < annotations.length - 1) {
+          a = annotations[i];
+          b = annotations[i + 1];
+             
+          if ((a.position.divIdx != b.position.divIdx) || (a.base.id != b.base.id)) {
+        	  i++; 
+        	  continue;
+          }
+          
+          if (a.position.end < b.position.begin) {
+        	  i++;
+        	  continue;
+          }
+          
+          if (a.position.end >= b.position.end) {
+        	  annotations.splice(i + 1, 1);
+          } else if (a.position.begin < b.position.begin) {
+        	  annotations[i].position = {
+	              begin:	a.position.begin,
+	              end:		b.position.end,
+	              divIdx:	a.position.divIdx
+        	  }
+        	  annotations.splice(i + 1, 1);
+          } else {
+        	  annotations.splice(i, 1);
+          }
+        }
+        
+        // step 3: sort by divIdx, begin  
+        annotations.sort(function(a, b) {
+        	if (a.position.divIdx < b.position.divIdx) 		{return -1}
+            if (a.position.divIdx > b.position.divIdx) 		{return 1}
+            if (a.position.begin < b.position.begin) 		{return -1}
+            if (a.position.begin > b.position.begin) 		{return 1}
+            return 0;
+        });
+        
+         
         //var t2 = performance.now();
         //var dur = t2 - t1;
         //console.log('PERF:' + dur);
         //console.log(annotations);
-        //console.log("HERZ UND NIEREN", annotations);
         
+        // step 4 draw
         
         var ann = null; 
         var prev = null;
@@ -363,7 +407,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
           begin = position.begin == -1 ? 0 : position.begin;
           tEnd = next ? next.position.begin : infinity.offset;
           
-         // console.log('coords: ' + position.divIdx + '/' + position.begin + ' - ' + position.divIdx + '/' + position.end/*, 'for', JSON.stringify(ann.base)*/);
+          // console.log('coords: ' + position.divIdx + '/' + position.begin + ' - ' + position.divIdx + '/' + position.end/*, 'for', JSON.stringify(ann.base)*/);
           //console.log(prev,ann,next);
                  
           
@@ -435,145 +479,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     },
     
     
-    
- /*   
-    renderMatches: function TextLayerBuilder_renderMatches(matches) {
-      // Early exit if there is nothing to render.
-      if (matches.length === 0) {
-        return;
-      }
-
-      var bidiTexts = this.textContent.items;
-      var textDivs = this.textDivs;
-      var prevEnd = null;
-      var pageIdx = this.pageIdx;
-      var isSelectedPage = (this.findController === null ?
-        false : (pageIdx === this.findController.selected.pageIdx));
-      var selectedMatchIdx = (this.findController === null ?
-                              -1 : this.findController.selected.matchIdx);
-      var highlightAll = (this.findController === null ?
-                          false : this.findController.state.highlightAll);
-      var infinity = {
-        divIdx: -1,
-        offset: undefined
-      };
-
-      function beginText(begin, className) {
-        var divIdx = begin.divIdx;
-        textDivs[divIdx].textContent = '';
-        appendTextToDiv(divIdx, 0, begin.offset, className);
-      }
-
-      function appendTextToDiv(divIdx, fromOffset, toOffset, className) {
-        var div = textDivs[divIdx];
-        var content = bidiTexts[divIdx].str.substring(fromOffset, toOffset);
-        var node = document.createTextNode(content);
-        if (className) {
-          var span = document.createElement('span');
-          span.className = className;
-          span.appendChild(node);
-          div.appendChild(span);
-          return;
-        }
-        div.appendChild(node);
-      }
-
-      var i0 = selectedMatchIdx, i1 = i0 + 1;
-      if (highlightAll) {
-        i0 = 0;
-        i1 = matches.length;
-      } else if (!isSelectedPage) {
-        // Not highlighting all and this isn't the selected page, so do nothing.
-        return;
-      }
-
-      for (var i = i0; i < i1; i++) {
-        var match = matches[i];
-        var begin = match.begin;
-        var end = match.end;
-        var isSelected = (isSelectedPage && i === selectedMatchIdx);
-        var highlightSuffix = (isSelected ? ' selected' : '');
-
-        if (this.findController) {
-          this.findController.updateMatchPosition(pageIdx, i, textDivs,
-                                                  begin.divIdx);
-        }
-
-        // Match inside new div.
-        if (!prevEnd || begin.divIdx !== prevEnd.divIdx) {
-          // If there was a previous div, then add the text at the end.
-          if (prevEnd !== null) {
-            appendTextToDiv(prevEnd.divIdx, prevEnd.offset, infinity.offset);
-          }
-          // Clear the divs and set the content until the starting point.
-          beginText(begin);
-        } else {
-          appendTextToDiv(prevEnd.divIdx, prevEnd.offset, begin.offset);
-        }
-
-        if (begin.divIdx === end.divIdx) {
-          appendTextToDiv(begin.divIdx, begin.offset, end.offset,
-                          'highlight' + highlightSuffix);
-        } else {
-          appendTextToDiv(begin.divIdx, begin.offset, infinity.offset,
-                          'highlight begin' + highlightSuffix);
-          for (var n0 = begin.divIdx + 1, n1 = end.divIdx; n0 < n1; n0++) {
-            textDivs[n0].className = 'highlight middle' + highlightSuffix;
-          }
-          beginText(end, 'highlight end' + highlightSuffix);
-        }
-        prevEnd = end;
-      }
-
-      if (prevEnd) {
-        appendTextToDiv(prevEnd.divIdx, prevEnd.offset, infinity.offset);
-      }
-    },
-*/
-/*
-    updateMatches: function TextLayerBuilder_updateMatches() {
-      // Only show matches when all rendering is done.
-      if (!this.renderingDone) {
-        return;
-      }
-
-      // Clear all matches.
-      var matches = this.matches;
-      var textDivs = this.textDivs;
-      var bidiTexts = this.textContent.items;
-      var clearedUntilDivIdx = -1;
-
-      // Clear all current matches.
-      for (var i = 0, len = matches.length; i < len; i++) {
-        var match = matches[i];
-        var begin = Math.max(clearedUntilDivIdx, match.begin.divIdx);
-        for (var n = begin, end = match.end.divIdx; n <= end; n++) {
-          var div = textDivs[n];
-          div.textContent = bidiTexts[n].str;
-          div.className = '';
-        }
-        clearedUntilDivIdx = match.end.divIdx + 1;
-      }
-
-      if (this.findController === null || !this.findController.active) {
-        return;
-      }
-
-      // Convert the matches on the page controller into the match format
-      // used for the textLayer.
-      var pageMatches, pageMatchesLength;
-      if (this.findController !== null) {
-        pageMatches = this.findController.pageMatches[this.pageIdx] || null;
-        pageMatchesLength = (this.findController.pageMatchesLength) ?
-          this.findController.pageMatchesLength[this.pageIdx] || null : null;
-      }
-
-      
-      this.matches = this.pConvertAnnotations(pageMatches, pageMatchesLength);
-      this.pRenderAnnotations(this.matches);
-      
-    },
-    */
     /**
      * dbv extension to show DAI computer generated annotations
      * 

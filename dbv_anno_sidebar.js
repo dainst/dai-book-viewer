@@ -85,6 +85,8 @@
 					block.classList.add('dbv-hidden');
 				}
 				
+				
+				
 				this.blocks[id] = {
 					opened: (typeof minimized === "undefined") ? false : !minimized,
 					block: block,
@@ -96,7 +98,7 @@
 					clear: function() {blockbody.textContent = ''},
 					
 				}
-				
+								
 				return blockbody;
 			},
 			
@@ -116,11 +118,12 @@
 			 * @param id
 			 */
 			toggleBlock: function(e, id) {
+								
 				e.stopPropagation();				
 				
 				this.blocks[id].opened = !this.blocks[id].opened; 
 				
-				if (this.blocks[id].opened) {
+				if (!this.blocks[id].opened) {
 					this.blocks[id].block.classList.remove('dbv-hidden');	
 				} else {
 					this.blocks[id].block.classList.add('dbv-hidden');

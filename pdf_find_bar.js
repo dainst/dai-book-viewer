@@ -200,9 +200,10 @@ var PDFFindBar = (function PDFFindBarClosure() {
       
       // show details
       this.$.blocks.findResults.clear();
+      var pageTerm = mozL10n.get('page', false, 'Page');
       for (var i = 0; i < matchDetails.length; i++) {
     	  if (matchDetails[i] > 0) {
-        	  this.$.blocks.findResults.add(mozL10n.get('Page', false, 'Page') + ' ' + (i + 1).toString(), matchDetails[i], {'click': ['jumpToResultPage', i]});
+        	  this.$.blocks.findResults.add(pageTerm + ' ' + (i + 1).toString(), matchDetails[i], {'click': ['jumpToResultPage', i]});
     	  }
       }
      },

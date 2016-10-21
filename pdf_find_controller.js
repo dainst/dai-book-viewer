@@ -550,6 +550,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	);
     },
     
+    
     /**
      * updated a page
      * 
@@ -565,9 +566,10 @@ var PDFFindController = (function PDFFindControllerClosure() {
 
     	// highlight current match if given and show
     	var page = this.pdfViewer.getPageView(index);
-    	if (page.textLayer && this.selected.matchIdx !== -1 && this.selected.pageIdx == index) {
-    		var textDiv = page.textLayer.highlightMatch(this.selected.matchIdx);
-    		this.updateMatchPosition(index, textDiv);
+    	if (this.selected.matchIdx !== -1 && this.selected.pageIdx == index) {
+    		if (page.textLayer) { // if not it will be highlighited during the rende rprocess and we don't have to do anything here
+    			page.textLayer.highlightMatch(this.selected.matchIdx, this.updateMatchPosition);	
+    		}
     	}
     	
     	// stop if not new search
@@ -723,7 +725,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         return true;
       } else {
         // No matches, so attempt to search the next page.
-        this.advanceOffsetPage(previous);
+        this.advanceOffsetPage(previous);        
         if (offset.wrapped) {
           offset.matchIdx = null;
           if (this.pagesToSearch < 0) {
@@ -747,8 +749,8 @@ var PDFFindController = (function PDFFindControllerClosure() {
      */
     updateMatchPosition: function PDFFindController_updateMatchPosition(pageIndex, textDiv) {    	
 		var spot = {
-				top: FIND_SCROLL_OFFSET_TOP,
-				left: FIND_SCROLL_OFFSET_LEFT
+			top: FIND_SCROLL_OFFSET_TOP,
+			left: FIND_SCROLL_OFFSET_LEFT
 		};
 		//console.log("updateMatchPosition page " + pageIndex, textDiv, spot);		
 		scrollIntoView(textDiv, spot, /* skipOverflowHiddenElements = */ true);
@@ -788,21 +790,23 @@ var PDFFindController = (function PDFFindControllerClosure() {
       var state = FindStates.FIND_NOTFOUND;
       var wrapped = this.offset.wrapped;
       this.offset.wrapped = false;
-
+      	
+      	
       if (found) {    	  
         var previousPage = this.selected.pageIdx;
         this.selected.pageIdx = this.offset.pageIdx;
         this.selected.matchIdx = this.offset.matchIdx;
         state = (wrapped ? FindStates.FIND_WRAPPED : FindStates.FIND_FOUND);
         // Update the currently selected page to wipe out any selected matches.
+        
         if (previousPage !== -1 && previousPage !== this.selected.pageIdx) {
-          this.updatePage(previousPage);
+           this.updatePage(previousPage);
         }
       }
 
       this.updateUIState(state, this.state.findPrevious);
       if (this.selected.pageIdx !== -1) {
-        this.updatePage(this.selected.pageIdx);
+          this.updatePage(this.selected.pageIdx);
       }
     },
 

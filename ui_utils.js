@@ -121,11 +121,18 @@ function scrollIntoView(element, spot, skipOverflowHiddenElements) {
   // Assuming offsetParent is available (it's not available when viewer is in
   // hidden iframe or object). We have to scroll: if the offsetParent is not set
   // producing the error. See also animationStartedClosure.
-  var parent = element.offsetParent;
-  if (!parent) {
+  /*
+  if (typeof element === "undefined") {
+	  console.log('element not defined', element, spot, skipOverflowHiddenElements);
+	  console.trace();
+  }
+	*/
+  if (!element || !element.offsetParent) {
     console.error('offsetParent is not set -- cannot scroll');
     return;
   }
+  var parent = element.offsetParent;
+
   var checkOverflow = skipOverflowHiddenElements || false;
   var offsetY = element.offsetTop + element.clientTop;
   var offsetX = element.offsetLeft + element.clientLeft;
@@ -153,6 +160,7 @@ function scrollIntoView(element, spot, skipOverflowHiddenElements) {
   }
   parent.scrollTop = offsetY;
 }
+
 
 /**
  * Helper function to start monitoring the scroll event and converting them into

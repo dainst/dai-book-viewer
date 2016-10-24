@@ -197,7 +197,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	var pageIndex = parseInt(page);
     	var self = this;
     	
-    	//console.log('find: ' + term + ' on page ' + pageIndex, annotation);
+    	console.log('find: ' + term + ' on page ' + pageIndex, annotation);
       	
     	
     	/**
@@ -424,9 +424,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
      */
     calcFindMatch: function PDFFindController_calcFindMatch(pageIndex) {
     	//console.log('calcFindMatch', pageIndex);
-    	
-    	var method = 'phraseSearch';// this.state.phraseSearch ? 'phraseSearch': 'wordMatch';
-    	
+    	    	
     	this.pageMatches[pageIndex] = this.calcFind(this.state.query, pageIndex, this.state);
 
     	if (!this.pageMatches[pageIndex]) {

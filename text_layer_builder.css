@@ -20,8 +20,8 @@
   right: 0;
   bottom: 0;
   overflow: hidden;
-  opacity: 0.2;
-  line-height: 1.0;
+  opacity: 0.3;
+  xxxline-height: 1.0;
 }
 
 .textLayer > div {
@@ -38,11 +38,9 @@
 
 .textLayer .dbv-annotation,
 .textLayer .highlight {
-  margin: -1px;
+  xxxmargin: -1px;
   padding: 1px;
 
-  background-color: rgb(180, 0, 170);
-  border-radius: 4px;
   position:absolute;
   
     -webkit-touch-callout: none;
@@ -51,81 +49,84 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    
 }
 
-.textLayer .dbv-annotation {
-	background-color: rgba(85, 85, 85, 0.7);
+@keyframes nubreath {
+	0% 	 {background-position: 0 0 }
+	100% {background-position: 600px  0px}
 }
 
-@keyframes breath {
-	0%, 100% {
-		box-shadow: 0px 0px 10px 10px rgba(0,0,0,1);
-	}
-	50% {
-		box-shadow: 0px 0px 20px 20px rgba(0,0,0,1);
-	}
+.textLayer .dbv-annotation  {
+	background-color: rgb(180, 0, 170);
+  	border-radius: 5px;
+	opacity:  1;
+	z-index: 5
 }
 
 .textLayer .dbv-annotation.blink {
-	animation: breath 2s;
-	animation-iteration-count: infinite;
-	border: 1px solid rgba(0,0,0,1);
-	z-index: 20;
-	border: 1px solid hsla(0,0%,0%,.5);
-	border-radius: 7px;
+
+	xxborder:2px solid red;
+	xxmargin: -1px;
 }
 
-.textLayer .dbv-annotation.keyterms.overlap {
-	background-color: rgba(0, 0, 255, 0.5);
-}
-
-.textLayer .dbv-annotation.persons.overlap {
-	background-color: rgba(255, 0, 0, 0.5);
-}
-
-.textLayer .dbv-annotation.locations.overlap {
-	background-color: rgba(0, 107, 0, 0.5);
-}
-
-.textLayer .dbv-annotation.keyterms.overlap:hover,
-.textLayer .dbv-annotation.keyterms {
-	background-color: rgba(0, 0, 255, 1);
-}
-
-.textLayer .dbv-annotation.persons.overlap:hover,
-.textLayer .dbv-annotation.persons {
-	background-color: rgba(255, 0, 0, 1);
-}
-
-.textLayer .dbv-annotation.locations.overlap:hover,
-.textLayer .dbv-annotation.locations {
-	background-color: rgba(0, 107, 0, 1);
-}
-
-.textLayer .dbv-annotation._search.overlap:hover,
-.textLayer .dbv-annotation._search {
-	background-color: rgba(180, 0, 170,1);
-}
+.textLayer .dbv-annotation.blink:before {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	content: "";
+	background: -moz-linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);
+	background: -o-linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);
+	background: -webkit-linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);
+	background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);	background-attachment: fixed;
+	background-position: 0px 0px;
+	background-size: 600px  600px;
+	animation: nubreath 4s linear infinite;
 	
+}
+
+.textLayer .dbv-annotation.overlap {
+	opacity: 0.5
+}
+
+.textLayer .dbv-annotation.overlap:hover {
+	opacity: 1
+}
+
 .textLayer .dbv-annotation:hover {
 	z-index: 10;
 }
 
-
-
-.textLayer .dbv-annotation.begin,
-.textLayer .highlight.begin {
-  border-radius: 4px 0px 0px 4px;
+.textLayer .dbv-annotation {
+	background-color: rgb(85, 85, 85);
 }
 
-.textLayer .dbv-annotation.end,
-.textLayer .highlight.end {
-  border-radius: 0px 4px 4px 0px;
+.textLayer .dbv-annotation.keyterms {
+	background-color: rgb(0, 0, 255);
+}
+.textLayer .dbv-annotation.persons {
+	background-color: rgb(255, 0, 0);
+}
+.textLayer .dbv-annotation.locations {
+	background-color: rgb(0, 107, 0);
+}
+.textLayer .dbv-annotation._search {
+	background-color: rgb(180, 0, 170);
 }
 
-.textLayer .dbv-annotation.middle,
-.textLayer .highlight.middle {
-  border-radius: 0px;
+
+.textLayer .dbv-annotation.nr {
+  border-radius: 5px 0px 0px 5px;
+  border-right: 0px
+}
+
+.textLayer .dbv-annotation.nl {
+  border-radius: 0px 5px 5px 0px;
+  border-left: 0px
+}
+
+.textLayer .dbv-annotation.nl.nr {
+  border-radius: 0px 0px 0px 0px;
 }
 
 
@@ -134,8 +135,17 @@
 	display: none
 }
 
-.textLayer ::selection { background: rgb(155,155,155); }
-.textLayer ::-moz-selection { background: rgb(155,155,155); }
+.textLayer ::-moz-selection {
+	background: rgb(200,200,200); 
+	opacity: 0.3;
+	color: rgb(200,200,200); 
+}
+
+.textLayer ::selection { 
+	background: rgb(200,200,200); 
+	opacity: 0.3;
+	color: rgb(200,200,200); 
+}
 
 .textLayer .endOfContent {
   display: block;

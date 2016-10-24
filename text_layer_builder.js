@@ -430,12 +430,20 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
 				highlightSuffix += ' blink ';
 			} 
 
-			if (prev && ((position.begin < prev.position.end) && (prev.base.id != ann.base.id))) {
+			if (prev && ((position.begin < prev.position.end))) {
 				highlightSuffix += ' overlap ';
 			}
 			
-			if (next && ((position.end > next.position.begin) && (next.base.id != ann.base.id))) {
+			if (next && ((position.end > next.position.begin))) {
 				highlightSuffix += ' overlap ';
+			}
+			
+			if (position.end == 1000000) {
+				highlightSuffix += ' nr ';
+			}
+			
+			if (position.begin == -1) {
+				highlightSuffix += ' nl ';
 			}
           
 			// first annotation or first annotation in new row

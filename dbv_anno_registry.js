@@ -146,6 +146,7 @@
 						
 
 					} else {
+
 						return self.error('404 not found: ' + url, request);
 					}
 				}
@@ -317,6 +318,7 @@
 			error: function(e, x) {
 				console.log('Error: ', e, x);
 				this.setState('error');
+				this.loadingPromiseResolver({});
 				for (var fn in this.errorFn) {
 					this.errorFn[fn](e, x);
 				}

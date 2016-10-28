@@ -2072,8 +2072,6 @@ function dbvTextmarker(e) {
     
     if (PDFViewerApplication.pdfSidebar.active == 'find') {
     	PDFViewerApplication.findBar.onTextmarker(text, pageIdx);
-    } else if (PDFViewerApplication.pdfSidebar.active == 'editAnnotations' && PDFViewerApplication.annoEditor) {
-    	PDFViewerApplication.annoEditor.onTextmarker(text, pageIdx);
     }
     
 }

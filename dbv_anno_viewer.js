@@ -171,8 +171,8 @@
 				block.appendChild(mapDiv);
 				var b = this.unitBoundaries(units);
 				
-				// prepare maps
-				try {
+				// prepare maps ..
+				try {dddasdsad
 					var map = new L.Map('dbv-av-map');
 				} catch (err) {
 					console.log(err);

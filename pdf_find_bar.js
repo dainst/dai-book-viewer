@@ -257,9 +257,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
         });
     },
     
-	onTextmarker: function(text) {
-		this.findField.value = text;
-	},
+
     
     searchToAnnotation: function() {
     	this.eventBus.dispatch('searchToAnnotation', {

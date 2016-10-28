@@ -85,8 +85,7 @@
 					block.classList.add('dbv-hidden');
 				}
 				
-				
-				
+
 				this.blocks[id] = {
 					opened: (typeof minimized === "undefined") ? false : !minimized,
 					block: block,

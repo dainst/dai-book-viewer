@@ -197,7 +197,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	var pageIndex = parseInt(page);
     	var self = this;
     	
-    	console.log('find: ' + term + ' on page ' + pageIndex, annotation);
+    	//console.log('find: ' + term + ' on page ' + pageIndex, annotation);
       	
     	
     	/**

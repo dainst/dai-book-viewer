@@ -1,0 +1,168 @@
+/* Copyright 2014 Mozilla Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.3;
+  xxxline-height: 1.0;
+}
+
+.textLayer > div {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  -webkit-transform-origin: 0% 0%;
+  -moz-transform-origin: 0% 0%;
+  -o-transform-origin: 0% 0%;
+  -ms-transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
+}
+
+.textLayer .dbv-annotation,
+.textLayer .highlight {
+  xxxmargin: -1px;
+  padding: 1px;
+
+  position:absolute;
+  
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+}
+
+@keyframes nubreath {
+	0% 	 {background-position: 0 0 }
+	100% {background-position: 600px  0px}
+}
+
+.textLayer .dbv-annotation  {
+	background-color: rgb(180, 0, 170);
+  	border-radius: 5px;
+	opacity:  1;
+	z-index: 5
+}
+
+.textLayer .dbv-annotation.blink {
+
+	xxborder:2px solid red;
+	xxmargin: -1px;
+}
+
+.textLayer .dbv-annotation.blink:before {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	content: "";
+	background: -moz-linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);
+	background: -o-linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);
+	background: -webkit-linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);
+	background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.5) 10%, rgba(0,0,0,0) 20%, rgba(255,255,255,0.5) 30%, rgba(0,0,0,0) 40%, rgba(255,255,255,0.5) 50%, rgba(0,0,0,0) 60%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 80%, rgba(255,255,255,0.5) 90%, rgba(0,0,0,0) 100%);	background-attachment: fixed;
+	background-position: 0px 0px;
+	background-size: 600px  600px;
+	animation: nubreath 4s linear infinite;
+	
+}
+
+.textLayer .dbv-annotation.overlap {
+	opacity: 0.5
+}
+
+.textLayer .dbv-annotation.overlap:hover {
+	opacity: 1
+}
+
+.textLayer .dbv-annotation:hover {
+	z-index: 10;
+}
+
+.textLayer .dbv-annotation {
+	background-color: rgb(85, 85, 85);
+}
+
+.textLayer .dbv-annotation.keyterms {
+	background-color: rgb(0, 0, 255);
+}
+.textLayer .dbv-annotation.persons {
+	background-color: rgb(255, 0, 0);
+}
+.textLayer .dbv-annotation.locations {
+	background-color: rgb(0, 107, 0);
+}
+.textLayer .dbv-annotation._search {
+	background-color: rgb(180, 0, 170);
+}
+
+
+.textLayer .dbv-annotation.nr {
+  border-radius: 5px 0px 0px 5px;
+  border-right: 0px
+}
+
+.textLayer .dbv-annotation.nl {
+  border-radius: 0px 5px 5px 0px;
+  border-left: 0px
+}
+
+.textLayer .dbv-annotation.nl.nr {
+  border-radius: 0px 0px 0px 0px;
+}
+
+.dbv-annotations-hidden .dbv-annotation {
+	display: none
+}
+
+.dbv-annotations-hidden .dbv-annotation._search {
+	display: block
+}
+
+.textLayer ::-moz-selection {
+	background: rgb(200,200,200); 
+	opacity: 0.3;
+	color: rgb(200,200,200); 
+}
+
+.textLayer ::selection { 
+	background: rgb(200,200,200); 
+	opacity: 0.3;
+	color: rgb(200,200,200); 
+}
+
+.textLayer .endOfContent {
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 100%;
+  right: 0px;
+  bottom: 0px;
+  z-index: -1;
+  cursor: default;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+
+.textLayer .endOfContent.active {
+  top: 0px;
+}

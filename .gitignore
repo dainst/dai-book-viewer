@@ -1,3 +1,5 @@
-locale.properties
-locale/
-cmaps/
+build/*
+extensions
+node_modules
+pdf.js
+web

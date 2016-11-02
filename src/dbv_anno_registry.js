@@ -94,8 +94,11 @@
 				}
 				
 				if (identifier.filename) {
+					identifier.filename = identifier.filename.replace(/(.*)\.pdf/g, '$1');					
 					this.setFilename(identifier.filename);
-					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
+					//this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'], 'http://195.37.232.186/DAIbookViewer');
+					this.getAnnotations(['test', identifier.filename], 'https://nlp.dainst.org:3000');
+
 					return;
 				}
 			},

@@ -101,7 +101,7 @@
 				// dai pubid
 				if (identifier.pubid) {
 					this.getAnnotations(['annotations', identifier.pubid]);
-					console.warn("get Annotations by daiPubId is not implemented right now");
+					console.log("get Annotations by daiPubId: " + identifier.pubid);
 					return;
 				}
 				

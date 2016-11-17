@@ -17,7 +17,7 @@
     "uglify-js": "^2.6.1",
     "wintersmith": "^2.0.0",
     "yargs": "^3.14.0",
-    "pdf.js": "^1.5"
+    "pdf.js": "^1.5.296"
   },
   "scripts": {
     "test": "gulp lint"

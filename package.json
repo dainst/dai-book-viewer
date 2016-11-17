@@ -27,6 +27,6 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "pdfjs-dist": "^1.5.296"
+    "pdfjs": "^1.5.296"
   }
 }

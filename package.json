@@ -1,5 +1,5 @@
 {
-  "name": "pdf.js",
+  "name": "dbv",
   "version": "0.8.0",
   "devDependencies": {
     "gulp": "^3.9.1",
@@ -16,14 +16,15 @@
     "typogr": "~0.6.5",
     "uglify-js": "^2.6.1",
     "wintersmith": "^2.0.0",
-    "yargs": "^3.14.0"
+    "yargs": "^3.14.0",
+    "pdf.js": "^1.5"
   },
   "scripts": {
     "test": "gulp lint"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mozilla/pdf.js.git"
+    "url": "git://github.com/dainst/dai-book-viewer/"
   },
   "license": "Apache-2.0",
   "dependencies": {

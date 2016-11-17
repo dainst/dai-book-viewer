@@ -29,3 +29,4 @@ chmod -R 777 build
 -	Werden alle Annotationen korrekt angezeigt?
 -	Test mit Möglichst verschiedenen Typen von PDFs
 
+--

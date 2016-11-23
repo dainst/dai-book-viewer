@@ -128,7 +128,7 @@
 					console.warn("get Annotations by filename is for testing only");
 					//#if !PRODUCTION
 					//identifier.filename = identifier.filename.replace(/.*\/(.*)\.pdf/g, '$1');
-					this.getAnnotations(['testdata', 'didgest_' + this.filename + '.json'], 'http://195.37.232.186/DAIbookViewer');
+					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'], 'http://195.37.232.186/DAIbookViewer');
 					//this.getAnnotations(['annotations', identifier.filename]);
 					return;
 					//#endif

@@ -1,6 +1,0 @@
-[submodule "pdf.js"]
-path = pdfjs
-url = https://github.com/mozilla/pdf.js
-[submodule "pdfjs"]
-	path = pdfjs
-	url = https://github.com/mozilla/pdf.js

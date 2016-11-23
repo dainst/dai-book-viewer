@@ -76,25 +76,29 @@
 					}.bind(this)
 				);
 				
-				this.loadingPromise.then(function(data) {
-					console.log('ADS Resolve', data, this.successFn);
-					this.registerSet(data);
-					for (var fn in this.successFn) {
-						this.successFn[fn](data);
-					}
-					this.setState('ready');
-				}.bind(this));
-				
-				this.loadingPromise['catch'](function(e, x) {
-					e = (typeof e.getMessage === "function") ? eText.getMessage() : e;
-					
-					console.log('Error: ', e, x);		
-					this.setState('error');
-					
-					for (var fn in this.errorFn) {
-						this.errorFn[fn](e, x);
-					}
-				}.bind(this));
+				this.loadingPromise
+					.then(
+					function(data) {
+						console.log('ADS Resolve', data, this.successFn);
+						this.registerSet(data);
+						for (var fn in this.successFn) {
+							this.successFn[fn](data);
+						}
+						this.setState('ready');
+					}.bind(this)
+					)
+					['catch'](
+					function(e, x) {
+						e = (typeof e.getMessage === "function") ? eText.getMessage() : e;
+						
+						console.log('Error: ', e, x);		
+						this.setState('error');
+						
+						for (var fn in this.errorFn) {
+							this.errorFn[fn](e, x);
+						}
+					}.bind(this)
+				);
 				
 			},
 			
@@ -124,7 +128,7 @@
 					console.warn("get Annotations by filename is for testing only");
 					//#if !PRODUCTION
 					//identifier.filename = identifier.filename.replace(/.*\/(.*)\.pdf/g, '$1');
-					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'], 'http://195.37.232.186/DAIbookViewer');
+					this.getAnnotations(['testdata', 'didgest_' + this.filename + '.json'], 'http://195.37.232.186/DAIbookViewer');
 					//this.getAnnotations(['annotations', identifier.filename]);
 					return;
 					//#endif

@@ -309,7 +309,8 @@ var PDFViewerApplication = {
         pdfViewer: this.pdfViewer,
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView}),
-        toggleAnnotationButton: appConfig.toolbar.toggleAnnotations
+        toggleAnnotationButton: appConfig.toolbar.toggleAnnotations,
+        yayBox: appConfig.toolbar.yayBox
     });
     this.annoEditor = this.editorMode ? new annoEditor({
         findController: this.findController,
@@ -1352,6 +1353,8 @@ var PDFViewerApplication = {
     eventBus.on('toggleannotations', dbvToggleAnnotations);
     eventBus.on('textmarker', dbvTextmarker);
     eventBus.on('viewNative', dbvViewNative);
+    
+    eventBus.on('yayboxclick', dbvYayboxClick);
 
   }
 };
@@ -1597,6 +1600,9 @@ function webViewerInitialized() {
   appConfig.toolbar.toggleAnnotations.addEventListener('click', function (e) {
 	  PDFViewerApplication.eventBus.dispatch('toggleannotations');
   });
+  appConfig.toolbar.yayBox.addEventListener('click', function (e) {
+	  PDFViewerApplication.eventBus.dispatch('yayboxclick');
+  })
 
   appConfig.viewerContainer.addEventListener('mouseup', function(e) {
 	  PDFViewerApplication.eventBus.dispatch('textmarker', e);
@@ -2086,6 +2092,11 @@ function dbvTextmarker(e) {
 function dbvViewNative(e) {
 	window.location.href = PDFViewerApplication.url;
 }
+
+function dbvYayboxClick(e) {
+	PDFViewerApplication.annoViewer.yayboxClick();
+}
+
 
 var zoomDisabled = false, zoomDisabledTimeout;
 function handleMouseWheel(evt) {

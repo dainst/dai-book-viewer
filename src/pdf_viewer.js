@@ -140,7 +140,7 @@ var PDFViewer = (function pdfViewer() {
     this.scroll = watchScroll(this.container, this._scrollUpdate.bind(this));
     this.presentationModeState = PresentationModeState.UNKNOWN;
     this._resetView();
-
+    
     if (this.removePageBorders) {
       this.viewer.classList.add('removePageBorders');
     }

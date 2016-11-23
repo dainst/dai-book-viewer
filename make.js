@@ -34,7 +34,7 @@ var config = JSON.parse(fs.readFileSync(CONFIG_FILE));
 
 var ROOT_DIR = __dirname + '/', // absolute path to project's root
     BUILD_DIR = 'build/',
-    SRC_DIR = 'pdf.js/src/',
+    SRC_DIR = 'node_modules/pdfjs-dist/src/',
     BUILD_TARGET = BUILD_DIR + 'pdf.js',
     BUILD_WORKER_TARGET = BUILD_DIR + 'pdf.worker.js',
     BUILD_TARGETS = [BUILD_TARGET, BUILD_WORKER_TARGET],
@@ -43,7 +43,7 @@ var ROOT_DIR = __dirname + '/', // absolute path to project's root
     B2G_BUILD_DIR = BUILD_DIR + 'pdf.js/b2g/',
     JSDOC_DIR = BUILD_DIR + 'pdf.js/jsdoc',
     EXTENSION_SRC_DIR = 'pdf.js/extensions/',
-    FIREFOX_CONTENT_DIR = EXTENSION_SRC_DIR + 'pdf.js//firefox/content/',
+    FIREFOX_CONTENT_DIR = EXTENSION_SRC_DIR + 'pdf.js/firefox/content/',
     LOCALE_SRC_DIR = 'pdf.js/l10n/',
     GH_PAGES_DIR = BUILD_DIR + 'gh-pages/',
     GENERIC_DIR = BUILD_DIR + 'generic/',

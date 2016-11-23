@@ -31,7 +31,7 @@
   }
 }(this, function (exports, pdfjsLib, uiUtils) {
 	var scrollIntoView = uiUtils.scrollIntoView;
-
+	
 	/**
 	 * @class
 	 */
@@ -40,6 +40,7 @@
 			this.pdfViewer = options.pdfViewer;
 			this.annoRegistry = options.annoRegistry;
 			this.toggleAnnotationButton = options.toggleAnnotationButton;
+			this.yayBox = options.yayBox;
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
 			
@@ -61,9 +62,18 @@
 			 */
 			load: function AnnoViewerLoad() { 
 				var self = this;		
+				
+				this.toggleAnnotations(false);
+				
 				this.annoRegistry.onGetAnnotations(
-						function(data) 	{return self.buildBlocks(data)},
-						function(e) 	{return self.$.displayError(e)}
+					function(data) 	{
+						console.log(data);
+						self.enableAnnotations();
+						self.buildBlocks(data)	
+					},
+					function(e) 	{
+						return self.$.displayError(e)
+					}
 				);
 				
 				this.$.clear();
@@ -91,10 +101,11 @@
 			 */
 			buildBlocks: function(data) {
 				this.$.clear();
-				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
-				this.block('places', 'Places', 'map-marker', data.locations);
+				this.$.message('dbv-info-annotions_info', false, false);
 				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false);
+				this.block('places', 'Places', 'map-marker', data.locations);
 				this.block('persons', 'Persons', 'user', data.persons);
+				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
 			},
 			
 
@@ -481,6 +492,8 @@
 		    toggleAnnotations: function(to) {
 		    	console.log('toggle annotations to ' , to);
 		    	
+		    	this.yayboxHide();
+		    	
 		    	this.annotationsVisible = to || !this.annotationsVisible;
 		    	if (!this.annotationsVisible) {
 		    		this.pdfViewer.container.classList.add('dbv-annotations-hidden');
@@ -488,12 +501,39 @@
 		    	} else {
 		    		this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
 		    		this.toggleAnnotationButton.classList.add('toggled');
+		    		this.openAnnotationsSidebar();
 		    	}
 		    	
+		    },
+		    
+		    enableAnnotations: function() {
+		    	this.yayboxShow();
+		    },
+		    
+		    
+		    /* yay box */
+
+		    
+		    yayboxClick: function() {
+		    	this.yayboxHide();
+		    },
+		    
+		    yayboxHide: function() {
+		    	this.yayBox.classList.add('hiddenBox');
+		    	this.toggleAnnotationButton.classList.remove('blinkButton');
+		    	
+		    },
+		    
+		    yayboxShow: function() {
+		    	this.yayBox.classList.remove('hiddenBox');
+		    	this.toggleAnnotationButton.classList.remove('hidden');
+		    	this.toggleAnnotationButton.classList.add('blinkButton');
+		    	setTimeout(function() {this.yayboxHide()}.bind(this), 50000);
+		    },
+		    
+		    openAnnotationsSidebar:  function(view) {
+		    	console.log('sidebar view not bound');
 		    }
-		    
-		    
-		    
 
 		
 		}

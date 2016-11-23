@@ -44,6 +44,7 @@
 			
 
 			this.blocks = {};
+			this.messageBox = null;
 		}
 		
 		AnnoSidebar.prototype = {
@@ -108,6 +109,66 @@
 				entry.appendChild(this.htmlElement('span', {'classes': ['badge', 'pull-right']}, badgeText));
 		    	
 		    	this.blocks[blockId].body.appendChild(entry);
+			},
+			
+			
+			/**
+			 * message is a "block" in a different layout above the blocks
+			 * 
+			 */
+			
+			message: function(text, warning, autohide) {
+				
+				warning = (typeof warning === "undefined") ? false : warning;
+				autohide = (typeof autohide === "undefined") ? true : autohide;
+				
+				//  generate message obj if not present
+				if (this.messageBox === null) {
+					this.messageBox = {};
+					this.messageBox.box = this.htmlElement('div', {'classes': ["alert"], "role": "alert"}, '', {'click': ['messageHide']});
+					this.container.appendChild(this.messageBox.box);
+					
+					this.messageBox.glyphicon = this.htmlElement('span', {'classes': ["glyphicon"]});
+					this.messageBox.box.appendChild(this.messageBox.glyphicon);
+					
+					this.messageBox.text = this.htmlElement('span');
+					this.messageBox.box.appendChild(this.messageBox.text);
+				}
+				
+				// update message object
+				this.messageBox.text.dataset.l10nId = text;
+				
+				if (text != '') {
+					mozL10n.translate(this.messageBox.text); 
+				}
+				
+				if (!warning) {
+					this.messageBox.box.classList.remove("dbv-colors-error");	
+					this.messageBox.glyphicon.className = "glyphicon glyphicon-info";
+				} else { 
+					this.messageBox.box.classList.add("dbv-colors-error");
+					this.messageBox.glyphicon.className = "glyphicon glyphicon-alert";
+				}
+				
+				if (autohide) {
+					this.messageBox.timeout = setTimeout(function() {this.messageHide()}.bind(this), 50000);
+				}
+
+			},
+			
+			messageHide: function() {
+				console.log('messageHide');
+				if (this.messageBox === null) {
+					return;
+				}
+				this.messageBox.box.classList.add('hiddenBox');
+				this.messageBox.timeout = setTimeout(function() {this.messageRemove()}.bind(this), 1000);
+			},
+			
+			messageRemove: function() {
+				console.log('messageRemove');
+				this.messageBox.box.parentNode.removeChild(this.messageBox.box);
+				this.messageBox = null;
 			},
 			
 			/**

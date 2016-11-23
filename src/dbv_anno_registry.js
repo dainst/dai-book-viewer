@@ -55,6 +55,7 @@
 			
 			loadingPromise: null,
 			loadingPromiseResolver: null,
+			loadingPromiseFail: null,
 			
 			reset: function() {
 				this.url = '';
@@ -68,11 +69,12 @@
 			},
 			
 			loadingPromiseReset: function() {
-				this.loadingPromise = new Promise(function(resolve) {
-					this.loadingPromiseResolver = resolve;
-				}.bind(this), function (reason) {
-					this.error(reason);
-			    }.bind(this));
+				this.loadingPromise = new Promise(
+					function(resolve, fail) {
+						this.loadingPromiseResolver = resolve;
+						this.loadingPromiseFail = fail;
+					}.bind(this)
+				);
 				
 				this.loadingPromise.then(function(data) {
 					console.log('ADS Resolve', data, this.successFn);
@@ -82,6 +84,18 @@
 					}
 					this.setState('ready');
 				}.bind(this));
+				
+				this.loadingPromise['catch'](function(e, x) {
+					e = (typeof e.getMessage === "function") ? eText.getMessage() : e;
+					
+					console.log('Error: ', e, x);		
+					this.setState('error');
+					
+					for (var fn in this.errorFn) {
+						this.errorFn[fn](e, x);
+					}
+				}.bind(this));
+				
 			},
 			
 			/**
@@ -153,27 +167,27 @@
 					if (request.status >= 200 && request.status < 400) {
 						try {
 							var data = JSON.parse(request.responseText);
+							if (self.checkAnnotationCount(data) > 0) {
+								//setTimeout(function(){ 
+								self.loadingPromiseResolver(data);
+								//}, 10000);
+								console.log('ADS Success');
+							} else {
+								return self.loadingPromiseFail('ADS no results', request);
+							}
 						} catch (e) {
-							return self.error(e, request);
+							return self.loadingPromiseFail(e, request);
 						}
-						console.log('ADS Success');
-						
-						//setTimeout(function(){ 
-							self.loadingPromiseResolver(data);
-						//}, 10000);
-						
-
 					} else {
-
-						return self.error('404 not found: ' + url, request);
+						return self.loadingPromiseFail('404 not found: ' + url, request);
 					}
 				}
 				request.onerror = function(e) {
-					return self.error(e, request);
+					return self.loadingPromiseFail(e, request);
 				};
 				request.ontimeout = function(e) {
 					console.log("ADS timeout");
-					return self.error(e, request);
+					return self.loadingPromiseFail(e, request);
 				}
 	
 				request.send();
@@ -208,7 +222,7 @@
 			        console.log("Filename: " + file.name + " | Type: " + file.type + " | Size: " + file.size + " bytes");
 			        
 			        if (file.type !== "text/json") {
-			        	this.error("Wrong filetype " +  file.type);
+			        	this.loadingPromiseFail("Wrong filetype " +  file.type);
 			        	return;
 			        }
 			        			        
@@ -219,13 +233,13 @@
 			              try {				            	  
 			            	  var result = JSON.parse(e.target.result);
 			              } catch (e) {
-			            	  return this.error(e);
+			            	  return this.loadingPromiseFail(e);
 			              }
 			              this.loadingPromiseResolver(result);
 			        }.bind(this);
 
 			        reader.onerror = function(e){
-			        	return this.error(e);
+			        	return this.loadingPromiseFail(e);
 			        }.bind(this);
 			        
 			        reader.readAsText(file);
@@ -279,6 +293,17 @@
 				}
 			},
 			
+			
+			checkAnnotationCount: function(data) {
+				var count = 0;
+				for (var type in data) {
+					if (typeof data[type].items !== "undefined") {
+						count += data[type].items.length;
+					}
+				}
+				return count;
+			},
+			
 			/**
 			 * registers an annotation 
 			 * 
@@ -326,21 +351,7 @@
 			},
 			
 			
-			/**
-			 * display Error with errorFn
-			 * 
-			 * 
-			 * @param e
-			 * @param x
-			 */
-			error: function(e, x) {
-				console.log('Error: ', e, x);
-				this.setState('error');
-				this.loadingPromiseResolver({});
-				for (var fn in this.errorFn) {
-					this.errorFn[fn](e, x);
-				}
-			},
+
 			
 			setFilename: function(url) {
 				this.url = url;

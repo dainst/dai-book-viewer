@@ -52,7 +52,8 @@ function getViewerConfiguration() {
       openFile: document.getElementById('openFile'),
       print: document.getElementById('print'),
       download: document.getElementById('download'),
-      toggleAnnotations: document.getElementById('toggleAnnotations')
+      toggleAnnotations: document.getElementById('toggleAnnotations'),
+      yayBox: document.getElementById('yayBox')
     },
     secondaryToolbar: {
       toolbar: document.getElementById('secondaryToolbar'),

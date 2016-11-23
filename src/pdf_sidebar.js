@@ -113,6 +113,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
     this._addEventListeners();
     
     options.annoRegistry.onGetAnnotations(function(e, x) {this.checkAnnotationFeatures()}.bind(this), function(e, x) {this.checkAnnotationFeatures()}.bind(this));
+    this.annoViewer.openAnnotationsSidebar = function() {this.openAnnotationsView()}.bind(this);
   }
 
   PDFSidebar.prototype = {
@@ -124,6 +125,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
       this.outlineButton.disabled = false;
       this.attachmentsButton.disabled = false;
+      
+      
     },
 
     /**
@@ -243,6 +246,10 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		if (isViewChanged) {
 			this._dispatchEvent();
 		}
+    },
+    
+    openAnnotationsView: function() {
+    	this.switchView('annotations', true);
     },
     
     checkAnnotationFeatures: function() {

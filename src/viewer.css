@@ -403,6 +403,7 @@ html[dir='rtl'] #viewerContainer {
 	transition-property: visibility, opacity;
     transition-duration: 0s, 1s;
     cursor: pointer;;
+    color:white
 }
 
 #yayBox .glyphicon {
@@ -775,7 +776,7 @@ html[dir='rtl'] .dropdownToolbarButton {
   font-size: 12px;
   color: hsl(0,0%,95%);
   margin: 0;
-  padding: 3px 2px 2px;
+  padding: 4px 2px 2px;
   border: none;
   background: rgba(0,0,0,0); /* Opera does not support 'transparent' <select> background */
 }
@@ -1045,7 +1046,7 @@ html[dir='rtl'] .verticalToolbarSeparator {
 }
 
 .toolbarField {
-  padding: 3px 6px;
+  padding: 4px 6px 4px;
   margin: 4px 0 4px 0;
   border: 1px solid transparent;
   border-radius: 2px;
@@ -1092,10 +1093,7 @@ html[dir='rtl'] .verticalToolbarSeparator {
     margin: 0;
 }
 
-.toolbarField:hover {
-  background-color: hsla(0,0%,100%,.11);
-  border-color: #5572A1;
-}
+
 
 .toolbarField:focus {
   background-color: hsla(0,0%,100%,.15);
@@ -1651,7 +1649,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	transition-duration: 0s, 1s;
 	cursor: pointer;
 	background-color: rgba(85, 114, 161, 1);
-	color: hsl(0,0%,85%);
+	color: white;
 }
 
 .alert.dbv-colors-error {
@@ -1660,7 +1658,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 .alert .glyphicon {
 	float: right;
-	color: hsl(0,0%,85%);
 }
 
 .alert.dbv-colors-error .glyphicon {
@@ -2223,6 +2220,8 @@ html[dir='rtl'] .pull-right {
 .embeddedViewer .blinkButton {
 	animation: blinkHardE 3s infinite
 }
+
+
 
 @keyframes blinkHardE {
 	0%  {	color: black; 	text-shadow: 2px 2px 2px rgb(255, 0, 0);}

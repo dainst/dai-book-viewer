@@ -214,7 +214,9 @@ var PDFFindController = (function PDFFindControllerClosure() {
         		return;
         	}
         	
-	        //console.log('SOP and found:', matches);
+
+        	//console.log('SOP and found:', term, matches);
+	        
 	        for (var i = 0; i < matches.length; i++) {
 	        	var termLength = ((typeof term === "object") ? term[1].length : term.length);
 	    		//console.log('MM:X ', termLength, term);
@@ -327,7 +329,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         	//console.log('MM:' + match.index + ' | ' + match[1] + ' (' + match[1].length + ') | ' + match[2] + ' (' + match[2].length + ')');
         	matches.push({
         		'begin': match.index + match[1].length + match[2].length,
-        		'length': termLength 
+        		'length': match[3].length 
         	});
         }
         //console.log(matches);
@@ -350,9 +352,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         }
         
         var ci = settings.caseSensitive ? '' : 'i';
-        //
-        
-        
+         
         var regexp = new RegExp(query, 'g' + ci);
         //console.log('MM: ', regexp);
         
@@ -408,7 +408,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
     	var pageContent = this.normalize(this.pageContents[pageIndex], false);
         query = (settings.regex) ? query : this.normalize(query, true);
         
-        //console.log('FIND ', query, pageIndex, searchsettings);
+        //console.log('FIND ', query, pageIndex, settings);
              
         if (settings.phraseSearch) {
         	return this.calcFindPhraseMatch(query, termLength, pageIndex, pageContent, searchsettings);

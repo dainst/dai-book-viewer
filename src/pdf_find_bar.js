@@ -257,7 +257,18 @@ var PDFFindBar = (function PDFFindBarClosure() {
         });
     },
     
-
+    onTextmarker: function(tm) {
+    	if (tm.length >  100  || (this.findField.value != '')) {
+    		return
+    	}
+    	
+    	this.findField.value = tm;
+        this.caseSensitive.checked = true;
+        this.phraseSearch.checked = false;
+        this.regex.checked = false; 
+    	
+        this.dispatchEvent('instant');
+    },
     
     searchToAnnotation: function() {
     	this.eventBus.dispatch('searchToAnnotation', {

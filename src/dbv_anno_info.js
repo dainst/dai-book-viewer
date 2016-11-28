@@ -23,7 +23,7 @@
 				"dbv": options.dbvVersion,
 				"pdfjs": options.pdfjsVersion,
 			}
-			this.annoRegistry.onGetAnnotations(function(e, x) {this.checkAnnotationFeatures(e, x)}.bind(this), function(e, x) {this.checkAnnotationFeatures(e, x)}.bind(this));
+			this.annoRegistry.onGetAnnotations(function annoInfoCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures(e, x)}.bind(this), function annoInfoCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures(e, x)}.bind(this));
 		}
 	
 		AnnoInfo.prototype = {

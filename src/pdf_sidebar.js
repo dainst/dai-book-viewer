@@ -112,7 +112,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
     this._addEventListeners();
     
-    options.annoRegistry.onGetAnnotations(function(e, x) {this.checkAnnotationFeatures()}.bind(this), function(e, x) {this.checkAnnotationFeatures()}.bind(this));
+    options.annoRegistry.onGetAnnotations(function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this), function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this));
     this.annoViewer.openAnnotationsSidebar = function() {this.openAnnotationsView()}.bind(this);
   }
 

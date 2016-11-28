@@ -1075,8 +1075,6 @@ var PDFViewerApplication = {
         self.pdfAttachmentViewer.render({ attachments: attachments });
       });
       
-	    // load annotations (dai paf)
-	  //self.findController.pSetAnnotations(); //!  paf goil
       self.annoViewer.refreshMap();
     });
 

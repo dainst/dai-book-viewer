@@ -56,6 +56,8 @@
 			loadingPromise: null,
 			loadingPromiseResolver: null,
 			loadingPromiseFail: null,
+			loadingPromiseAlways: null, // gets resolved if loading promise fails or not
+			loadingPromiseAlwaysResolver: null, // gets resolved if loading promise fails or not
 			
 			reset: function() {
 				this.url = '';
@@ -68,11 +70,27 @@
 				this.loadingPromiseReset();
 			},
 			
+			/**
+			 * while app loading phase, several componets can bind functions to annotation loading success or fail
+			 * with this.onGetAnnotations
+			 * 
+			 * if some functions shall be bound only on the next loading promise use then() and catch() functions
+			 * of this.loadingPromise oder this.loadingPromiseAlways. The latter resolves when the first resolves or failes
+			 * and can be used to indicate, that the attempt to get annotations fpr this document is now over.
+			 * 
+			 * 
+			 */
 			loadingPromiseReset: function() {
 				this.loadingPromise = new Promise(
 					function(resolve, fail) {
 						this.loadingPromiseResolver = resolve;
 						this.loadingPromiseFail = fail;
+					}.bind(this)
+				);
+				
+				this. loadingPromiseAlways = new Promise(
+					function(resolve, fail) {
+						this.loadingPromiseAlwaysResolver = resolve;
 					}.bind(this)
 				);
 				
@@ -84,19 +102,19 @@
 						for (var fn in this.successFn) {
 							this.successFn[fn](data);
 						}
+						this.loadingPromiseAlwaysResolver();
 						this.setState('ready');
 					}.bind(this)
 					)
 					['catch'](
 					function(e, x) {
-						e = (typeof e.getMessage === "function") ? e.getMessage() : e;
-						
+						e = (typeof e.getMessage === "function") ? e.getMessage() : e;						
 						console.log('Error: ', e, x);		
-						this.setState('error');
-						
+						this.setState('error');						
 						for (var fn in this.errorFn) {
 							this.errorFn[fn](e, x);
 						}
+						this.loadingPromiseAlwaysResolver();
 					}.bind(this)
 				);
 				
@@ -261,6 +279,7 @@
 			 * @param errorFn
 			 */
 			onGetAnnotations: function(fn, errorFn) {
+				
 				if (typeof fn === 'function') {
 					var name = 'fn__' + Object.keys(this.successFn).length;
 					this.successFn[fn.name || name] = fn;

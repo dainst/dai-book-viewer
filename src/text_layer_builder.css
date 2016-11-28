@@ -38,18 +38,14 @@
 
 .textLayer .dbv-annotation,
 .textLayer .highlight {
-
-  padding: 1px;
-
-  position:absolute;
-  
-    -webkit-touch-callout: none;
+	padding: 1px;
+	position:absolute;
+	-webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    
 }
 
 @keyframes nubreath {
@@ -134,7 +130,7 @@
 }
 
 .dbv-annotations-hidden .dbv-annotation._search {
-	display: block
+	display: inline-block
 }
 
 .textLayer ::-moz-selection {

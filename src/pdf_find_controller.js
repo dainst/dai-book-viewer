@@ -110,7 +110,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
       }.bind(this));
       
       
-      this.annoRegistry.onGetAnnotations(function onGetAnnotations_pSetAnnotations() {
+      this.annoRegistry.onGetAnnotations(function finController_pSetAnnotations() {
     	  return this.pSetAnnotations();
       }.bind(this));
       

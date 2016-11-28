@@ -75,8 +75,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
       var endOfContent = document.createElement('div');
       endOfContent.className = 'endOfContent';
       this.textLayerDiv.appendChild(endOfContent);
-
-
       
       this.eventBus.dispatch('textlayerrendered', {
         source: this,
@@ -111,8 +109,8 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         textDivs: this.textDivs,
         timeout: timeout
       });
-      
-      Promise.all([this.textLayerRenderTask.promise, this.annoRegistry.loadingPromise])      
+
+      Promise.all([this.textLayerRenderTask.promise, this.annoRegistry.loadingPromiseAlways])      
       .then(function textLayerRenderTaskPromiseThen() {
         this.textLayerDiv.appendChild(textLayerFrag);
         this.pUpdateAnnotations();
@@ -529,7 +527,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         }.bind(this));
     	
     	//var c = this.findController.dbvAnnoMatchesReady[this.pageIdx] ? this.findController.dbvAnnoMatchesReady[this.pageIdx].length : 'NONE';
-    	//console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);console.trace();
+    	//console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);
         
     	if (this.findController === null) { console.log('no findcontroller');  return; }
         var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;

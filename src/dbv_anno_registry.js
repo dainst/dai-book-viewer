@@ -165,7 +165,7 @@
 				this.loadingPromiseReset();
 				
 				var request = new XMLHttpRequest();
-				//request.timeout = 5000;
+				request.timeout = 5000;
 				request.open('get', url, true);
 				request.onload = function() {
 					if (request.status >= 200 && request.status < 400) {

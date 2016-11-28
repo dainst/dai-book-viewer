@@ -178,7 +178,7 @@
 			 */
 			populateMap: function(block, units) {
 				var self = this;
-				var mapDiv = this.$.htmlElement('div',{'id':'dbv-av-map', 'style': 'height: 300px'});	
+				var mapDiv = this.$.htmlElement('div',{'id':'dbv-av-map'});	
 				block.appendChild(mapDiv);
 				var b = this.unitBoundaries(units);
 				

@@ -223,22 +223,27 @@
 				if (typeof attr.classes === "object" && typeof attr.classes.join === "function") {
 					el.className = attr.classes.join(" ");
 				}
-				var skipAttrs = ['classes', 'data'];
+				var skipAttrs = ['classes', 'data', 'style'];
 				var transAttrs = {'class': 'className', 'for': 'htmlFor'};
 				for (var key in attr) {
 					if (skipAttrs.indexOf(key) !== -1) {
 						continue;
 					}
-					
 					if (typeof transAttrs[key] !== "undefined") {
 						el[transAttrs[key]] = attr[key];
 					} else {
+						
 						el[key] = attr[key];
 					}
 				}
 				for (var key in attr.data) {
 					el.setAttribute('data-' + key, attr.data[key]);
 				} 
+				if (typeof attr.style !== "undefined") { // Edge would complain otherwise 
+					el.setAttribute('style', attr.style);
+				}
+				
+				
 				if (typeof content !== "undefined") {
 					el.appendChild(document.createTextNode(content));
 				}

@@ -89,7 +89,7 @@
 					)
 					['catch'](
 					function(e, x) {
-						e = (typeof e.getMessage === "function") ? eText.getMessage() : e;
+						e = (typeof e.getMessage === "function") ? e.getMessage() : e;
 						
 						console.log('Error: ', e, x);		
 						this.setState('error');
@@ -180,20 +180,20 @@
 								return self.loadingPromiseFail('ADS no results', request);
 							}
 						} catch (e) {
-							return self.loadingPromiseFail(e, request);
+							return self.loadingPromiseFail('JSON Parse Error: ' + e, request);
 						}
 					} else {
 						return self.loadingPromiseFail('404 not found: ' + url, request);
 					}
 				}
 				request.onerror = function(e) {
-					return self.loadingPromiseFail(e, request);
+					return self.loadingPromiseFail('Request Error:' + e, request);
 				};
 				request.ontimeout = function(e) {
 					console.log("ADS timeout");
-					return self.loadingPromiseFail(e, request);
+					return self.loadingPromiseFail('Timeout: ' + e, request);
 				}
-	
+
 				request.send();
 			},
 			
@@ -226,7 +226,7 @@
 			        console.log("Filename: " + file.name + " | Type: " + file.type + " | Size: " + file.size + " bytes");
 			        
 			        if (file.type !== "text/json") {
-			        	this.loadingPromiseFail("Wrong filetype " +  file.type);
+			        	this.loadingPromiseFail("Wrong filetype: " +  file.type);
 			        	return;
 			        }
 			        			        

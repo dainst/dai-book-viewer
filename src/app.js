@@ -1094,7 +1094,6 @@ var PDFViewerApplication = {
       var pdfTitle;
       
       pdfDocument.dbvMetadata = {};
-      
       // serach XMP dataset for DAI specific data
       if (metadata) {
     	  
@@ -1103,12 +1102,23 @@ var PDFViewerApplication = {
         	  var sXML = oSerializer.serializeToString(metadata.metaDocument);
         	  window.parent.postMessage({message: sXML}, 'http://195.37.232.186');
     	  }
-    	  
+    	  console.log(metadata);
+    	  console.log(info);
     	  var res;
-    	  res = metadata.metaDocument.getElementsByTagNameNS('xml.dainst.org', 'pubid');
-    	  pdfDocument.dbvMetadata.daiPubId = (res && res.length > 0) ? res[0].textContent : false;
-    	  res = metadata.metaDocument.getElementsByTagNameNS('xml.dainst.org', 'zenonid');
-    	  pdfDocument.dbvMetadata.zenonId = (res && res.length > 0) ? res[0].textContent : false;
+    	  res = metadata.metaDocument.getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', 'relation')[0];
+    	  if (res) {
+        	  var list, first, rest;
+        	  for (var i = 0; i < res.children[0].children.length; i++) {
+        		  list = res.children[0].children[i].innerHTML.split(':');
+        		  first = list.shift();
+        		  rest = list.join(':');
+        		  pdfDocument.dbvMetadata[first] = rest;
+        		  
+        	  }
+    	  }
+
+    	  //pdfDocument.dbvMetadata.daiPubId = (res && res.length > 0) ? res[0].textContent : false;
+
     	  console.log('dbvMetadata detected: ', pdfDocument.dbvMetadata);
     	  
       }

@@ -1,10 +1,9 @@
 # dai-book-viewer
 
-
-
     npm install
     mkdir build
     chmod -R 777 build
+    gulp dbv
 
 # Testphase
 

@@ -2,9 +2,9 @@
 
 
 
-npm install
-mkdir build
-chmod -R 777 build
+    npm install
+    mkdir build
+    chmod -R 777 build
 
 # Testphase
 

@@ -17,7 +17,7 @@
 'use strict';
 
 (function (root, factory) {
-  if (typeof define === 'function' && define.amd) { 
+  if (typeof define === 'function' && define.amd) {
     define('pdfjs-dbv/app', ['exports', 'pdfjs-dbv/ui_utils',
      'pdfjs-dbv/download_manager', 'pdfjs-dbv/pdf_history',
      'pdfjs-dbv/preferences', 'pdfjs-dbv/pdf_sidebar',
@@ -29,8 +29,8 @@
      'pdfjs-dbv/pdf_outline_viewer', 'pdfjs-dbv/overlay_manager',
      'pdfjs-dbv/pdf_attachment_viewer', 'pdfjs-dbv/pdf_find_controller',
      'pdfjs-dbv/pdf_find_bar', 'pdfjs-dbv/dom_events', 'pdfjs-dbv/pdfjs',
-     'pdfjs-dbv/dbv_anno_viewer', 
-     'pdfjs-dbv/inc/leaflet/leaflet', 
+     'pdfjs-dbv/dbv_anno_viewer',
+     'pdfjs-dbv/inc/leaflet/leaflet',
      'pdfjs-dbv/dbv_anno_registry',
      'pdfjs-dbv/dbv_anno_editor',
      'pdfjs-dbv/dbv_anno_sidebar',
@@ -48,8 +48,8 @@
       require('./overlay_manager.js'), require('./pdf_attachment_viewer.js'),
       require('./pdf_find_controller.js'), require('./pdf_find_bar.js'),
       require('./dom_events.js'), require('./pdfjs.js'),
-      require('./dbv_anno_viewer.js'), 
-      require('inc/leaflet/leaflet.js'), 
+      require('./dbv_anno_viewer.js'),
+      require('inc/leaflet/leaflet.js'),
       require('./dbv_anno_registry.js'),
       require('./dbv_anno_editor.js'),
       require('./dbv_anno_sidebar.js'),
@@ -76,15 +76,28 @@
                   pdfViewerLib, pdfRenderingQueueLib, pdfLinkServiceLib,
                   pdfOutlineViewerLib, overlayManagerLib,
                   pdfAttachmentViewerLib, pdfFindControllerLib, pdfFindBarLib,
-                  domEventsLib, pdfjsLib,                   
+                  domEventsLib, pdfjsLib,
                   annoViewerLib, leaflet, annoRegistryLib, annoEditorLib, annoSidebarLib,
                   annoInfoLib
 ) {
 
+
+
+//#if PRODUCTION
+//var dbv_version =
+//#include version.json
+//;
+//var DBV_VERSION = dbv_version.version;
+//var version =
+//#include pdfjs_version.json
+//;
+//var PDFJS_VERSION = version.version;
+//#else
 var PDFJS_VERSION = "1.5";
-var DBV_VERSION = "0.7";
-	
-	
+var DBV_VERSION = "0.7 DEV";
+//#endif
+
+
 var UNKNOWN_SCALE = uiUtilsLib.UNKNOWN_SCALE;
 var DEFAULT_SCALE_VALUE = uiUtilsLib.DEFAULT_SCALE_VALUE;
 var ProgressBar = uiUtilsLib.ProgressBar;
@@ -130,18 +143,20 @@ var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 
 function configure(PDFJS) {
   PDFJS.imageResourcesPath = './images/';
-//#if (FIREFOX || MOZCENTRAL || GENERIC || CHROME)
-//PDFJS.workerSrc = '../pdf.worker.js';
+//#if (GENERIC)
+//PDFJS.workerSrc = 'pdf.worker.js';
 //#endif
 //#if !PRODUCTION
   PDFJS.cMapUrl = '../pdf.js/external/bcmaps/';
   PDFJS.cMapPacked = true;
   PDFJS.workerSrc = '../pdf.js/src/worker_loader.js';
 //#else
-//PDFJS.cMapUrl = '../pdf.js/web/cmaps/';
+//PDFJS.cMapUrl = './cmaps/';
 //PDFJS.cMapPacked = true;
 //#endif
 }
+
+
 
 
 var DefaultExernalServices = {
@@ -190,11 +205,11 @@ var PDFViewerApplication = {
   pdfOutlineViewer: null,
   /** @type {PDFAttachmentViewer} */
   pdfAttachmentViewer: null,
-  
+
   /** dbv */
   annoViewer: null,
   editorMode: false,
-  
+
   /** @type {ViewHistory} */
   store: null,
   /** @type {DownloadManager} */
@@ -237,7 +252,7 @@ var PDFViewerApplication = {
 
     var downloadManager = this.externalServices.createDownloadManager();
     this.downloadManager = downloadManager;
-    
+
     var container = appConfig.mainContainer;
     var viewer = appConfig.viewerContainer;
     this.pdfViewer = new PDFViewer({
@@ -250,7 +265,7 @@ var PDFViewerApplication = {
     });
     pdfRenderingQueue.setViewer(this.pdfViewer);
     pdfLinkService.setViewer(this.pdfViewer);
-    
+
 
     var thumbnailContainer = appConfig.sidebar.thumbnailView;
     this.pdfThumbnailViewer = new PDFThumbnailViewer({
@@ -272,8 +287,8 @@ var PDFViewerApplication = {
 
 
     // paf dai
-    this.annoRegistry = new annoRegistry(); 
-        
+    this.annoRegistry = new annoRegistry();
+
     this.findController = new PDFFindController({
       annoRegistry: this.annoRegistry,
       pdfViewer: this.pdfViewer,
@@ -303,9 +318,9 @@ var PDFViewerApplication = {
     });
 
     this.pdfDocumentProperties = new PDFDocumentProperties(appConfig.documentProperties);
-        
+
     // paf dai
-    this.annoViewer = new annoViewer({ 
+    this.annoViewer = new annoViewer({
         pdfViewer: this.pdfViewer,
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView}),
@@ -325,12 +340,12 @@ var PDFViewerApplication = {
     	dbvVersion: DBV_VERSION,
     	pdfjsVersion: PDFJS_VERSION
     });
-    
+
     this.pdfViewer.setDbvControllers({
     	annoViewer: this.annoViewer,
     	annoRegistry: this.annoRegistry
     });
-    
+
 
     this.secondaryToolbar =
       new SecondaryToolbar(appConfig.secondaryToolbar, eventBus);
@@ -375,7 +390,7 @@ var PDFViewerApplication = {
     sidebarConfig.editorMode = this.editorMode;
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
-  
+
     this.findBar = new PDFFindBar({
     	elements: appConfig.findBar,
         findController: this.findController,
@@ -384,10 +399,10 @@ var PDFViewerApplication = {
     	annoSidebar: new annoSidebar({container: appConfig.sidebar.findView}),
     	editorMode: this.editorMode
     });
-      
+
     var self = this;
     var PDFJS = pdfjsLib.PDFJS;
-    
+
     var initializedPromise = Promise.all([
       Preferences.get('enableWebGL').then(function resolved(value) {
         PDFJS.disableWebGL = !value;
@@ -449,7 +464,7 @@ var PDFViewerApplication = {
         // when it's embedded in e.g. an iframe or an object.
         PDFJS.externalLinkTarget = PDFJS.LinkTarget.TOP;
       }
-      
+
 
 
       self.initialized = true;
@@ -646,7 +661,7 @@ var PDFViewerApplication = {
    *                      is opened.
    */
   open: function pdfViewOpen(file, args) {
-  
+
     var scale = 0;
     if (arguments.length > 2 || typeof args === 'number') {
       console.warn('Call of open() with obsolete signature.');
@@ -675,7 +690,7 @@ var PDFViewerApplication = {
         return this.open(file, args);
       }.bind(this));
     }
-    
+
 
 
     var parameters = Object.create(null);
@@ -714,21 +729,21 @@ var PDFViewerApplication = {
 
     var result = loadingTask.promise.then(
       function getDocumentCallback(pdfDocument) {
-    	  
+
     	console.log('RESC try to get annotations!', args);
     	self.annoViewer.load();
     	self.annoInfo.load();
     	self.findBar.load();
-    	
+
     	var identifier = {filename: parameters.filename || parameters.url};
     	if (typeof args.pubid !== 'undefined') {
     		identifier.pubid = args.pubid;
     	}
-    	
-    	self.annoRegistry.get(identifier);   	
+
+    	self.annoRegistry.get(identifier);
 
     	self.load(pdfDocument, scale);
-    	
+
       },
       function getDocumentError(exception) {
         var message = exception && exception.message;
@@ -865,11 +880,11 @@ var PDFViewerApplication = {
     closeButton.onclick = function() {
       errorWrapper.setAttribute('hidden', 'true');
     };
-    
+
     var errorMoreInfo = errorWrapperConfig.errorMoreInfo;console.log(errorWrapperConfig);
     var moreInfoButton = errorWrapperConfig.moreInfoButton;
     var lessInfoButton = errorWrapperConfig.lessInfoButton;console.log(moreInfoButton);
-    
+
     moreInfoButton.onclick = function() {
     	console.log("!");
       errorMoreInfo.removeAttribute('hidden');
@@ -964,9 +979,9 @@ var PDFViewerApplication = {
 	  if (this.editorMode) {
 		  this.annoEditor.load();
 	  }
-	  
-    
-    
+
+
+
     firstPagePromise.then(function(pdfPage) {
       downloadedPromise.then(function () {
         self.eventBus.dispatch('documentload', {source: self});
@@ -1006,7 +1021,7 @@ var PDFViewerApplication = {
           storedHash = 'page=' + pageNum + '&zoom=' + zoom + ',' + left + ',' + top;
 
           sidebarView = store.get('sidebarView', 'none');
-          
+
           editorMode  = store.get('editorMode', false);
 
         } else if (self.preferenceDefaultZoomValue) {
@@ -1029,7 +1044,7 @@ var PDFViewerApplication = {
       // For documents with different page sizes,
       // ensure that the correct location becomes visible on load.
       pagesPromise.then(function resolved() {
-    	  
+
         if (!initialParams.destination && !initialParams.bookmark && !initialParams.hash) {
           return;
         }
@@ -1041,7 +1056,7 @@ var PDFViewerApplication = {
 
         self.pdfViewer.currentScaleValue = self.pdfViewer.currentScaleValue;
         self.setInitialView(initialParams.hash);
-         
+
       });
     });
 
@@ -1074,12 +1089,12 @@ var PDFViewerApplication = {
       pdfDocument.getAttachments().then(function(attachments) {
         self.pdfAttachmentViewer.render({ attachments: attachments });
       });
-      
+
       self.annoViewer.refreshMap();
     });
 
     pdfDocument.getMetadata().then(function(data) {
-    	
+
       var info = data.info, metadata = data.metadata;
       self.documentInfo = info;
       self.metadata = metadata;
@@ -1092,11 +1107,11 @@ var PDFViewerApplication = {
                   (!pdfjsLib.PDFJS.disableWebGL ? ' [WebGL]' : '') + ')');
 
       var pdfTitle;
-      
+
       pdfDocument.dbvMetadata = {};
       // serach XMP dataset for DAI specific data
       if (metadata) {
-    	  
+
     	  if (window.parent) {// @ TODO remove
         	  var oSerializer = new XMLSerializer();
         	  var sXML = oSerializer.serializeToString(metadata.metaDocument);
@@ -1113,16 +1128,16 @@ var PDFViewerApplication = {
         		  first = list.shift();
         		  rest = list.join(':');
         		  pdfDocument.dbvMetadata[first] = rest;
-        		  
+
         	  }
     	  }
 
     	  //pdfDocument.dbvMetadata.daiPubId = (res && res.length > 0) ? res[0].textContent : false;
 
     	  console.log('dbvMetadata detected: ', pdfDocument.dbvMetadata);
-    	  
+
       }
-      
+
       if (metadata && metadata.has('dc:title')) {
         var title = metadata.get('dc:title');
         // Ghostscript sometimes return 'Untitled', sets the title to 'Untitled'
@@ -1356,12 +1371,12 @@ var PDFViewerApplication = {
     eventBus.on('find', webViewerFind);
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
     eventBus.on('fileinputchange', webViewerFileInputChange);
-    
-    eventBus.on('newsearch', webViewerFindNewSearch)  
+
+    eventBus.on('newsearch', webViewerFindNewSearch)
     eventBus.on('toggleannotations', dbvToggleAnnotations);
     eventBus.on('textmarker', dbvTextmarker);
     eventBus.on('viewNative', dbvViewNative);
-    
+
     eventBus.on('yayboxclick', dbvYayboxClick);
 
   }
@@ -1441,10 +1456,10 @@ function webViewerInitialized() {
   }
 
 
-  
 
-  
-  
+
+
+
   var PDFJS = pdfjsLib.PDFJS;
 
 //#if !PRODUCTION
@@ -1495,7 +1510,7 @@ function webViewerInitialized() {
 //#endif
 
     if ('locale' in hashParams) {
-    
+
       PDFJS.locale = hashParams['locale'];
     }
 
@@ -1518,7 +1533,7 @@ function webViewerInitialized() {
       var enabled = pdfBug.split(',');
       waitForBeforeOpening.push(loadAndEnablePDFBug(enabled));
     }
-        
+
   }
 
 
@@ -1604,7 +1619,7 @@ function webViewerInitialized() {
   appConfig.toolbar.download.addEventListener('click', function (e) {
     PDFViewerApplication.eventBus.dispatch('download');
   });
-  
+
   appConfig.toolbar.toggleAnnotations.addEventListener('click', function (e) {
 	  PDFViewerApplication.eventBus.dispatch('toggleannotations');
   });
@@ -1615,7 +1630,7 @@ function webViewerInitialized() {
   appConfig.viewerContainer.addEventListener('mouseup', function(e) {
 	  PDFViewerApplication.eventBus.dispatch('textmarker', e);
   });
-  
+
   Promise.all(waitForBeforeOpening).then(function () {
     webViewerOpenFileViaURL(file, {pubid: pubid});
   }).catch(function (reason) {
@@ -1626,7 +1641,7 @@ function webViewerInitialized() {
 
 
 function webViewerOpenFileViaURL(file, params) {
-	
+
   if (file && file.lastIndexOf('file:', 0) === 0) {
     // file:-scheme. Load the contents in the main thread because QtWebKit
     // cannot load file:-URLs in a Web Worker. file:-URLs are usually loaded
@@ -2073,15 +2088,15 @@ function dbvToggleAnnotations() {
 	PDFViewerApplication.annoViewer.toggleAnnotations();
 }
 
-function dbvTextmarker(e) {	
-	
+function dbvTextmarker(e) {
+
     var text = "";
     if (window.getSelection) {
         text = window.getSelection().toString();
     } else if (document.selection && document.selection.type != "Control") {
         text = document.selection.createRange().text;
     }
-        
+
 	function hasClass(el, className) {
 		return el ? ((el.classList) ? el.classList.contains(className): new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className)) : false;
 	}
@@ -2090,11 +2105,11 @@ function dbvTextmarker(e) {
 	if (parent) {
 		var pageIdx = parseInt(parent.dataset.pageNumber);
 	}
-    
+
     if (PDFViewerApplication.pdfSidebar.active == 'find') {
     	PDFViewerApplication.findBar.onTextmarker(text, pageIdx);
     }
-    
+
 }
 
 function dbvViewNative(e) {

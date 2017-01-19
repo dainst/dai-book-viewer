@@ -169,7 +169,7 @@ function webViewerLoad() {
 //#if !PRODUCTION
   require.config({
 	  paths: {
-		 'pdfjs': '../pdf.js/src', 
+		 'pdfjs': '../pdf.js/src',
 		 'pdfjs-dbv': '.'
 	  }
   });
@@ -178,7 +178,6 @@ function webViewerLoad() {
     web.PDFViewerApplication.run(config);
   });
 //#else
-//console.log('hello');
 //window.PDFViewerApplication = pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication;
 //pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication.run(config);
 //#endif

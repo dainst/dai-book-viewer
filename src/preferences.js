@@ -28,7 +28,7 @@
 
 //#if PRODUCTION
 //var defaultPreferences = Promise.resolve(
-//#include $ROOT/web/default_preferences.json
+//#include $ROOT/../src/default_preferences.json
 //);
 //#else
   var defaultPreferences = new Promise(function (resolve) {
@@ -55,9 +55,9 @@ function cloneObj(obj) {
 
 /**
  * part of dbv extension (paf dai)
- * 
+ *
  * function to deep copy Objects, containing objects, arrays and primitives
- *  
+ *
  * @param <object>	obj
  */
 function cloneObjDeep(obj) {
@@ -231,21 +231,7 @@ var Preferences = {
   }
 };
 
-//#if !(FIREFOX || MOZCENTRAL || CHROME)
-Preferences._writeToStorage = function (prefObj) {
-  return new Promise(function (resolve) {
-    localStorage.setItem('pdfjs.preferences', JSON.stringify(prefObj));
-    resolve();
-  });
-};
 
-Preferences._readFromStorage = function (prefObj) {
-  return new Promise(function (resolve) {
-    var readPrefs = JSON.parse(localStorage.getItem('pdfjs.preferences'));
-    resolve(readPrefs);
-  });
-};
-//#endif
 
 exports.Preferences = Preferences;
 }));

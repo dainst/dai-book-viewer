@@ -47,7 +47,6 @@ var ROOT_DIR = __dirname + '/', // absolute path to project's root
     LOCALE_SRC_DIR = 'pdf.js/l10n/',
     GH_PAGES_DIR = BUILD_DIR + 'gh-pages/',
     GENERIC_DIR = BUILD_DIR + 'generic/',
-    DBV_DIR = BUILD_DIR + 'dbv/',
     MINIFIED_DIR = BUILD_DIR + 'minified/',
     SINGLE_FILE_DIR = BUILD_DIR + 'singlefile/',
     COMPONENTS_DIR = BUILD_DIR + 'components/',
@@ -110,6 +109,7 @@ var COMMON_WEB_FILES =
 // Builds the generic production viewer that should be compatible with most
 // modern HTML5 browsers.
 //
+/*
 target.generic = function() {
   exec('gulp bundle-generic');
 
@@ -154,62 +154,68 @@ target.generic = function() {
   cleanupJSSource(GENERIC_DIR + '/web/viewer.js');
   cleanupCSSSource(GENERIC_DIR + '/web/viewer.css');
 };
-
+*/
 //make generic/dbv version
 //Builds the generic production viewer that should be compatible with most
 //modern HTML5 browsers.
 //
 target.dbv = function() {
-	exec('gulp bundle-dbv');
-	
+  // clean
+  rm('-rf', BUILD_DIR);
+
+
+  exec('gulp bundle-dbv');
+
 	target.locale();
-	
+
 	cd(ROOT_DIR);
 	echo();
-	echo('### Creating DBV viewer');
-		
-	rm('-rf', DBV_DIR);
-	mkdir('-p', DBV_DIR);
-	mkdir('-p', DBV_DIR + BUILD_DIR);
-	mkdir('-p', DBV_DIR);
-	mkdir('-p', DBV_DIR + '/cmaps');
-	
+	echo('### collect other files');
+
+
+	mkdir('-p', BUILD_DIR);
+	mkdir('-p', BUILD_DIR + '/cmaps');
+
+	/*mv(BUILD_DIR + 'pdf.worker.js', BUILD_DIR + 'tmp.pdf.worker.js')
+	mv(BUILD_DIR + 'pdf.js', BUILD_DIR + 'tmp.pdf.js')
+*/
 	var defines = builder.merge(DEFINES, {GENERIC: true});
-	
-	var WEB_FILES = ['src/images','src/debugger.js','src/inc','src/locale-dbv'];
-    var WEB_FILES_PREPROCESS = ['src/viewer.html'];
-    
-	console.log('bt: ' + BUILD_TARGETS + '|dd+bd:' + DBV_DIR + BUILD_DIR);
-			
-	
+
 	var setup = {
 	 defines: defines,
 	 copy: [
-	   [BUILD_TARGETS, DBV_DIR + BUILD_DIR],
-	   [BUILD_DIR + 'viewer.js', DBV_DIR],
-	   [WEB_FILES, DBV_DIR],
-	   ['LICENSE', DBV_DIR],
-	   ['pdf.js/external/webL10n/l10n.js', DBV_DIR],
-	   ['pdf.js/web/compatibility.js', DBV_DIR],
-	   ['pdf.js/external/bcmaps/*', DBV_DIR + '/cmaps/'],
-	   ['pdf.js/web/locale', DBV_DIR]
+	/*   [BUILD_DIR + 'pdf.js', BUILD_DIR],
+	   [BUILD_DIR + 'pdf.worker.js', BUILD_DIR],*/
+	/*   [BUILD_DIR + 'viewer.js', BUILD_DIR],*/
+	   ['src/images', BUILD_DIR],
+/*	   ['src/debugger.js', BUILD_DIR],*/
+	   ['src/inc', BUILD_DIR],
+	   ['src/locale-dbv', BUILD_DIR],
+	   ['LICENSE', BUILD_DIR],
+	   ['pdf.js/external/webL10n/l10n.js', BUILD_DIR],
+	   ['src/compatibility.js', BUILD_DIR],
+	   ['pdf.js/external/bcmaps/*', BUILD_DIR + '/cmaps/'],
+	   ['pdf.js/web/locale', BUILD_DIR]
 	 ],
 	 preprocess: [
-	   [WEB_FILES_PREPROCESS, DBV_DIR]
+	   ['src/viewer.html', BUILD_DIR],
+     [BUILD_DIR + '*.js', BUILD_DIR]
 	 ],
 	 preprocessCSS: [
-	   ['generic', 'src/viewer.css', DBV_DIR + '/viewer.css']
+	   ['generic', 'src/viewer.css', BUILD_DIR + '/viewer.css']
 	 ]
 	};
-	
+/*
+	rm('-f', 'pdf.worker.js', BUILD_DIR + 'tmp.pdf.worker.js');
+	rm('-f', 'pdf.worker.js', BUILD_DIR + 'tmp.pdf.js');
+	*/
 	builder.build(setup);
-	
-	//cleanupJSSource(DBV_DIR + '/build/pdf.js');
-	cleanupJSSource(DBV_DIR + '/viewer.js');
-	cleanupCSSSource(DBV_DIR + '/viewer.css');
+
+	cleanupJSSource(BUILD_DIR + '/viewer.js');
+	cleanupCSSSource(BUILD_DIR + '/viewer.css');
 };
 
-
+/*
 target.components = function() {
   exec('gulp bundle-components');
 
@@ -437,7 +443,7 @@ target.dist = function() {
   echo('  cd ' + DIST_DIR + '; git push --tags ' + DIST_REPO_URL + ' master');
   echo();
 };
-
+*/
 target.publish = function() {
   exec('gulp publish');
 };
@@ -479,12 +485,10 @@ target.locale = function() {
 
     mkdir('-p', EXTENSION_LOCALE_OUTPUT + '/' + locale);
     mkdir('-p', VIEWER_LOCALE_OUTPUT + '/' + locale);
-    chromeManifestContent += 'locale  pdf.js  ' + locale + '  locale/' +
-                             locale + '/\n';
+    chromeManifestContent += 'locale  pdf.js  ' + locale + '  locale/' +  locale + '/\n';
 
     if (test('-f', path + '/viewer.properties')) {
-      viewerOutput += '[' + locale + ']\n' +
-                      '@import url(' + locale + '/viewer.properties)\n\n';
+      viewerOutput += '[' + locale + ']\n' + '@import url(' + locale + '/viewer.properties)\n\n';
       cp(path + '/viewer.properties', EXTENSION_LOCALE_OUTPUT + '/' + locale);
       cp(path + '/viewer.properties', VIEWER_LOCALE_OUTPUT + '/' + locale);
     }
@@ -501,6 +505,7 @@ target.locale = function() {
   viewerOutput.to(VIEWER_LOCALE_OUTPUT + 'locale.properties');
   metadataContent.to(METADATA_OUTPUT);
   chromeManifestContent.to(CHROME_MANIFEST_OUTPUT);
+  echo('.. done');
 };
 
 //
@@ -670,7 +675,7 @@ target.minified = function() {
 //
 // Extension stuff
 //
-
+/*
 //
 // make extension
 //
@@ -1123,7 +1128,7 @@ target.chromium = function() {
   // Rename to pdf.js.crx
   mv(BUILD_DIR + 'chrome.crx', CHROME_BUILD_DIR + 'pdf.js.crx');
 };
-
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1176,7 +1181,7 @@ target.fonttest = function(options, callback) {
 target.botmakeref = function() {
   exec('gulp botmakeref');
 };
-
+/*
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Baseline operation
@@ -1337,7 +1342,7 @@ target.mozcentralcheck = function() {
 
   echo('Success: there are no changes at mozilla-central');
 };
-
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //

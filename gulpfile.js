@@ -35,8 +35,9 @@ var makeFile = require('./make.js');
 var stripCommentHeaders = makeFile.stripCommentHeaders;
 var builder = makeFile.builder;
 
-var CONFIG_FILE = 'pdf.js/pdfjs.config';
-var config = JSON.parse(fs.readFileSync(CONFIG_FILE).toString());
+var dbv_config = JSON.parse(fs.readFileSync('src/dbv.config').toString());
+var pdfjs_config = JSON.parse(fs.readFileSync('pdf.js/pdfjs.config').toString());
+
 
 var DEFINES = {
   PRODUCTION: true,
@@ -71,7 +72,7 @@ function stripUMDHeaders(content) {
     '\\} else ', 'g');
   return content.replace(reg, '');
 }
-
+/*
 function checkChromePreferencesFile(chromePrefsPath, webPrefsPath) {
   var chromePrefs = JSON.parse(fs.readFileSync(chromePrefsPath).toString());
   var chromePrefsKeys = Object.keys(chromePrefs.properties);
@@ -93,7 +94,7 @@ function checkChromePreferencesFile(chromePrefsPath, webPrefsPath) {
     return chromePrefsKeys[index] === value &&
            chromePrefs.properties[value].default === webPrefs[value];
   });
-}
+}*/
 
 function bundle(filename, outfilename, pathPrefix, initFiles, amdName, defines, isMainFile, versionInfo) {
   // Reading UMD headers and building loading orders of modules. The
@@ -149,11 +150,10 @@ function bundle(filename, outfilename, pathPrefix, initFiles, amdName, defines, 
 }
 
 function createBundle(defines) {
-  var versionJSON = JSON.parse(
-    fs.readFileSync(BUILD_DIR + 'version.json').toString());
+  var versionJSON = JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
 
   console.log();
-  console.log('### Bundling files into pdf.js');
+  console.log('### Bundling pdf.js files ');
 
   var mainFiles = [
     'display/global.js'
@@ -168,21 +168,7 @@ function createBundle(defines) {
   var mainOutputName = 'pdf.js';
   var workerOutputName = 'pdf.worker.js';
 
-  // Extension does not need network.js file.
-  if (!defines.FIREFOX && !defines.MOZCENTRAL) {
-    workerFiles.push('core/network.js');
-  }
-
-  if (defines.SINGLE_FILE) {
-    // In singlefile mode, all of the src files will be bundled into
-    // the main pdf.js output.
-    mainFiles = mainFiles.concat(workerFiles);
-    workerFiles = null; // no need for worker file
-    mainAMDName = 'pdfjs-dist/build/pdf.combined';
-    workerAMDName = null;
-    mainOutputName = 'pdf.combined.js';
-    workerOutputName = null;
-  }
+  workerFiles.push('core/network.js');
 
   var state = 'mainfile';
   var source = stream.Readable({ objectMode: true });
@@ -192,8 +178,7 @@ function createBundle(defines) {
       case 'mainfile':
         // 'buildnumber' shall create BUILD_DIR for us
         tmpFile = BUILD_DIR + '~' + mainOutputName + '.tmp';
-        bundle('pdf.js/src/pdf.js', tmpFile, 'pdf.js/src/', mainFiles,  mainAMDName,
-          defines, true, versionJSON);
+        bundle('pdf.js/src/pdf.js', tmpFile, 'pdf.js/src/', mainFiles,  mainAMDName, defines, true, versionJSON);
         this.push(new gutil.File({
           cwd: '',
           base: '',
@@ -206,8 +191,7 @@ function createBundle(defines) {
       case 'workerfile':
         // 'buildnumber' shall create BUILD_DIR for us
         tmpFile = BUILD_DIR + '~' + workerOutputName + '.tmp';
-        bundle('pdf.js/src/pdf.js', tmpFile, 'pdf.js/src/', workerFiles, workerAMDName,
-          defines, false, versionJSON);
+        bundle('pdf.js/src/pdf.js', tmpFile, 'pdf.js/src/', workerFiles, workerAMDName, defines, false, versionJSON);
         this.push(new gutil.File({
           cwd: '',
           base: '',
@@ -227,42 +211,40 @@ function createBundle(defines) {
 
 
 function createDbvBundle(defines) {
-	console.log('DBV');
-	// console.log(defines);
-	// production = true
-	// generic = true
+  console.log();
+  console.log('### create DBV bundle');
+
 	var versionJSON = JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
 
 	var template, files, outputName, amdName;
 
-    amdName = 'pdfjs-dist/dbv-web/viewer';
-    outputName = 'viewer.js';
-    template = 'src/viewer.js';
-    files = [
-         'app.js',
-         'mozPrintCallback_polyfill.js'
-    ];
-    
-    console.log(amdName,outputName,template,files);
-    
-	var source = stream.Readable({ objectMode: true });
+  amdName = 'pdfjs-dist/dbv-web/viewer';
+  outputName = 'viewer.js';
+  template = 'src/viewer.js';
+  files = [
+    'app.js',
+    'mozPrintCallback_polyfill.js'
+  ];
+
+
+	var source = stream.Readable({objectMode: true});
 	source._read = function () {
-	    // 'buildnumber' shall create BUILD_DIR for us
-	    var tmpFile = BUILD_DIR + '~' + outputName + '.tmp';
-	    bundle(template, tmpFile, 'src/', files, amdName, defines, false, versionJSON);
-	    this.push(new gutil.File({
-	      cwd: '',
-	      base: '',
-	      path: outputName,
-	      contents: fs.readFileSync(tmpFile)
-	    }));
-	    fs.unlinkSync(tmpFile);
-	    this.push(null);
-	  };
-	  return source;
-	}
+	  // 'buildnumber' shall create BUILD_DIR for us
+	  var tmpFile = BUILD_DIR + '~' + outputName + '.tmp';
+	  bundle(template, tmpFile, 'src/', files, amdName, defines, false, versionJSON);
+	  this.push(new gutil.File({
+      cwd: '',
+      base: '',
+      path: outputName,
+      contents: fs.readFileSync(tmpFile)
+	  }));
+	  fs.unlinkSync(tmpFile);
+	  this.push(null);
+	};
+	return source;
+}
 
-
+/*
 function createWebBundle(defines) {
   var versionJSON = JSON.parse(
     fs.readFileSync(BUILD_DIR + 'version.json').toString());
@@ -311,7 +293,7 @@ function createWebBundle(defines) {
   };
   return source;
 }
-
+*/
 function checkFile(path) {
   try {
     var stat = fs.lstatSync(path);
@@ -320,7 +302,7 @@ function checkFile(path) {
     return false;
   }
 }
-
+/*
 function createTestSource(testsName) {
   var source = stream.Readable({ objectMode: true });
   source._read = function () {
@@ -377,39 +359,54 @@ gulp.task('default', function() {
   });
 });
 
-gulp.task('buildnumber', function (done) {
+/**
+ * dbv: finds out the build number with git
+ */
+gulp.task('buildnumber_dbv', function(done) {
   console.log();
-  console.log('### Getting extension build number');
-
-  exec('git log --format=oneline ' + config.baseVersion + '..',
-      function (err, stdout, stderr) {
-    var buildNumber = 0;
-    if (!err) {
-      // Build number is the number of commits since base version
-      buildNumber = stdout ? stdout.match(/\n/g).length : 0;
-    }
-
-    console.log('Extension build number: ' + buildNumber);
-
-    var version = config.versionPrefix + buildNumber;
-
-    exec('git log --format="%h" -n 1', function (err, stdout, stderr) {
-      var buildCommit = '';
-      if (!err) {
-        buildCommit = stdout.replace('\n', '');
-      }
-
-      createStringSource('version.json', JSON.stringify({
-        version: version,
-        build: buildNumber,
-        commit: buildCommit
-      }, null, 2))
-        .pipe(gulp.dest(BUILD_DIR))
-        .on('end', done);
-    });
-  });
+  console.log('### Getting dbv build number');
+  getVersionInfo(dbv_config, 'version.json', done);
+});
+gulp.task('buildnumber_pdfjs', function(done) {
+  console.log();
+  console.log('### Getting pdf.js build number');
+  getVersionInfo(pdfjs_config, 'pdfjs_version.json', done);
 });
 
+function getVersionInfo(config, target, readyFn) {
+  exec('git log --format=oneline ' + config.baseVersion + '..',
+    function (err, stdout, stderr) {
+      var buildNumber = 0;
+      if (!err) {
+        // Build number is the number of commits since base version
+        buildNumber = stdout ? stdout.match(/\n/g).length : 0;
+      }
+
+      console.log('build number: ' + buildNumber);
+
+      var version = config.versionPrefix + buildNumber;
+
+      exec('git log --format="%h" -n 1',
+        function (err, stdout, stderr) {
+          var buildCommit = '';
+          if (!err) {
+            buildCommit = stdout.replace('\n', '');
+          }
+
+          createStringSource(target, JSON.stringify({
+            version: version,
+            build: buildNumber,
+            commit: buildCommit
+          }, null, 2))
+            .pipe(gulp.dest(BUILD_DIR))
+            .on('end', readyFn);
+        });
+  });
+}
+
+
+
+/*
 gulp.task('bundle-firefox', ['buildnumber'], function () {
   var defines = builder.merge(DEFINES, {FIREFOX: true});
   return streamqueue({ objectMode: true },
@@ -430,7 +427,8 @@ gulp.task('bundle-chromium', ['buildnumber'], function () {
     createBundle(defines), createWebBundle(defines))
     .pipe(gulp.dest(BUILD_DIR));
 });
-
+*/
+/*
 gulp.task('bundle-singlefile', ['buildnumber'], function () {
   var defines = builder.merge(DEFINES, {SINGLE_FILE: true});
   return createBundle(defines).pipe(gulp.dest(BUILD_DIR));
@@ -449,7 +447,8 @@ gulp.task('bundle-minified', ['buildnumber'], function () {
     createBundle(defines), createWebBundle(defines))
     .pipe(gulp.dest(BUILD_DIR));
 });
-
+*/
+/*
 gulp.task('bundle-components', ['buildnumber'], function () {
   var defines = builder.merge(DEFINES, {COMPONENTS: true, GENERIC: true});
   return createWebBundle(defines).pipe(gulp.dest(BUILD_DIR));
@@ -458,36 +457,18 @@ gulp.task('bundle-components', ['buildnumber'], function () {
 gulp.task('bundle', ['buildnumber'], function () {
   return createBundle(DEFINES).pipe(gulp.dest(BUILD_DIR));
 });
+*/
 
-
-gulp.task('bundle-dbv', ['buildnumber'], function () {
+gulp.task('bundle-dbv', ['buildnumber_dbv', 'buildnumber_pdfjs'], function () {
   var defines = builder.merge(DEFINES, {GENERIC: true});
-  return streamqueue({ objectMode: true },
-    createBundle(defines), createDbvBundle(defines))
+  return streamqueue(
+      {objectMode: true},
+      createBundle(defines), // pdf.js
+      createDbvBundle(defines) //dbv
+    )
     .pipe(gulp.dest(BUILD_DIR));
 });
-/*
-gulp.task('publish', ['generic'], function (done) {
-  var version = JSON.parse(
-    fs.readFileSync(BUILD_DIR + 'version.json').toString()).version;
 
-  config.stableVersion = config.betaVersion;
-  config.betaVersion = version;
-
-  createStringSource(CONFIG_FILE, JSON.stringify(config, null, 2))
-    .pipe(gulp.dest('.'))
-    .on('end', function () {
-      var targetName = 'pdfjs-' + version + '-dist.zip';
-      gulp.src(BUILD_DIR + 'generic/**')
-        .pipe(zip(targetName))
-        .pipe(gulp.dest(BUILD_DIR))
-        .on('end', function () {
-          console.log('Built distribution file: ' + targetName);
-          done();
-        });
-    });
-});
-*/
 gulp.task('test', function () {
   return streamqueue({ objectMode: true },
     createTestSource('unit'), createTestSource('browser'));
@@ -637,7 +618,7 @@ for (var taskName in global.target) {
 }
 
 Object.keys(gulp.tasks).forEach(function (taskName) {
-	
+
   var oldTask = global.target[taskName] || function () {
     gulp.run(taskName);
   };

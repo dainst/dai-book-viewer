@@ -81,8 +81,8 @@ const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
 			 * with this.onGetAnnotations
 			 *
 			 * if some functions shall be bound only on the next loading promise use then() and catch() functions
-			 * of this.loadingPromise oder this.loadingPromiseAlways. The latter resolves when the first resolves or failes
-			 * and can be used to indicate, that the attempt to get annotations fpr this document is now over.
+			 * of this.loadingPromise oder this.loadingPromiseAlways. The latter resolves when the first resolves or fails
+			 * and can be used to indicate, that the attempt to get annotations for this document is now over.
 			 *
 			 *
 			 */
@@ -94,7 +94,7 @@ const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
 					}.bind(this)
 				);
 
-				this. loadingPromiseAlways = new Promise(
+				this.loadingPromiseAlways = new Promise(
 					function(resolve, fail) {
 						this.loadingPromiseAlwaysResolver = resolve;
 					}.bind(this)
@@ -115,7 +115,7 @@ const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
 					['catch'](
 					function(e, x) {
 						e = (typeof e.getMessage === "function") ? e.getMessage() : e;
-						console.log('Error: ', e, x);
+            console.warn('ADS Error: ', e);
 						this.setState('error');
 						for (var fn in this.errorFn) {
 							this.errorFn[fn](e, x);
@@ -142,16 +142,16 @@ const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
 
 				// dai pubid
 				if (identifier.pubid) {
-					this.getAnnotations(['annotations', identifier.pubid]);
-					console.log("get Annotations by daiPubId: " + identifier.pubid);
+          console.log("get annotations by daiPubId: " + identifier.pubid);
+				  this.getAnnotations(['annotations', identifier.pubid]);
 					return;
-				}
-
-				if (identifier.filename && TEST_DATA_URL) {
-					console.warn("get Annotations by filename is for testing only");
+				} else if (identifier.filename && TEST_DATA_URL) {
+					console.warn("get annotations by filename is for testing only");
 					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'], TEST_DATA_URL);
 					return;
-				}
+				} else {
+          this.loadingPromiseFail('no annotations to load');
+        }
 			},
 
 			/**

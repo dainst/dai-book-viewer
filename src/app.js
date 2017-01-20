@@ -337,13 +337,13 @@ var PDFViewerApplication = {
         annoSidebar: new annoSidebar({container: appConfig.sidebar.infoView}),
         pdfDocumentProperties: this.pdfDocumentProperties,
         elements: appConfig.dbvInfo,
-    	dbvVersion: DBV_VERSION,
-    	pdfjsVersion: PDFJS_VERSION
+    	  dbvVersion: DBV_VERSION,
+    	  pdfjsVersion: PDFJS_VERSION
     });
 
     this.pdfViewer.setDbvControllers({
-    	annoViewer: this.annoViewer,
-    	annoRegistry: this.annoRegistry
+    	  annoViewer: this.annoViewer,
+    	  annoRegistry: this.annoRegistry
     });
 
 

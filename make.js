@@ -58,18 +58,7 @@ function getCurrentVersion() {
     .version;
 }
 
-//
-// make all
-//
-target.all = function() {
-  // Don't do anything by default
-  echo('Please specify a target. Available targets:');
-  for (var t in target) {
-    if (t !== 'all') {
-      echo('  ' + t);
-    }
-  }
-};
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -127,9 +116,7 @@ target.dbv = function() {
   echo('.. done');
 };
 
-target.publish = function() {
-  exec('gulp publish');
-};
+
 
 //
 // make locale
@@ -206,6 +193,27 @@ function cleanupCSSSource(file) {
   content.to(file);
 }
 
+
+
+
+target.publish_dbv = function() {
+
+  var token = "6f4c4aea4d8b974ddcf90a779491a36df6487edf";
+  var version = 'build_test1';
+
+  echo('### commiting built version');
+  exec('git clone https://dai-book-viewer:'+token+'@github.com/dainst/dai-book-viewer-built.git tmp');
+  exec('cp -r build/* tmp');
+  exec('cd tmp');
+  exec('git add .');
+  exec('git tag v' + version);
+  exec('git commit -m "build dai book viewer version '+version+'"');
+  exec('git push origin master');
+  exec('cd ..');
+  exec('rm -r tmp');
+  echo('..done');
+
+}
 
 
 

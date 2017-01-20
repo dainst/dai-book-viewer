@@ -292,7 +292,9 @@ gulp.task('bundle-dbv', ['buildnumber_dbv', 'buildnumber_pdfjs'], function () {
     .pipe(gulp.dest(BUILD_DIR));
 });
 
-
+gulp.task('publish-dbv-build', function() {
+  global.target.publish_dbv();
+});
 
 
 gulp.task('dbv', function() {

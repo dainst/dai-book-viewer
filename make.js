@@ -199,16 +199,18 @@ function cleanupCSSSource(file) {
 target.publish_dbv = function() {
 
   var token = "6f4c4aea4d8b974ddcf90a779491a36df6487edf";
-  var version = 'build_test1';
+  var version = 'build_test_';
 
   echo('### commiting built version');
   exec('git clone https://dai-book-viewer:'+token+'@github.com/dainst/dai-book-viewer-built.git tmp');
   exec('cp -r build/* tmp');
   exec('cd tmp');
   exec('git add .');
-  exec('git tag v' + version);
+  //exec('git tag v' + version);
   exec('git commit -m "build dai book viewer version '+version+'"');
+echo("=====================================");
   exec('git push origin master');
+echo("=====================================");
   exec('cd ..');
   exec('rm -r tmp');
   echo('..done');

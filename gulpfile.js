@@ -20,12 +20,12 @@
 var fs = require('fs');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var rimraf = require('rimraf');
+//var rimraf = require('rimraf');
 var stream = require('stream');
 var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
 var streamqueue = require('streamqueue');
-var zip = require('gulp-zip');
+//var zip = require('gulp-zip');
 
 var BUILD_DIR = 'build/';
 var L10N_DIR = 'src/l10n/';

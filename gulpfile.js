@@ -293,7 +293,7 @@ gulp.task('bundle-dbv', ['buildnumber_dbv', 'buildnumber_pdfjs'], function () {
 
 gulp.task('publish-dbv-build', function() {
   var versionJSON = JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
-  var token = fs.readFileSync('/var/www/dai_book_viewer.gittoken').toString().replace(/(\r\n|\n|\r)/gm,"");
+  var token = fs.readFileSync('gituser.token').toString().replace(/(\r\n|\n|\r)/gm,"");
   global.target.publish_dbv(versionJSON, token);
 });
 

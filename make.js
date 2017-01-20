@@ -196,23 +196,24 @@ function cleanupCSSSource(file) {
 
 
 
-target.publish_dbv = function() {
+target.publish_dbv = function(versionJSON, token) {
 
-  var token = "6f4c4aea4d8b974ddcf90a779491a36df6487edf";
-  var version = 'build_test_';
+  var version = versionJSON.version;
 
-  echo('### commiting built version');
-  exec('git clone https://dai-book-viewer:'+token+'@github.com/dainst/dai-book-viewer-built.git tmp');
-  exec('cp -r build/* tmp');
-  exec('cd tmp');
-  exec('git add .');
-  //exec('git tag v' + version);
-  exec('git commit -m "build dai book viewer version '+version+'"');
-echo("=====================================");
-  exec('git push origin master');
-echo("=====================================");
-  exec('cd ..');
-  exec('rm -r tmp');
+  echo('### commiting built version ' + version + ' | ' + token);
+
+  exec(
+	'rm -r tmp || true && ' +
+	'git clone https://'+token+'@github.com/dainst/dai-book-viewer-built.git tmp && ' + 
+	'cp -r build/* tmp && ' + 
+  	'cd tmp && ' +
+	'echo " dai-book-viewer build ' + version +  ' timestamp ' + Date.now() + '" >> build.info &&' + // because we don't want jenkins to fail, just because there is nothing to commit!
+ 	'git add . && ' +
+  	'git commit -m "build dai book viewer version '+version+'" && ' +
+  	'git push origin master && ' +
+  	'cd .. && ' +
+  	'rm -r tmp'
+  ); // must be one command, otherwise it forgets github api token
   echo('..done');
 
 }

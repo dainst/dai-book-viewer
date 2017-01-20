@@ -12,7 +12,8 @@
 
   },
   "scripts": {
-    "build": "gulp dbv"
+    "build": "gulp dbv",
+	"pupish": "gulp publish-dbv-build"
   },
   "repository": {
     "type": "git",

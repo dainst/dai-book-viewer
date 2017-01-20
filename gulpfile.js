@@ -192,9 +192,8 @@ function createDbvBundle(defines) {
   console.log();
   console.log('### create DBV bundle');
 
-	var versionJSON = JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
-
-	var template, files, outputName, amdName;
+  var versionJSON = JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
+  var template, files, outputName, amdName;
 
   amdName = 'pdfjs-dist/dbv-web/viewer';
   outputName = 'viewer.js';
@@ -293,7 +292,9 @@ gulp.task('bundle-dbv', ['buildnumber_dbv', 'buildnumber_pdfjs'], function () {
 });
 
 gulp.task('publish-dbv-build', function() {
-  global.target.publish_dbv();
+  var versionJSON = JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
+  var token = fs.readFileSync('/var/www/dai_book_viewer.gittoken').toString().replace(/(\r\n|\n|\r)/gm,"");
+  global.target.publish_dbv(versionJSON, token);
 });
 
 

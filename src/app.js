@@ -730,7 +730,7 @@ var PDFViewerApplication = {
     var result = loadingTask.promise.then(
       function getDocumentCallback(pdfDocument) {
 
-    	console.log('RESC try to get annotations!', args);
+    	console.log('try to get annotations!', args);
     	self.annoViewer.load();
     	self.annoInfo.load();
     	self.findBar.load();

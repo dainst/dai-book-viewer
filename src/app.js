@@ -158,7 +158,6 @@ function configure(PDFJS) {
 
 
 
-
 var DefaultExernalServices = {
   updateFindControlState: function (data) {},
   initPassiveLoading: function (callbacks) {},

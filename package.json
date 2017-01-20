@@ -12,6 +12,7 @@
 
   },
   "scripts": {
+    "build": "gulp dbv"
   },
   "repository": {
     "type": "git",

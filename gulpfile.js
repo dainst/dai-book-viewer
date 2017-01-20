@@ -291,7 +291,7 @@ gulp.task('bundle-dbv', ['buildnumber_dbv', 'buildnumber_pdfjs'], function () {
     .pipe(gulp.dest(BUILD_DIR));
 });
 
-gulp.task('publish-dbv-build', function() {
+gulp.task('publishdbv', function() {
   var versionJSON = JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
   var token = fs.readFileSync('gituser.token').toString().replace(/(\r\n|\n|\r)/gm,"");
   global.target.publish_dbv(versionJSON, token);

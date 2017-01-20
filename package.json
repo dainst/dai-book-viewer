@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "gulp dbv",
-    "puplish": "gulp publish-dbv-build"
+    "puplishbuild": "gulp publishdbv"
   },
   "repository": {
     "type": "git",

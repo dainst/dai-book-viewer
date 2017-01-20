@@ -203,7 +203,8 @@ target.publish_dbv = function(versionJSON, token) {
   echo('### commiting built version ' + version + ' | ' + token);
 
   exec(
-	'rm -r tmp || true && ' +
+	'git config --global user.name "dai-book-viewer && "' +
+    'git config --global user.email none@emailadresse.de && ' +
 	'git clone https://'+token+'@github.com/dainst/dai-book-viewer-built.git tmp && ' + 
 	'cp -r build/* tmp && ' + 
   	'cd tmp && ' +

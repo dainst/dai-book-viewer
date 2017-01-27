@@ -86,18 +86,18 @@ function getViewerConfiguration() {
       thumbnailButton: document.getElementById('viewThumbnail'),
       outlineButton: document.getElementById('viewOutline'),
       attachmentsButton: document.getElementById('viewAttachments'),
-      annotationsButton: document.getElementById('dbv-viewAnnotations'), // dai paf
-      findButton: document.getElementById('dbv-viewFind'),// dai paf
-      editAnnotationsButton: document.getElementById('dbv-editAnnotations'), // dai paf
-      infoButton: document.getElementById('dbv-info'), // dai paf
+      annotationsButton: document.getElementById('dbv-viewAnnotations'), 
+      findButton: document.getElementById('dbv-viewFind'),
+      editAnnotationsButton: document.getElementById('dbv-editAnnotations'), 
+      infoButton: document.getElementById('dbv-info'), 
       // Views
       thumbnailView: document.getElementById('thumbnailView'),
       outlineView: document.getElementById('outlineView'),
       attachmentsView: document.getElementById('attachmentsView'),
-      annotationsView: document.getElementById('dbv-annotationsView'),// dai paf
-      findView: document.getElementById('dbv-findView'),// dai paf
-      editAnnotationsView: document.getElementById('dbv-editAnnotationsView'),// dai paf
-      infoView: document.getElementById('dbv-infoView'),// dai paf
+      annotationsView: document.getElementById('dbv-annotationsView'),
+      findView: document.getElementById('dbv-findView'),
+      editAnnotationsView: document.getElementById('dbv-editAnnotationsView'),
+      infoView: document.getElementById('dbv-infoView'),
     },
     findBar: {
       bar: document.getElementById('findbar'),
@@ -136,7 +136,8 @@ function getViewerConfiguration() {
         'version': document.getElementById('versionField'),
         'pageCount': document.getElementById('pageCountField'),
         'daiPubId': document.getElementById('daiPubIdField'),
-        'zenonId': document.getElementById('zenonIdField')
+        'zenonId': document.getElementById('zenonIdField'),
+        'description': document.getElementById('descriptionField')
       }
     },
     errorWrapper: {

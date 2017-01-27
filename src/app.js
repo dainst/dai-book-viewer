@@ -1110,13 +1110,15 @@ var PDFViewerApplication = {
       pdfDocument.dbvMetadata = {};
       // serach XMP dataset for DAI specific data
       if (metadata) {
-
-    	  if (window.parent) {// @ TODO remove
+          //#if !PRODUCTION
+    	  if (window.parent) {
         	  var oSerializer = new XMLSerializer();
         	  var sXML = oSerializer.serializeToString(metadata.metaDocument);
-        	  window.parent.postMessage({message: sXML}, 'http://195.37.232.186');
+        	  window.parent.postMessage({message: sXML}, 'http://localhost:63342/');
     	  }
-    	  console.log(metadata);
+    	  //#endif
+
+          console.log(metadata);
     	  console.log(info);
     	  var res;
     	  res = metadata.metaDocument.getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', 'relation')[0];
@@ -1136,6 +1138,10 @@ var PDFViewerApplication = {
     	  console.log('dbvMetadata detected: ', pdfDocument.dbvMetadata);
 
       }
+
+      if (metadata && metadata.has('dc:description')) {
+        pdfDocument.dbvMetadata['description'] = metadata.get('dc:description');
+	  }
 
       if (metadata && metadata.has('dc:title')) {
         var title = metadata.get('dc:title');

@@ -108,7 +108,6 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
      * @private
      */
     _getProperties: function PDFDocumentProperties_getProperties() {
-    	
     	if (this.pdfDocument == null) {
     		return;
     	}
@@ -138,8 +137,9 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
           'producer': data.info.Producer,
           'version': data.info.PDFFormatVersion,
           'pageCount': this.pdfDocument.numPages,
-          'daiPubId': dbvData.daiPubId,
-          'zenonId': dbvData.zenonId
+          'daiPubId': dbvData.url,
+          'zenonId': dbvData.zenon_id,
+          'description': dbvData.description
         };
         // Show the properties in the dialog.
         for (var identifier in content) {
@@ -163,7 +163,8 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
 	        'version',
 	        'pageCount',
 	        'daiPubId',
-	        'zenonId'
+	        'zenonId',
+            'description'
     	];
 
 		for (var i = 0; i < content.length; i++) {			
@@ -173,8 +174,9 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
 
     _dbvLinks: function(data) {
     	return {
-    		daiPubId: 	data.daiPubId ? '<a target="blank" href="https://journals.dainst.org/publication/' + data.daiPubId + '">e-Journals</a>' 	: '-', // @ TODO richtig machen
-    		zenonId: 	data.zenonId ? 	'<a target="blank" href="http://zenon.dainst.org/Record/' + data.zenonId + '">Zenon</a>' 					: '-'
+			url: 	    data.url ? '<a target="_blank" href="' + data.url + '">iDAI.publications</a>' 	: '-',
+			zenon_id: 	data.zenon_id ? '<a target="_blank" href="http://zenon.dainst.org/Record/' + data.zenon_id + '">iDAI.bibliography | Zenon</a>' : '-',
+            description:  data.description ? data.description : '-'
     	}
     },
     

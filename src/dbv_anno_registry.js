@@ -13,7 +13,7 @@
  */
 
 //#if !PRODUCTION
-const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
+const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 //#else
 //const TEST_DATA_URL = false;
 //#endif
@@ -115,7 +115,7 @@ const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
 					['catch'](
 					function(e, x) {
 						e = (typeof e.getMessage === "function") ? e.getMessage() : e;
-            console.warn('ADS Error: ', e);
+            			console.warn('ADS Error: ', e);
 						this.setState('error');
 						for (var fn in this.errorFn) {
 							this.errorFn[fn](e, x);
@@ -142,7 +142,7 @@ const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
 
 				// dai pubid
 				if (identifier.pubid) {
-          console.log("get annotations by daiPubId: " + identifier.pubid);
+          		console.log("get annotations by daiPubId: " + identifier.pubid);
 				  this.getAnnotations(['annotations', identifier.pubid]);
 					return;
 				} else if (identifier.filename && TEST_DATA_URL) {
@@ -150,8 +150,8 @@ const TEST_DATA_URL = 'http://195.37.232.186/DAIbookViewer';
 					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'], TEST_DATA_URL);
 					return;
 				} else {
-          this.loadingPromiseFail('no annotations to load');
-        }
+          			this.loadingPromiseFail('no annotations to load');
+        		}
 			},
 
 			/**

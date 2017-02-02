@@ -81,6 +81,10 @@
 	
 }
 
+.textLayer .dbv-annotation.filtered {
+	opacity: 0
+}
+
 .textLayer .dbv-annotation.overlap {
 	opacity: 0.5
 }

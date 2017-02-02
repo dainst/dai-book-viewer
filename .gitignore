@@ -4,3 +4,6 @@ extensions
 node_modules
 node_modules/*
 web
+tmp
+tmp/*
+gituser.token

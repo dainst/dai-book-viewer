@@ -101,27 +101,58 @@
 			 */
 			buildBlocks: function(data) {
 				this.$.clear();
-				this.$.message('dbv-info-annotions_info', false, false);
-				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false);
+				this.$.message('dbv-info-annotions_info', false, false, false);
+				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false, false);
 				this.block('places', 'Places', 'map-marker', data.locations);
 				this.block('persons', 'Persons', 'user', data.persons);
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
 			},
 
-
-			block: function(id, title, glyphicon, data, populationFn, loadMore) {
+			/**
+			 * creates a block in the sidebar in annotations tab
+			 * @param id
+			 * @param title
+			 * @param glyphicon
+			 * @param data
+			 * @param populationFn
+			 * @param <bool> loadMore
+			 * @param <bool> controls
+			 */
+			block: function(id, title, glyphicon, data, populationFn, loadMore, controls) {
 				if (!data) {
 					return;
 				}
 
 				var hasData = (data.items && (data.items.length > 0));
 				var hasMore = (loadMore !== false && data.more);
+				var controls = (typeof controls  !== "undefined") ? controls : true;
 
 				if (!hasData && !hasMore) {
 					return;
 				}
 
-				var block = this.$.block(id, title, glyphicon, true);
+				// default controls
+				if (controls === true) {
+					var controls = [
+						{
+							caption: 'S',
+							eventListeners: {
+								'click': 'blockCtrlPlop'
+							},
+							icon: 'save'
+						},
+						{
+							type: 'text',
+							eventListeners: {
+								'keyup': ['blockCtrlFilter', id]
+							}
+						}
+					];
+					controls = [];
+				}
+
+
+				var block = this.$.block(id, title, glyphicon, true, false, controls);
 
 				var populationFn = populationFn || 'populate';
 
@@ -136,6 +167,25 @@
 				}
 			},
 
+			blockCtrlPlop: function() {
+				alert('yo')
+			},
+
+			blockCtrlFilter: function(e,  blockId) {
+				var filter = e.target.value.toUpperCase();
+				var list = this.$.blocks[blockId].body.getElementsByClassName('dbv-av-block-entry');
+				for (var i = 0; i < list.length; i++) {
+					var entry = list[i].getElementsByClassName("dbv-av-block-entry-caption")[0];
+					if (entry.innerHTML.toUpperCase().indexOf(filter) > -1) {
+						list[i].style.display = "";
+						this.filterShow(entry.dataset)
+					} else {
+						list[i].style.display = "none";
+						this.filterHide(entry.dataset)
+
+					}
+				}
+			},
 
 
 			/**
@@ -437,6 +487,21 @@
 		    	for (var i = 0; i < spans.length; i++) {
 		    		spans[i].classList.remove('blink');
 		    	}
+			},
+
+			filterHide: function(annotation) {
+				console.log('HYDE', annotation);
+				var spans = document.querySelectorAll('.dbv-annotation[data-id="' + annotation.id + '"]');
+				for (var i = 0; i < spans.length; i++) {
+					spans[i].classList.add('filtered');
+				}
+			},
+
+			filterShow: function(annotation) {
+				var spans = document.querySelectorAll('.dbv-annotation[data-id="' + annotation.id + '"]');
+				for (var i = 0; i < spans.length; i++) {
+					spans[i].classList.remove('filtered');
+				}
 			},
 
 			/**

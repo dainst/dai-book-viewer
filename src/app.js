@@ -1108,7 +1108,7 @@ var PDFViewerApplication = {
       var pdfTitle;
 
       pdfDocument.dbvMetadata = {};
-      // serach XMP dataset for DAI specific data
+      // search XMP dataset for DAI specific data
       if (metadata) {
           //#if !PRODUCTION
     	  if (window.parent) {
@@ -1128,6 +1128,7 @@ var PDFViewerApplication = {
         		  list = res.children[0].children[i].innerHTML.split(':');
         		  first = list.shift();
         		  rest = list.join(':');
+        		  console.log('rest', rest);
         		  pdfDocument.dbvMetadata[first] = rest;
 
         	  }
@@ -1141,6 +1142,7 @@ var PDFViewerApplication = {
 
       if (metadata && metadata.has('dc:description')) {
         pdfDocument.dbvMetadata['description'] = metadata.get('dc:description');
+        console.log(typeof metadata.get('dc:description'));
 	  }
 
       if (metadata && metadata.has('dc:title')) {

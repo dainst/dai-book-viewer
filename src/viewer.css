@@ -382,7 +382,7 @@ html[dir='rtl'] #viewerContainer {
 	position: absolute;
 	z-index: 10000;
 	height: 32px;
-	
+
 	min-width: 16px;
 	padding: 0px 6px 0px 6px;
 	margin: 14px 2px 4px 2px;
@@ -666,39 +666,39 @@ html[dir='rtl'] .splitToolbarButtonSeparator {
 }
 .splitToolbarButton:hover > .splitToolbarButtonSeparator,
 .splitToolbarButton.toggled > .splitToolbarButtonSeparator {
-  padding: 12px 0;
-  margin: 1px 0;
-  box-shadow: 0 0 0 1px hsla(0,0%,100%,.03);
-  -webkit-transition-property: padding;
-  -webkit-transition-duration: 10ms;
-  -webkit-transition-timing-function: ease;
-  transition-property: padding;
-  transition-duration: 10ms;
-  transition-timing-function: ease;
+	padding: 12px 0;
+	margin: 1px 0;
+	box-shadow: 0 0 0 1px hsla(0,0%,100%,.03);
+	-webkit-transition-property: padding;
+	-webkit-transition-duration: 10ms;
+	-webkit-transition-timing-function: ease;
+	transition-property: padding;
+	transition-duration: 10ms;
+	transition-timing-function: ease;
 }
 
 .toolbarButton,
 .dropdownToolbarButton,
 .secondaryToolbarButton,
 .overlayButton {
-  min-width: 16px;
-  padding: 2px 6px 0;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  color: hsla(0,0%,100%,.8);
-  font-size: 12px;
-  line-height: 14px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  /* Opera does not support user-select, use <... unselectable="on"> instead */
-  cursor: pointer;
-  -webkit-transition-property: background-color, border-color, box-shadow;
-  -webkit-transition-duration: 150ms;
-  -webkit-transition-timing-function: ease;
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 150ms;
-  transition-timing-function: ease;
+	min-width: 16px;
+	padding: 2px 6px 0;
+	border: 1px solid transparent;
+	border-radius: 2px;
+	color: hsla(0,0%,100%,.8);
+	font-size: 12px;
+	line-height: 14px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	/* Opera does not support user-select, use <... unselectable="on"> instead */
+	cursor: pointer;
+	-webkit-transition-property: background-color, border-color, box-shadow;
+	-webkit-transition-duration: 150ms;
+	-webkit-transition-timing-function: ease;
+	transition-property: background-color, border-color, box-shadow;
+	transition-duration: 150ms;
+	transition-timing-function: ease;
 }
 
 html[dir='ltr'] .toolbarButton,
@@ -726,13 +726,13 @@ html[dir='rtl'] .dropdownToolbarButton {
 .overlayButton:hover:active,
 .dropdownToolbarButton:hover:active,
 .secondaryToolbarButton:hover:active {
-  background-color: hsla(0,0%,0%,.2);
-  -webkit-transition-property: background-color, border-color, box-shadow;
-  -webkit-transition-duration: 10ms;
-  -webkit-transition-timing-function: linear;
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 10ms;
-  transition-timing-function: linear;
+	background-color: hsla(0,0%,0%,.2);
+	-webkit-transition-property: background-color, border-color, box-shadow;
+	-webkit-transition-duration: 10ms;
+	-webkit-transition-timing-function: linear;
+	transition-property: background-color, border-color, box-shadow;
+	transition-duration: 10ms;
+	transition-timing-function: linear;
 }
 
 .toolbarButton.toggled,
@@ -749,10 +749,10 @@ html[dir='rtl'] .dropdownToolbarButton {
 }
 
 .dropdownToolbarButton {
-  width: 120px;
-  max-width: 120px;
-  padding: 0;
-  overflow: hidden;
+	width: 120px;
+	max-width: 120px;
+	padding: 0;
+	overflow: hidden;
 }
 
 .dropdownToolbarButton:after {
@@ -765,20 +765,20 @@ html[dir='rtl'] .dropdownToolbarButton {
 }
 
 html[dir='ltr'] .dropdownToolbarButton {
-  background-position: 95%;
+	background-position: 95%;
 }
 html[dir='rtl'] .dropdownToolbarButton {
-  background-position: 5%;
+	background-position: 5%;
 }
 
 .dropdownToolbarButton > select {
-  min-width: 140px;
-  font-size: 12px;
-  color: hsl(0,0%,95%);
-  margin: 0;
-  padding: 4px 2px 2px;
-  border: none;
-  background: rgba(0,0,0,0); /* Opera does not support 'transparent' <select> background */
+	min-width: 140px;
+	font-size: 12px;
+	color: hsl(0,0%,95%);
+	margin: 0;
+	padding: 4px 2px 2px;
+	border: none;
+	background: rgba(0,0,0,0); /* Opera does not support 'transparent' <select> background */
 }
 
 .dropdownToolbarButton > select > option {
@@ -1022,12 +1022,12 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 .verticalToolbarSeparator {
-  display: block;
-  padding: 8px 0;
-  margin: 8px 4px;
-  width: 1px;
-  background-color: hsla(0,0%,0%,.5);
-  box-shadow: 0 0 0 1px hsla(0,0%,100%,.08);
+	display: block;
+	padding: 8px 0;
+	margin: 8px 4px;
+	width: 1px;
+	background-color: hsla(0,0%,0%,.5);
+	box-shadow: 0 0 0 1px hsla(0,0%,100%,.08);
 }
 html[dir='ltr'] .verticalToolbarSeparator {
   margin-left: 2px;
@@ -1046,27 +1046,27 @@ html[dir='rtl'] .verticalToolbarSeparator {
 }
 
 .toolbarField {
-  padding: 4px 6px 4px;
-  margin: 4px 0 4px 0;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  /*
-  background-color: hsla(0,0%,100%,.09);
-  background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  background-clip: padding-box;
-  border: 1px solid hsla(0,0%,0%,.35);
-  border-color: hsla(0,0%,0%,.32) hsla(0,0%,0%,.38) hsla(0,0%,0%,.42);
-  box-shadow: 0 1px 0 hsla(0,0%,0%,.05) inset,
-              0 1px 0 hsla(0,0%,100%,.05);
-  color: hsl(0,0%,95%);*/
-  background-color: rgba(0, 0, 0, 0.15);
-  font-size: 12px;
-  line-height: 14px;
-  outline-style: none;
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 150ms;
-  transition-timing-function: ease;
-  color: white
+	padding: 4px 6px 4px;
+	margin: 4px 0 4px 0;
+	border: 1px solid transparent;
+	border-radius: 2px;
+	/*
+	background-color: hsla(0,0%,100%,.09);
+	background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
+	background-clip: padding-box;
+	border: 1px solid hsla(0,0%,0%,.35);
+	border-color: hsla(0,0%,0%,.32) hsla(0,0%,0%,.38) hsla(0,0%,0%,.42);
+	box-shadow: 0 1px 0 hsla(0,0%,0%,.05) inset,
+			  0 1px 0 hsla(0,0%,100%,.05);
+	color: hsl(0,0%,95%);*/
+	background-color: rgba(0, 0, 0, 0.15);
+	font-size: 12px;
+	line-height: 14px;
+	outline-style: none;
+	transition-property: background-color, border-color, box-shadow;
+	transition-duration: 150ms;
+	transition-timing-function: ease;
+	color: white
 }
 
 .toolbarField[type=checkbox] {
@@ -1101,18 +1101,18 @@ html[dir='rtl'] .verticalToolbarSeparator {
 }
 
 .toolbarLabel {
-  min-width: 16px;
-  padding: 3px 6px 3px 2px;
-  margin: 4px 2px 4px 0;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  color: hsl(0,0%,85%);
-  font-size: 12px;
-  line-height: 14px;
-  text-align: left;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  cursor: default;
+	min-width: 16px;
+	padding: 3px 6px 3px 2px;
+	margin: 4px 2px 4px 0;
+	border: 1px solid transparent;
+	border-radius: 2px;
+	color: hsl(0,0%,85%);
+	font-size: 12px;
+	line-height: 14px;
+	text-align: left;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	cursor: default;
 }
 
 .thumbnail {
@@ -1182,18 +1182,18 @@ html[dir='rtl'] .outlineItem > .outlineItems {
 
 .outlineItem > a,
 .attachmentsItem > button {
-  text-decoration: none;
-  color: #37588e;
-  display: inline-block;
+	text-decoration: none;
+	color: #37588e;
+	display: inline-block;
 
-  height: auto;
-  margin-bottom: 1px;
+	height: auto;
+	margin-bottom: 1px;
 
 
-  font-size: 13px;
-  line-height: 15px;
-  -moz-user-select: none;
-  white-space: normal;
+	font-size: 13px;
+	line-height: 15px;
+	-moz-user-select: none;
+	white-space: normal;
 }
 
 .attachmentsItem > button {
@@ -1349,7 +1349,7 @@ html[dir='rtl'] .outlineItemToggler::before {
 	color: black;
 	font-size: 12px;
 	line-height: 14px;
-	background-color: white; 
+	background-color: white;
 	border: 1px solid hsla(0,0%,0%,.5);
 	border-radius: 7px;
 	box-shadow: 0 1px 70px 7px rgba(0, 0, 0, 0.7);
@@ -1617,30 +1617,13 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .dbv-av-state.loading {
-    background-image: url(images/loading-small@2x.png);
-    background-size: 16px 17px;	
+    background-image: url("images/loading-small@2x.png");
+    background-size: 16px 17px;
 }
 
-.panel {
-	margin: 14px;
-	background: white;
-	border-radius: 2px;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-
-.panel-title {
-	background: rgba(85, 114, 161, 0.3);
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
+.message-box {
 	padding: 10px 10px 7px 10px;
-	color: black;
-	font-weight: normal;
-	font-size: medium;
-}
-
-.alert {
-    padding: 10px 10px 7px 10px;
-    margin: 14px;
+	margin: 14px;
 	border-radius: 2px;
 	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
 	font-size: medium;
@@ -1652,6 +1635,10 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	color: white;
 }
 
+.alert {
+
+}
+
 .alert.dbv-colors-error {
 	color: black;
 }
@@ -1661,8 +1648,38 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .alert.dbv-colors-error .glyphicon {
-	color:black	
+	color:black
 }
+
+.panel {
+	margin: 14px;
+	background: white;
+	border-radius: 2px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.panel-heading {
+	background: rgba(85, 114, 161, 0.3);
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	padding: 4px 10px 0px 10px;
+	color: black;
+
+	min-height: 36px;
+	text-align: right;
+	margin-top: 4px;
+}
+
+.panel-title {
+	float: left;
+	font-size: 16px;
+	font-size-adjust: none;
+	font-stretch: normal;
+	font-style: normal;
+	font-weight: normal;
+	margin-top: 6px;
+}
+
 
 
 .dbv-colors-places, /* @ TODO eleminate places */
@@ -1683,6 +1700,34 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	border-bottom-right-radius: 2px;
 	padding: 7px 10px 10px 10px;
 	overflow: auto;
+}
+
+.dbv-av-block-icon {
+	display: inline-block;
+	margin: 3px 2px 4px 10px;
+	min-width: 16px;
+	padding: 2px 0px 0;
+	border: 1px solid transparent;
+	border-radius: 2px;
+	line-height: 14px;
+}
+
+.dbv-av-block-controls {
+	display:inline-block;
+	margin-bottom: 4px;
+}
+
+.dbv-av-block-controls input,
+.dbv-av-block-controls button {
+	xmargin-top: 0px !important;
+	xmargin-bottom: 0px !important;
+	position: relative;
+}
+
+.dbv-av-block-controls input {
+	margin-bottom: 0px;
+	margin-top: 0px;
+	padding-top: 6px;
 }
 
 .dbv-av-block-entry {
@@ -1745,7 +1790,7 @@ html[dir='rtl'] .pull-right {
 
 .dbv-av-reference:hover {
 	color: #223657;
-	text-decoration: underline;		
+	text-decoration: underline;
 }
 
 #dbv-av-block-map .panel-body {
@@ -1754,7 +1799,7 @@ html[dir='rtl'] .pull-right {
 
 #dbv-av-block-thumbnails .panel-body {
     height: 450px;
-    height: calc(100vh - 130px); 
+    height: calc(100vh - 130px);
 	overflow-y: scroll;
 }
 
@@ -1856,27 +1901,31 @@ html[dir='rtl'] .pull-right {
 .panel-body p.separator { /*, .panel-body table tr.separator td*/
 	margin-bottom: 2px;
 	margin-top: 8px;
-
 	border-top: 1px dotted rgba(1,1,1,0.3);
 }
 
+.panel-heading .btn-group,
 .panel-body .btn-group {
 	line-height: 32px;
 }
 
+.panel-heading .btn-group .toolbarButton,
 .panel-body .btn-group .toolbarButton {
 	margin-bottom: 0px;
 	margin-top: 0px;
 }
 
+.panel-heading .btn-group + .btn-group,
 .panel-body .btn-group + .btn-group {
 	margin-top: 0px
 }
 
+.panel-heading .btn-group .splitToolbarButton,
 .panel-body .btn-group .splitToolbarButton {
 	margin-right: 0px !important;
 }
 
+.panel-heading .btn-group button,
 .panel-body .btn-group button {
 	position: relative;
 	background: rgba(0,0,0,0.1);
@@ -1901,7 +1950,7 @@ html[dir='rtl'] .pull-right {
 	color: #223657;
 }
 
-.dbv-noAnnotations  .dbv-hideOnNoAnnotations { 
+.dbv-noAnnotations  .dbv-hideOnNoAnnotations {
 	display: none;
 }
 
@@ -1930,12 +1979,12 @@ html[dir='rtl'] .pull-right {
 
   .toolbarField.pageNumber.visiblePageIsLoading,
   #findInput[data-status="pending"] {
-    background-image: url(images/loading-small@2x.png);
+    background-image: url("images/loading-small@2x.png");
     background-size: 16px 17px;
   }
 
   .dropdownToolbarButton {
-    background: url(images/toolbarButton-menuArrows@2x.png) no-repeat;
+    background: url("images/toolbarButton-menuArrows@2x.png") no-repeat;
     background-size: 7px 16px;
   }
 
@@ -2043,7 +2092,7 @@ html[dir='rtl'] .pull-right {
     float: right;
     right: 205px;
   }
-  
+
 }
 
 @media all and (max-width: 1100px) {
@@ -2079,7 +2128,7 @@ html[dir='rtl'] .pull-right {
   #toolbarSidebar {
   	padding-left: 0px;
   }
-  
+
   .sidebarOpen #sidebarContainer {
   	box-shadow: 2px 0px 3px 0px rgba(0,0,0,0.75);
   }
@@ -2101,7 +2150,7 @@ html[dir='rtl'] .pull-right {
 
 	#dbv-av-block-thumbnails .panel-body {
     	height: 250px;
-    	height: calc(100vh - 180px); 
+    	height: calc(100vh - 180px);
 		overflow-y: scroll;
 	}
 
@@ -2113,7 +2162,7 @@ html[dir='rtl'] .pull-right {
   #outerContainer .visibleMediumView {
     display: none;
   }
-  
+
 
 }
 
@@ -2124,7 +2173,7 @@ html[dir='rtl'] .pull-right {
   #outerContainer .visibleLargeView {
     display: inherit;
   }
-  
+
 
 }
 
@@ -2135,7 +2184,7 @@ html[dir='rtl'] .pull-right {
   #outerContainer .visibleMediumView {
     display: inherit;
   }
-  
+
 
 }
 
@@ -2159,7 +2208,7 @@ html[dir='rtl'] .pull-right {
   .toolbarButtonSpacer {
     width: 0;
   }
-  
+
 
 }
 
@@ -2180,7 +2229,7 @@ html[dir='rtl'] .pull-right {
 }
 
 .embeddedViewer .dropdownToolbarButton > select > option,
-.embeddedViewer .findbar, 
+.embeddedViewer .findbar,
 .embeddedViewer .secondaryToolbar {
 	background: white
 }
@@ -2189,9 +2238,9 @@ html[dir='rtl'] .pull-right {
 .embeddedViewer .toolbarField,
 .embeddedViewer .dropdownToolbarButton > select,
 .embeddedViewer .toolbarLabel,
-.embeddedViewer .toolbarButton, 
-.embeddedViewer .dropdownToolbarButton, 
-.embeddedViewer .secondaryToolbarButton, 
+.embeddedViewer .toolbarButton,
+.embeddedViewer .dropdownToolbarButton,
+.embeddedViewer .secondaryToolbarButton,
 .embeddedViewer .overlayButton {
 	color: black
 }
@@ -2208,12 +2257,12 @@ html[dir='rtl'] .pull-right {
 	background: #F5F5F5
 }
 .embeddedViewer #yayBox,
-.embeddedViewer .alert {
+.embeddedViewer .message-box {
 	background: rgb(114, 113, 113) !important;
 	color: white;
 }
 
-.embeddedViewer .alert .glyphicon {
+.embeddedViewer .message-box .glyphicon {
 	color: white
 }
 

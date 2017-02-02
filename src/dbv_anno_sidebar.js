@@ -63,21 +63,26 @@
 			 * @param minimized 	<boolean> 		is minimized from da beginning
 			 * 
 			 */
-			block: function(id, title, glyphicon, minimizable, minimized) {
+			block: function(id, title, glyphicon, minimizable, minimized, controls) {
 				var block = document.getElementById('dbv-av-block-' + id);
 				if (!block) {
 					block		= this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
 					this.container.appendChild(block);
 								
-					var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading"]});
-					var blockh3		= this.htmlElement('h3', {'classes': ['panel-title', 'dbv-colors-' + id], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
-					var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'pull-right']});
+					var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading", 'dbv-colors-' + id]});
+					var blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
+					var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'dbv-av-block-icon']});
 					var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
 					var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
-					
-					blockh3.appendChild(icon);
+					var blockctrl 	= this.blockControls(controls);
+
+
 					blocktitle.appendChild(blockh3);
+					blocktitle.appendChild(blockctrl);
+					blocktitle.appendChild(icon);
+
 					block.appendChild(blocktitle);
+
 					block.appendChild(blockbody);
 					block.appendChild(blockfooter);
 				}
@@ -94,12 +99,35 @@
 					headline: blockh3,
 					footer: blockfooter,
 					icon: icon,
+					controls: blockctrl,
 					add: function(attr, content, eventListeners) {return this.blockEntry(attr, content, eventListeners, id)}.bind(this),
 					clear: function() {blockbody.textContent = ''},
 					
 				}
 								
 				return blockbody;
+			},
+
+			blockControls: function(ctrl) {
+				if ((typeof ctrl === "undefined") || (typeof ctrl.length === "undefined")) {
+					return this.htmlElement('span');
+				}
+				var controls = this.htmlElement('div', {'classes': ['dbv-av-block-controls', 'btn-group']});
+				for (var i = 0; i < ctrl.length; i++) {
+					var control = ctrl[i];
+					if (typeof control.type === "undefined") {
+						controls.appendChild(this.htmlElement('button', {'classes': ['dbv-av-block-control', 'toolbarButton', 'glyphicon-' + control.icon]}, control.caption, control.eventListeners));
+					} else {
+						this.htmlInput(
+							{'classes': ['toolbarField']},
+							control.caption,
+							control.eventListeners,
+							controls
+						);
+					}
+
+				}
+				return controls;
 			},
 			
 			blockEntry: function(captionText, badgeText, eventListeners, blockId) {
@@ -125,7 +153,7 @@
 				//  generate message obj if not present
 				if (this.messageBox === null) {
 					this.messageBox = {};
-					this.messageBox.box = this.htmlElement('div', {'classes': ["alert"], "role": "alert"}, '', {'click': ['messageHide']});
+					this.messageBox.box = this.htmlElement('div', {'classes': ["alert", "message-box"], "role": "alert"}, '', {'click': ['messageHide']});
 					this.container.appendChild(this.messageBox.box);
 					
 					this.messageBox.glyphicon = this.htmlElement('span', {'classes': ["glyphicon"]});
@@ -285,7 +313,9 @@
 				attr.id = attr.id || 'input.' + Math.random();				
 				attr.type = attr.type || 'text';
 				attr.data = attr.data || {};
-				label = mozL10n.get(label, false, label);
+				try {
+					label = mozL10n.get(label, false, label);
+				} catch(e) {}
 				var label = this.htmlElement('label', {'classes':['a'], 'for': attr.id, 'data': attr.data}, label, eventListeners);
 				var input = this.htmlElement('input', attr, '', eventListeners);	
 				

@@ -133,22 +133,28 @@
 
 				// default controls
 				if (controls === true) {
-					var controls = [
-						{
-							caption: 'S',
+					var controls = {
+						test: {
 							eventListeners: {
 								'click': 'blockCtrlPlop'
 							},
-							icon: 'save'
+							icon: 'eye'
 						},
-						{
+						test3: {
+							eventListeners: {
+								'click': 'blockCtrlPlop'
+							},
+							icon: 'eye'
+						},
+						test2: {
 							type: 'text',
 							eventListeners: {
 								'keyup': ['blockCtrlFilter', id]
 							}
 						}
-					];
-					controls = [];
+					};
+					controls = {}
+					
 				}
 
 

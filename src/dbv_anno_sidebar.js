@@ -66,11 +66,15 @@
 			block: function(id, title, glyphicon, minimizable, minimized, controls) {
 				var block = document.getElementById('dbv-av-block-' + id);
 				if (!block) {
-					block		= this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
-					this.container.appendChild(block);
-								
+					block = this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
+
+					if (minimizable) {
+						controls = controls ? controls : {};
+						controls['hide'] = {eventListeners: {'click': ['toggleBlock', id]}, icon: 'eye-close'}
+					}
+
 					var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading", 'dbv-colors-' + id]});
-					var blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title, minimizable  ? {'click': ['toggleBlock', id]} : {});
+					var blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title);
 					var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'dbv-av-block-icon']});
 					var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
 					var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
@@ -80,11 +84,10 @@
 					blocktitle.appendChild(blockh3);
 					blocktitle.appendChild(blockctrl);
 					blocktitle.appendChild(icon);
-
 					block.appendChild(blocktitle);
-
 					block.appendChild(blockbody);
 					block.appendChild(blockfooter);
+					this.container.appendChild(block);
 				}
 				
 				if (minimized) {
@@ -93,7 +96,7 @@
 				
 
 				this.blocks[id] = {
-					opened: (typeof minimized === "undefined") ? false : !minimized,
+					opened: minimized ? false : true,
 					block: block,
 					body: blockbody,
 					headline: blockh3,
@@ -109,14 +112,22 @@
 			},
 
 			blockControls: function(ctrl) {
-				if ((typeof ctrl === "undefined") || (typeof ctrl.length === "undefined")) {
+				if ((typeof ctrl === "undefined")) {
 					return this.htmlElement('span');
 				}
-				var controls = this.htmlElement('div', {'classes': ['dbv-av-block-controls', 'btn-group']});
-				for (var i = 0; i < ctrl.length; i++) {
+				var controls = this.htmlElement('div', {'classes': ['dbv-av-block-controls', 'btn-group', 'splitToolbarButton']});
+				for (var i in ctrl) {
 					var control = ctrl[i];
-					if (typeof control.type === "undefined") {
-						controls.appendChild(this.htmlElement('button', {'classes': ['dbv-av-block-control', 'toolbarButton', 'glyphicon-' + control.icon]}, control.caption, control.eventListeners));
+					if (typeof control.type === "undefined") { // button
+						controls.appendChild(this.htmlElement(
+							'button',
+							{
+								'classes': ['dbv-av-block-control', 'toolbarButton', 'glyphicon-' + control.icon],
+								'title': control.caption
+							},
+							null, //creates an empty textnode
+							control.eventListeners
+						));
 					} else {
 						this.htmlInput(
 							{'classes': ['toolbarField']},
@@ -211,11 +222,14 @@
 				
 				this.blocks[id].opened = !this.blocks[id].opened; 
 				
-				if (!this.blocks[id].opened) {
-					this.blocks[id].block.classList.remove('dbv-hidden');	
+				if (this.blocks[id].opened) {
+					this.blocks[id].block.classList.remove('dbv-hidden');
+					this.blocks[id].controls.hide.classList.remove('toggled');
 				} else {
 					this.blocks[id].block.classList.add('dbv-hidden');
+					this.blocks[id].controls.hide.classList.add('toggled');
 				}
+
 
 			},
 				
@@ -270,9 +284,9 @@
 				if (typeof attr.style !== "undefined") { // Edge would complain otherwise 
 					el.setAttribute('style', attr.style);
 				}
-				
-				
+
 				if (typeof content !== "undefined") {
+					content = (content === null) ? '\u00A0' : content;
 					el.appendChild(document.createTextNode(content));
 				}
 

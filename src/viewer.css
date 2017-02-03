@@ -1585,7 +1585,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-th-large:before 		{content: "\e010"}
 .glyphicon-user:before 			{content: "\e008"}
 .glyphicon-wrench:before 		{content: "\E136"}
-
+.glyphicon-eye-open:before 		{content: "\E105"}
+.glyphicon-eye-close:before 	{content: "\E106"}
 
 
 
@@ -1662,7 +1663,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	background: rgba(85, 114, 161, 0.3);
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
-	padding: 4px 10px 0px 10px;
+	padding: 0px 10px 0px 10px;
 	color: black;
 
 	min-height: 36px;
@@ -1677,7 +1678,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	font-stretch: normal;
 	font-style: normal;
 	font-weight: normal;
-	margin-top: 6px;
+	margin-top: 9px;
 }
 
 
@@ -1704,30 +1705,31 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 .dbv-av-block-icon {
 	display: inline-block;
-	margin: 3px 2px 4px 10px;
+	margin-top: 9px;
 	min-width: 16px;
 	padding: 2px 0px 0;
 	border: 1px solid transparent;
 	border-radius: 2px;
 	line-height: 14px;
+	float: right;
 }
 
-.dbv-av-block-controls {
-	display:inline-block;
-	margin-bottom: 4px;
+html[dir="rtl"] .dbv-av-block-controls,
+html[dir="ltr"] .dbv-av-block-controls {
+	margin-bottom: 0px;
 }
 
 .dbv-av-block-controls input,
 .dbv-av-block-controls button {
-	xmargin-top: 0px !important;
-	xmargin-bottom: 0px !important;
 	position: relative;
+	float:none !important
 }
 
 .dbv-av-block-controls input {
 	margin-bottom: 0px;
 	margin-top: 0px;
 	padding-top: 6px;
+	padding-bottom: 3px;
 }
 
 .dbv-av-block-entry {
@@ -1909,11 +1911,25 @@ html[dir='rtl'] .pull-right {
 	line-height: 32px;
 }
 
-.panel-heading .btn-group .toolbarButton,
-.panel-body .btn-group .toolbarButton {
+.panel-body .btn-group .toolbarButton,
+.panel-heading .btn-group .toolbarButton {
 	margin-bottom: 0px;
 	margin-top: 0px;
+	position: relative;
+	/*color: rgba(0,0,0,0.0);*/
 }
+
+.panel-body .btn-group .toolbarButton {
+	background: rgba(0,0,0,0.1);
+
+}
+
+.panel-heading .btn-group .toolbarButton:before,
+.panel-body .btn-group .toolbarButton:before {
+	color: black
+}
+
+
 
 .panel-heading .btn-group + .btn-group,
 .panel-body .btn-group + .btn-group {
@@ -1925,13 +1941,7 @@ html[dir='rtl'] .pull-right {
 	margin-right: 0px !important;
 }
 
-.panel-heading .btn-group button,
-.panel-body .btn-group button {
-	position: relative;
-	background: rgba(0,0,0,0.1);
-	color: black;
-
-}
+.
 
 .panel-body .btn-group-left,
 .panel-body .btn-group-right {

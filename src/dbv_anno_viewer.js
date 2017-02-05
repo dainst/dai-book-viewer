@@ -50,9 +50,12 @@
 
 			/* registry for content blocks in the sidebar */
 			blocks: {},
+			entries: {}, // all entries of all blocks
 
 			/* map */
 			map: false,
+			markers: {},
+			mapover: null,
 
 			/**
 			 * prepares the anno viewer controller
@@ -76,7 +79,10 @@
 					}
 				);
 
+				// reset 'em
 				this.$.clear();
+				this.entries = {};
+				this.markers = {};
 
 				this.$.block('annotations_wait', 'Waiting for Annotations', 'tags');
 
@@ -102,10 +108,22 @@
 			buildBlocks: function(data) {
 				this.$.clear();
 				this.$.message('dbv-info-annotions_info', false, false, false);
+
+				this.$.block('tools', 'Filter', 'cog', false, true, {
+					'filter': {
+						type: 'text',
+						eventListeners: {
+							'keyup': 'blockCtrlFilter'
+						}
+					}
+				});
+
+
 				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false, false);
 				this.block('places', 'Places', 'map-marker', data.locations);
 				this.block('persons', 'Persons', 'user', data.persons);
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
+
 			},
 
 			/**
@@ -173,22 +191,25 @@
 				}
 			},
 
-			blockCtrlPlop: function() {
-				alert('yo')
-			},
-
+			/**
+			 * filters some annotation elements in sidebar, text, map
+			 * get's called by filter tool control textbox
+			 *
+			 * @param e
+			 * @param blockId
+			 */
 			blockCtrlFilter: function(e,  blockId) {
 				var filter = e.target.value.toUpperCase();
-				var list = this.$.blocks[blockId].body.getElementsByClassName('dbv-av-block-entry');
-				for (var i = 0; i < list.length; i++) {
-					var entry = list[i].getElementsByClassName("dbv-av-block-entry-caption")[0];
-					if (entry.innerHTML.toUpperCase().indexOf(filter) > -1) {
-						list[i].style.display = "";
-						this.filterShow(entry.dataset)
+				var entry, annotation;
+				for (var annotationId in this.entries) {
+					entry = this.entries[annotationId];
+					annotation = this.annoRegistry.registry[annotationId];
+					if (annotation.lemma.toUpperCase().indexOf(filter) > -1) {
+						entry.classList.remove('dbv-hidden');
+						this.filterShow(annotation)
 					} else {
-						list[i].style.display = "none";
-						this.filterHide(entry.dataset)
-
+						entry.classList.add('dbv-hidden');
+						this.filterHide(annotation)
 					}
 				}
 			},
@@ -213,9 +234,10 @@
 					var entry = this.$.htmlElement('div', {'classes': ['dbv-av-block-entry']});
 					var caption = this.$.htmlElement('span', {'classes': ['dbv-av-block-entry-caption'], 'data': {'id': unit.id}}, unit.lemma);
 
-					caption.addEventListener('click', function(e) {return self.eventHandler(e);})
-					caption.addEventListener('mouseover', function(e) {return self.eventHandler(e);})
-					caption.addEventListener('mouseout', function(e) {return self.eventHandler(e);})
+					caption.annotationId = unit.id; // is this ok?
+					caption.addEventListener('click', 		function(e) {return this.entryClick(e)}.bind(this));
+					caption.addEventListener('mouseover', 	function(e) {return this.entryMouseover(e)}.bind(this));
+					caption.addEventListener('mouseout', 	function(e) {return this.entryMouseout(e)}.bind(this));
 
 					entry.appendChild(caption);
 					entry.appendChild(this.$.htmlElement('span', {'classes': ['badge', 'pull-right']}, unit.count || 1));
@@ -223,6 +245,7 @@
 					this.references(entry, unit.references);
 					//console.log(k, unit, entry);
 
+					this.entries[unit.id] = entry;
 					block.appendChild(entry);
 				}
 			},
@@ -239,13 +262,14 @@
 				var b = this.unitBoundaries(units);
 
 				// prepare maps ..
+				this.markers = {};
 				try {
 					var map = new L.Map('dbv-av-map');
 				} catch (err) {
 					console.log(err);
 					return;
 				}
-				var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+				var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; // @ TODO save in config
 				var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 				var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 16, attribution: osmAttrib});
 				var markers = [];
@@ -260,39 +284,40 @@
 						}
 
 						var count = unit.count || 1;
-						var radius = (isNaN(b.max) || b.max == b.min) ? 9 : (count - b.min) / (b.max - b.min) * 8 + 4;
+						var depth = (isNaN(b.max) || b.max == b.min) ? 0.8 : (count - b.min) / (b.max - b.min) * 0.4 + 0.3;
 
 						//var marker = L.marker([parseFloat(unit.coordinates[0]), parseFloat(unit.coordinates[1])]).addTo(map);
 						var marker = L.circleMarker(
 							[parseFloat(unit.coordinates[0]), parseFloat(unit.coordinates[1])],
-							{	radius:			radius,
-								fillColor: 		'#006B00',
-								fillOpacity:	0.2,
-								color:			'#006B00',
-								className:		unit.id // abuse of classname for our sinister goals
+							{
+								radius:			6,
+								fillOpacity:	depth,
+								opacity:		depth,
+								className:		'marker-' + unit.type
 							}
 						).addTo(map);
 
-						marker.on('click', function(e) {
-							self.eventHandler(e, 'marker');
-						});
-						marker.on('mouseover', function(e) {
-							self.eventHandler(e, 'marker');
-						});
-						marker.on('mouseout', function(e) {
-							self.eventHandler(e, 'marker');
-						});
-						//marker.bindPopup(unit.lemma + '<span class="badge">' +  unit.count + "</span>");
+						marker.annotationId = unit.id;
 
+						marker.on('click', 		function(e) {this.mapMarkerClick(e)}.bind(this));
+						marker.on('mouseover', 	function(e) {this.mapMarkerMouseover(e)}.bind(this));
+						marker.on('mouseout', 	function(e) {this.mapMarkerMouseout(e)}.bind(this));
+
+						this.markers[unit.id] = marker;
 						markers.push(marker);
-						window.Xmap = map;
+
+						//marker.bindPopup(unit.lemma);
+
+
+						//marker.bindPopup(unit.lemma + '<span class="badge">' +  unit.count + "</span>");
+						//window.XXX = this.markers;
 						this.map = map;
 					} catch (err) {
 						console.log('MAP:ERR', err);
 					}
 				}
 
-				// if adding markers failed in every  case and we don't have markers
+				// if adding markers failed in every case and we don't have markers
 				if (markers.length == 0) {
 					mapDiv.parentNode.removeChild(mapDiv);
 					return;
@@ -314,7 +339,8 @@
 
 			loadMore: function(blockId) {
 				console.log('load more ' + blockId);
-				this.annoRegistry.getAnnotations(['testdata', 'more.' + blockId + '_' + this.annoRegistry.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
+				//this.annoRegistry.getAnnotations(['testdata', 'more.' + blockId + '_' + this.annoRegistry.filename + '.json'],'http://195.37.232.186/DAIbookViewer');
+				// @ TODO implement
 			},
 
 			/**
@@ -430,35 +456,49 @@
 			},
 
 			/**
-			 * Event handler for clicking items in the annotation list or markers on the map etc.
+			 * click events for markers and list entries
 			 *
-			 *
-			 * @param event:		event
-			 * @param basetype:		string: entry*, marker, ...
+			 * @param annotationId <int>
+			 * @param entry | marker <elem>
+			 * @param event <event>
 			 */
-			eventHandler: function(event, basetype) {
+			entryClick: function(event) {
+				var annotation = this.annoRegistry.registry[event.originalTarget.annotationId];
+				this.jumpToNextMatchingPage(annotation);
+			},
 
-				basetype = basetype ||  'entry';
-				var annotationId = (basetype == 'marker') ? event.target.options.className : event.target.dataset.id;
-				var annotation = this.annoRegistry.registry[annotationId];
+			entryMouseover: function(event) {
+				var annotation = this.annoRegistry.registry[event.originalTarget.annotationId];
+				this.highlightsShow(annotation);
+			},
 
-				//console.log(event, basetype, annotation);
+			entryMouseout: function(event) {
+				var annotation = this.annoRegistry.registry[event.originalTarget.annotationId];
+				this.highlightsHide(annotation);
+			},
 
-				if (event.type == 'click') {
-					this.jumpToNextMatchingPage(annotation);
+			mapMarkerClick: function(event) {
+				this.jumpToNextMatchingPage(this.annoRegistry.registry[event.target.annotationId]);
+			},
+
+			mapMarkerMouseover: function(event) {
+				var annotation = this.annoRegistry.registry[event.target.annotationId];
+				var marker = event.target;
+				this.highlightsShow(annotation);
+				this.mapover = L.popup({
+					closeButton: false,
+					closeOnClick: true,
+					offset: new L.Point(0, -1)
+				}).setLatLng(event.target._latlng).setContent(annotation.lemma).openOn(this.map);
+			},
+
+			mapMarkerMouseout: function(event) {
+				var annotation = this.annoRegistry.registry[event.target.annotationId];
+				this.highlightsHide(annotation);
+				if (this.map && this.mapover) {
+					this.map.closePopup();
+					this.mapover = false;
 				}
-
-				if (event.type == 'mouseover') {
-					this.highlightsShow(annotation);
-					if ((basetype !== 'marker') && (typeof annotation.coordinates !== 'undefined')) {
-						this.mapCenter(annotation);
-					}
-				}
-
-				if (event.type == 'mouseout') {
-					this.highlightsHide(annotation);
-				}
-
 			},
 
 			/**
@@ -497,9 +537,15 @@
 
 			filterHide: function(annotation) {
 				console.log('HYDE', annotation);
+				// hide in-text annotations
 				var spans = document.querySelectorAll('.dbv-annotation[data-id="' + annotation.id + '"]');
 				for (var i = 0; i < spans.length; i++) {
 					spans[i].classList.add('filtered');
+				}
+				// hide map markers
+				if (typeof this.markers[annotation.id] !== "undefined") {
+					console.log(this.markers[annotation.id]._path);
+					this.markers[annotation.id]._path.classList.add('marker-hidden')
 				}
 			},
 
@@ -507,6 +553,10 @@
 				var spans = document.querySelectorAll('.dbv-annotation[data-id="' + annotation.id + '"]');
 				for (var i = 0; i < spans.length; i++) {
 					spans[i].classList.remove('filtered');
+				}
+				// show map markers
+				if (typeof this.markers[annotation.id] !== "undefined") {
+					this.markers[annotation.id]._path.classList.remove('marker-hidden')
 				}
 			},
 

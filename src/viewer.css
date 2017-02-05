@@ -69,8 +69,8 @@ input,
 button,
 select {
 	font: message-box;
-  /*font-family: "Source Sans Pro",Helvetica,sans-serif;*/
-  outline: none;
+	/*font-family: "Source Sans Pro",Helvetica,sans-serif;*/
+	outline: none;
 }
 
 ul {
@@ -402,8 +402,8 @@ html[dir='rtl'] #viewerContainer {
 	line-height: 1.2 ;
 	transition-property: visibility, opacity;
     transition-duration: 0s, 1s;
-    cursor: pointer;;
-    color:white
+    cursor: pointer;
+    color: white
 }
 
 #yayBox .glyphicon {
@@ -1587,6 +1587,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-wrench:before 		{content: "\E136"}
 .glyphicon-eye-open:before 		{content: "\E105"}
 .glyphicon-eye-close:before 	{content: "\E106"}
+.glyphicon-cog:before 			{content: "\E019"}
 
 
 
@@ -1624,7 +1625,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 .message-box {
 	padding: 10px 10px 7px 10px;
-	margin: 14px;
+	margin: 14px 14px 14px 14px;
 	border-radius: 2px;
 	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
 	font-size: medium;
@@ -1653,11 +1654,13 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .panel {
-	margin: 14px;
+	margin: 14px 14px 14px 14px;
 	background: white;
 	border-radius: 2px;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
+
+
 
 .panel-heading {
 	background: rgba(85, 114, 161, 0.3);
@@ -1681,20 +1684,18 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	margin-top: 9px;
 }
 
-
-
 .dbv-colors-places, /* @ TODO eleminate places */
 .dbv-colors-locations { 		background-color: rgba(0, 107, 0, 0.3);}
 .dbv-colors-persons {			background-color: rgba(255, 0, 0, 0.3);}
 .dbv-colors-keyterms {			background-color: rgba(0, 0, 255, 0.3);}
 .dbv-colors-error {				background-color: rgba(129, 0, 0, 0.5);}
 .dbv-colors-map {				background-color: rgba(93, 144, 93, 0.3);}
-.dbv-colors-find {				background: rgba(180, 0, 170, 0.3);}
-.dbv-colors-findResults {		background: rgba(180, 0, 170, 0.2);}
-.dbv-colors-findHistory {		background: rgba(180, 0, 170, 0.1);}
-.dbv-colors-file_info {			background: rgba(85, 114, 161, 0.6);}
-.dbv-colors-annotation_info {	background: rgba(85, 114, 161, 0.45);}
-.dbv-colors-product_info {		background: rgba(85, 114, 161, 0.3);}
+.dbv-colors-find {				background-color: rgba(180, 0, 170, 0.3);}
+.dbv-colors-findResults {		background-color: rgba(180, 0, 170, 0.2);}
+.dbv-colors-findHistory {		background-color: rgba(180, 0, 170, 0.1);}
+.dbv-colors-file_info {			background-color: rgba(85, 114, 161, 0.6);}
+.dbv-colors-annotation_info {	background-color: rgba(85, 114, 161, 0.45);}
+.dbv-colors-product_info {		background-color: rgba(85, 114, 161, 0.3);}
 
 .panel-body {
 	border-bottom-left-radius: 2px;
@@ -1735,6 +1736,10 @@ html[dir="ltr"] .dbv-av-block-controls {
 .dbv-av-block-entry {
 	padding: 2px 0 5px 0px;
 
+}
+
+.dbv-av-block-entry.dbv-hidden {
+  display: none
 }
 
 .dbv-av-block a,
@@ -1805,16 +1810,58 @@ html[dir='rtl'] .pull-right {
 	overflow-y: scroll;
 }
 
-
-
+.dbv-hidden .panel-body {
+  display: none;
+}
 
 #dbv-av-map {
 	height: 300px
 }
 
-.dbv-hidden .panel-body {
-	display: none;
+#dbv-av-map .marker-hidden {
+  fill-opacity: 0.2;
+  fill: #0000EE;
+  opacity: 0.2;
 }
+#dbv-av-map .marker-locations { stroke: #006b00; fill: #006b00}
+#dbv-av-map .marker-persons {	stroke: #0000EE; fill: #0000EE}
+#dbv-av-map .marker-keyterms {	stroke: #EE0000; fill: #EE0000}
+
+
+
+#dbv-av-map .leaflet-popup-content-wrapper {
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  background-color: rgba(85, 114, 161, 1);
+  color: hsl(0,0%,85%);
+  transition-property: visibility, opacity;
+  transition-duration: 0s, 1s;
+}
+
+#dbv-av-map .leaflet-popup-content {
+	line-height: 1.2 ;
+	cursor: pointer;
+	padding: 2px 2px 1px 2px;
+    margin: 0;
+    text-align: center;
+}
+
+#dbv-av-map .leaflet-popup-tip-container {
+  height: 13px;
+}
+
+#dbv-av-map .leaflet-popup-tip {
+  border-color: hsla(0,0%,0%,.5);
+  background-color: hsla(0,0%,32%,.99);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  width: 8px;
+  height: 8px;
+  padding: 1px;
+  margin: -5px auto 0;
+}
+
+
 
 #dbv-edit-annotation-result,
 #dbv-edit-annotation-overview {
@@ -2256,6 +2303,7 @@ html[dir='rtl'] .pull-right {
 }
 
 .embeddedViewer .toolbarButton.toggled,
+.embeddedViewer .toolbarButton.toggled:before,
 .embeddedViewer .splitToolbarButton.toggled > .toolbarButton.toggled,
 .embeddedViewer .secondaryToolbarButton.toggled {
   background: none;
@@ -2280,7 +2328,14 @@ html[dir='rtl'] .pull-right {
 	animation: blinkHardE 3s infinite
 }
 
+.embeddedViewer .message-box,
+.embeddedViewer .panel {
+	margin-top: 0px
+}
 
+.embeddedViewer #errorWrapper.panel {
+	margin-top: 14px
+}
 
 @keyframes blinkHardE {
 	0%  {	color: black; 	text-shadow: 2px 2px 2px rgb(255, 0, 0);}
@@ -2288,3 +2343,4 @@ html[dir='rtl'] .pull-right {
 	66.66%  {	color: black; 	text-shadow: 2px 2px 2px rgb(0, 0, 255);}
 	100%  {	color: black; 	text-shadow: 2px 2px 2px rgb(255, 0, 0);}
 }
+

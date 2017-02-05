@@ -78,11 +78,9 @@
 					var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'dbv-av-block-icon']});
 					var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
 					var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
-					var blockctrl 	= this.blockControls(controls);
-
 
 					blocktitle.appendChild(blockh3);
-					blocktitle.appendChild(blockctrl);
+					var blockctrl 	= this.blockControls(controls, blocktitle);
 					blocktitle.appendChild(icon);
 					block.appendChild(blocktitle);
 					block.appendChild(blockbody);
@@ -92,8 +90,10 @@
 				
 				if (minimized) {
 					block.classList.add('dbv-hidden');
+					if (typeof blockctrl.hide !== "undefined") {
+						blockctrl.hide.classList.add('toggled');
+					}
 				}
-				
 
 				this.blocks[id] = {
 					opened: minimized ? false : true,
@@ -105,21 +105,22 @@
 					controls: blockctrl,
 					add: function(attr, content, eventListeners) {return this.blockEntry(attr, content, eventListeners, id)}.bind(this),
 					clear: function() {blockbody.textContent = ''},
-					
 				}
 								
 				return blockbody;
 			},
 
-			blockControls: function(ctrl) {
+			blockControls: function(ctrl, appendTo) {
 				if ((typeof ctrl === "undefined")) {
 					return this.htmlElement('span');
 				}
 				var controls = this.htmlElement('div', {'classes': ['dbv-av-block-controls', 'btn-group', 'splitToolbarButton']});
+				var controlsCollection = {};
+				var controlEl;
 				for (var i in ctrl) {
 					var control = ctrl[i];
 					if (typeof control.type === "undefined") { // button
-						controls.appendChild(this.htmlElement(
+						controlEl = this.htmlElement(
 							'button',
 							{
 								'classes': ['dbv-av-block-control', 'toolbarButton', 'glyphicon-' + control.icon],
@@ -127,18 +128,21 @@
 							},
 							null, //creates an empty textnode
 							control.eventListeners
-						));
+						);
 					} else {
-						this.htmlInput(
+						controlEl = this.htmlInput(
 							{'classes': ['toolbarField']},
 							control.caption,
 							control.eventListeners,
 							controls
 						);
 					}
+					controls.appendChild(controlEl);
+					controlsCollection[i] = controlEl;
 
 				}
-				return controls;
+				appendTo.appendChild(controls);
+				return controlsCollection;
 			},
 			
 			blockEntry: function(captionText, badgeText, eventListeners, blockId) {
@@ -229,8 +233,6 @@
 					this.blocks[id].block.classList.add('dbv-hidden');
 					this.blocks[id].controls.hide.classList.add('toggled');
 				}
-
-
 			},
 				
 			/* errör */

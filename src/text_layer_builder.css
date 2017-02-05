@@ -81,10 +81,6 @@
 	
 }
 
-.textLayer .dbv-annotation.filtered {
-	opacity: 0
-}
-
 .textLayer .dbv-annotation.overlap {
 	opacity: 0.5
 }
@@ -95,6 +91,11 @@
 
 .textLayer .dbv-annotation:hover {
 	z-index: 10;
+}
+
+.textLayer .dbv-annotation.filtered:hover,
+.textLayer .dbv-annotation.filtered {
+	opacity: 0
 }
 
 .textLayer .dbv-annotation {

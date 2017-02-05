@@ -366,12 +366,7 @@ html[dir='rtl'] #viewerContainer {
   left: 0;
   height: 100%;
   width: calc(100% + 150px);
-
-  background: repeating-linear-gradient(135deg,
-                                        #bbb 0, #999 5px,
-                                        #999 45px, #ddd 55px,
-                                        #ddd 95px, #bbb 100px);
-
+  background: repeating-linear-gradient(135deg, #bbb 0, #999 5px, #999 45px, #ddd 55px, #ddd 95px, #bbb 100px);
   -webkit-animation: progressIndeterminate 950ms linear infinite;
   animation: progressIndeterminate 950ms linear infinite;
 }
@@ -382,7 +377,8 @@ html[dir='rtl'] #viewerContainer {
 	position: absolute;
 	z-index: 10000;
 	height: 32px;
-
+    transition-property: visibility, opacity;
+    transition-duration: 0s, 1s;
 	min-width: 16px;
 	padding: 0px 6px 0px 6px;
 	margin: 14px 2px 4px 2px;
@@ -392,6 +388,7 @@ html[dir='rtl'] #viewerContainer {
 	text-align: left;
 	cursor: default;
 }
+
 
 
 #yayBox {
@@ -1589,28 +1586,66 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-eye-close:before 	{content: "\E106"}
 .glyphicon-cog:before 			{content: "\E019"}
 
+#intext-popup {
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  max-width: 250px;
+}
 
+#intext-popup h5 {
+  color: white
+}
 
-#dbv-ao {
-	background-color: white;
-	color: black;
-	border: 1px solid hsla(0,0%,0%,.5);
-	border-radius: 7px;
-	box-shadow: 0 1px 70px 7px rgba(0, 0, 0, 0.7);
-	padding: 0.4em;
-	position: absolute;
-	top: 45%;
-	left: 45%;
-	max-width: 250px;
+#intext-popup-inner {
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  background-color: rgba(85, 114, 161, 1);
+
+  padding: 9px;
+  line-height: 14px;
+  transition-property: visibility, opacity;
+  transition-duration: 0s, 1s;
+  color: hsl(0, 0%, 85%);
+}
+
+.intext-popup-tip-container {
+  margin: 0 auto;
+  width: 40px;
+  height: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.intext-popup-tip {
+  width: 8px;
+  height: 8px;
+  padding: 1px;
+
+  border: 1px solid rgba(67, 67, 67, 1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  background-color: rgba(67, 67, 67, 1);
+
+  margin: -5px auto 0;
+
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 
-#dbv-ao a,
-#dbv-ao a:hover,
-#dbv-ao a:visited,
-#dbv-ao a:active {
-	color: rgba(85, 114, 161, 1);
-	text-decoration: none
+#intext-popup a {
+  color: hsl(0,0%,85%);
+  text-decoration: none
+}
+
+#intext-popup a:hover,
+#intext-popup a:visited,
+#intext-popup a:active {
+	text-decoration: underline
 }
 
 .dbv-av-state {
@@ -1852,8 +1887,8 @@ html[dir='rtl'] .pull-right {
 }
 
 #dbv-av-map .leaflet-popup-tip {
-  border-color: hsla(0,0%,0%,.5);
-  background-color: hsla(0,0%,32%,.99);
+  border: 1px solid rgba(67, 67, 67, 1);
+  background-color: rgba(67, 67, 67, 1);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   width: 8px;
   height: 8px;
@@ -2310,12 +2345,10 @@ html[dir='rtl'] .pull-right {
   color: rgba(85, 114, 161, 1) !important;
 }
 
-
-.embeddedViewer #yayBox {
-	background: #F5F5F5
-}
+.embeddedViewer #dbv-av-map .leaflet-popup-content-wrapper,
 .embeddedViewer #yayBox,
-.embeddedViewer .message-box {
+.embeddedViewer .message-box,
+.embeddedViewer #intext-popup-inner {
 	background: rgb(114, 113, 113) !important;
 	color: white;
 }

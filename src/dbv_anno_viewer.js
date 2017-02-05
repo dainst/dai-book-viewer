@@ -41,6 +41,8 @@
 			this.annoRegistry = options.annoRegistry;
 			this.toggleAnnotationButton = options.toggleAnnotationButton;
 			this.yayBox = options.yayBox;
+			this.intextPopup = options.intextPopup;
+			this.intextPopupInner = options.intextPopupInner;
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
 
@@ -86,10 +88,7 @@
 
 				this.$.block('annotations_wait', 'Waiting for Annotations', 'tags');
 
-				this.annotationPopup = document.getElementById('dbv-ao'); // @ TODO do better blah
-				document.getElementsByTagName('html')[0].addEventListener('click', function(e) {
-					self.annotationPopup.classList.add('hidden');
-				}, true);
+				this.intextPopup.classList.add('hidden');
 
 			},
 
@@ -376,8 +375,6 @@
 
 			/* annotation popup  */
 
-			annotationPopup: false,
-
 			/**
 			 * shows the annotationPopup with content of the annotations (reference links and text)
 			 *
@@ -385,9 +382,10 @@
 			 * @param pageX
 			 * @param pageY
 			 */
-			renderAnnotationPopup: function(annotation, pageX, pageY) {
+			renderAnnotationPopup: function(annotation, event) {
 
-				var box = this.annotationPopup;
+				var box = this.intextPopupInner;
+				var boxWrapper = this.intextPopup;
 
 				var text = annotation.text || '';
 				var refs = annotation.references || {};
@@ -397,6 +395,7 @@
 				}
 
 				box.innerHTML = '';
+				box.appendChild(this.$.htmlElement('h5', {}, annotation.lemma));
 
 				if (annotation.text) {
 					box.appendChild(this.$.htmlElement('div', {}, annotation.text));
@@ -411,15 +410,26 @@
 					}
 				}
 
-		    	box.style.left = pageX + 'px';
-		    	box.style.top = pageY + 'px';
-				box.classList.remove('hidden');
+				boxWrapper.classList.remove('hidden');
+				var el1 = event.target.getBoundingClientRect();
+				var el2 = boxWrapper.getBoundingClientRect();
+				var pos = {
+					left: el1.left + window.scrollX + (el1.width/2) - (el2.width/2),
+					top: el1.top + window.scrollY - el2.height + 10
+				}
+				console.log(el1.left, window.scrollX, el1.width, el2.width);
+
+				console.log(boxWrapper, el2);
+				window.xx = boxWrapper;
+
+
+				boxWrapper.style.left = pos.left + 'px';
+				boxWrapper.style.top = pos.top + 'px';
+
 			},
 
 			hoverAnnotationPopup: function(annotation, pageX, pageY) {
-		    	if (typeof annotation.coordinates !== "undefined") {
-		    		this.mapCenter(annotation);
-		    	}
+				this.mapCenter(annotation);
 			},
 
 			/**
@@ -470,6 +480,7 @@
 			entryMouseover: function(event) {
 				var annotation = this.annoRegistry.registry[event.originalTarget.annotationId];
 				this.highlightsShow(annotation);
+				this.mapCenter(annotation);
 			},
 
 			entryMouseout: function(event) {
@@ -536,7 +547,6 @@
 			},
 
 			filterHide: function(annotation) {
-				console.log('HYDE', annotation);
 				// hide in-text annotations
 				var spans = document.querySelectorAll('.dbv-annotation[data-id="' + annotation.id + '"]');
 				for (var i = 0; i < spans.length; i++) {

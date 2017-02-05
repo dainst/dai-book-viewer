@@ -162,6 +162,8 @@ function getViewerConfiguration() {
     printContainer: document.getElementById('printContainer'),
     openFileInputName: 'fileInput',
     debuggerScriptPath: './debugger.js',
+    intextPopup: document.getElementById('intext-popup'),
+    intextPopupInner: document.getElementById('intext-popup-inner')
   };
 }
 

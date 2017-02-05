@@ -474,11 +474,11 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     	var annotation = this.findController.annoRegistry.registry[event.target.dataset.id]; 	
     	   	
     	if (event.type == 'click') {
-    		this.annoViewer.renderAnnotationPopup(annotation, event.pageX, event.pageY);
+    		this.annoViewer.renderAnnotationPopup(annotation, event);
     	}
 
     	if (event.type == 'mouseover') {
-    		this.annoViewer.hoverAnnotationPopup(annotation, event.pageX, event.pageY);
+    		this.annoViewer.hoverAnnotationPopup(annotation, event);
     	}
     	
     	

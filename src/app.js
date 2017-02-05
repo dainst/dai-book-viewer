@@ -324,7 +324,9 @@ var PDFViewerApplication = {
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView}),
         toggleAnnotationButton: appConfig.toolbar.toggleAnnotations,
-        yayBox: appConfig.toolbar.yayBox
+        yayBox: appConfig.toolbar.yayBox,
+		intextPopup: appConfig.intextPopup,
+		intextPopupInner: appConfig.intextPopupInner
     });
     this.annoEditor = this.editorMode ? new annoEditor({
         findController: this.findController,

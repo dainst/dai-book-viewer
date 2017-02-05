@@ -118,7 +118,16 @@
 				});
 
 
-				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false, false);
+				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false, {
+					"zoomin": {
+						icon: 'zoom-in',
+						eventListeners: {'click': 'mapZoomIn'}
+					},
+					"zoomout": {
+						icon: 'zoom-out',
+						eventListeners: {'click': 'mapZoomOut'}
+					}
+				});
 				this.block('places', 'Places', 'map-marker', data.locations);
 				this.block('persons', 'Persons', 'user', data.persons);
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
@@ -150,30 +159,8 @@
 
 				// default controls
 				if (controls === true) {
-					var controls = {
-						test: {
-							eventListeners: {
-								'click': 'blockCtrlPlop'
-							},
-							icon: 'eye'
-						},
-						test3: {
-							eventListeners: {
-								'click': 'blockCtrlPlop'
-							},
-							icon: 'eye'
-						},
-						test2: {
-							type: 'text',
-							eventListeners: {
-								'keyup': ['blockCtrlFilter', id]
-							}
-						}
-					};
 					controls = {}
-					
 				}
-
 
 				var block = this.$.block(id, title, glyphicon, true, false, controls);
 
@@ -263,7 +250,9 @@
 				// prepare maps ..
 				this.markers = {};
 				try {
-					var map = new L.Map('dbv-av-map');
+					var map = new L.Map('dbv-av-map', {
+						"zoomControl": false
+					});
 				} catch (err) {
 					console.log(err);
 					return;
@@ -522,6 +511,15 @@
 					}
 				}
 
+			},
+
+			mapZoomIn: function() {
+				console.log("!!!!");
+				this.map.zoomIn();
+			},
+
+			mapZoomOut: function() {
+				this.map.zoomOut();
 			},
 
 			/**

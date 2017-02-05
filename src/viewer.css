@@ -1585,6 +1585,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-eye-open:before 		{content: "\E105"}
 .glyphicon-eye-close:before 	{content: "\E106"}
 .glyphicon-cog:before 			{content: "\E019"}
+.glyphicon-zoom-in:before 		{content: "\E015"}
+.glyphicon-zoom-out:before 		{content: "\E016"}
 
 #intext-popup {
   position: absolute;

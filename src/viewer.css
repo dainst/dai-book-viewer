@@ -1760,6 +1760,14 @@ html[dir="ltr"] .dbv-av-block-controls {
 	padding-bottom: 3px;
 }
 
+
+.dbv-av-block-controls label {
+  padding: 3px 6px 3px 2px;
+  margin: 4px 2px 4px 0;
+}
+
+
+
 .dbv-av-block-entry {
 	padding: 2px 0 5px 0px;
 
@@ -1781,6 +1789,18 @@ html[dir="ltr"] .dbv-av-block-controls {
 .dbv-load-more:hover,
 .dbv-av-block-entry-caption:hover {
 	text-decoration: underline;
+}
+/*
+a[target="_blank"] {
+  text-decoration: underline dashed !important;
+}
+*/
+a[target="_blank"]:after {
+  font-family: 'Glyphicons Halflings';
+  content: "\E164";
+  font-size: 6pt;
+  margin-left: 2px;
+
 }
 
 .dbv-load-more {

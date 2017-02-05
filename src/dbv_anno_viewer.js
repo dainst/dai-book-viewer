@@ -108,9 +108,10 @@
 				this.$.clear();
 				this.$.message('dbv-info-annotions_info', false, false, false);
 
-				this.$.block('tools', 'Filter', 'cog', false, true, {
+				this.$.block('tools', 'Tools', '', false, true, {
 					'filter': {
 						type: 'text',
+						caption: 'Filter',
 						eventListeners: {
 							'keyup': 'blockCtrlFilter'
 						}

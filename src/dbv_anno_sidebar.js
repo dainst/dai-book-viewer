@@ -58,12 +58,11 @@
 			 * 
 			 * @param id -			<string>		id
 			 * @param title 		<string>		headline @ TODO i10n
-			 * @param glyphicon 	<string> 		icon code
 			 * @param minimizable 	<boolean> 		is minimizable
 			 * @param minimized 	<boolean> 		is minimized from da beginning
 			 * 
 			 */
-			block: function(id, title, glyphicon, minimizable, minimized, controls) {
+			block: function(id, title, depricated, minimizable, minimized, controls) {
 				var block = document.getElementById('dbv-av-block-' + id);
 				if (!block) {
 					block = this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
@@ -75,13 +74,11 @@
 
 					var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading", 'dbv-colors-' + id]});
 					var blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title);
-					var icon		= this.htmlElement('span', {'classes': ['glyphicon', 'glyphicon-' + glyphicon, 'dbv-av-block-icon']});
 					var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
 					var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
 
 					blocktitle.appendChild(blockh3);
 					var blockctrl 	= this.blockControls(controls, blocktitle);
-					blocktitle.appendChild(icon);
 					block.appendChild(blocktitle);
 					block.appendChild(blockbody);
 					block.appendChild(blockfooter);
@@ -101,7 +98,6 @@
 					body: blockbody,
 					headline: blockh3,
 					footer: blockfooter,
-					icon: icon,
 					controls: blockctrl,
 					add: function(attr, content, eventListeners) {return this.blockEntry(attr, content, eventListeners, id)}.bind(this),
 					clear: function() {blockbody.textContent = ''},

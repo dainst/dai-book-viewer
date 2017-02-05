@@ -1703,9 +1703,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	background: rgba(85, 114, 161, 0.3);
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
-	padding: 0px 10px 0px 10px;
+	padding: 0px 0px 0px 10px;
 	color: black;
-
 	min-height: 36px;
 	text-align: right;
 	margin-top: 4px;
@@ -1741,16 +1740,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 	overflow: auto;
 }
 
-.dbv-av-block-icon {
-	display: inline-block;
-	margin-top: 9px;
-	min-width: 16px;
-	padding: 2px 0px 0;
-	border: 1px solid transparent;
-	border-radius: 2px;
-	line-height: 14px;
-	float: right;
-}
+
 
 html[dir="rtl"] .dbv-av-block-controls,
 html[dir="ltr"] .dbv-av-block-controls {

@@ -59,6 +59,13 @@
 			markers: {},
 			mapover: null,
 
+			/* in-text annotations */
+			annotationsVisible: {
+				all: true
+			},
+			currentFilter: '',
+
+
 			/**
 			 * prepares the anno viewer controller
 			 *
@@ -179,6 +186,20 @@
 			},
 
 			/**
+			 * hides / shows a block and corresponding in-text annotations
+			 *
+			 * @param e
+			 * @param blockId
+			 */
+			toggleBlock: function(e, blockId) {
+				// hide/show corresponding in-text annotations
+				this.toggleAnnotationsType(undefined, blockId);
+				// hide/show block
+				this.$.toggleBlock(e, blockId)
+			},
+
+
+			/**
 			 * filters some annotation elements in sidebar, text, map
 			 * get's called by filter tool control textbox
 			 *
@@ -186,19 +207,8 @@
 			 * @param blockId
 			 */
 			blockCtrlFilter: function(e,  blockId) {
-				var filter = e.target.value.toUpperCase();
-				var entry, annotation;
-				for (var annotationId in this.entries) {
-					entry = this.entries[annotationId];
-					annotation = this.annoRegistry.registry[annotationId];
-					if (annotation.lemma.toUpperCase().indexOf(filter) > -1) {
-						entry.classList.remove('dbv-hidden');
-						this.filterShow(annotation)
-					} else {
-						entry.classList.add('dbv-hidden');
-						this.filterHide(annotation)
-					}
-				}
+				this.currentFilter = e.target.value.toUpperCase();
+				this.filterApply();
 			},
 
 
@@ -407,11 +417,6 @@
 					left: el1.left + window.scrollX + (el1.width/2) - (el2.width/2),
 					top: el1.top + window.scrollY - el2.height + 10
 				}
-				console.log(el1.left, window.scrollX, el1.width, el2.width);
-
-				console.log(boxWrapper, el2);
-				window.xx = boxWrapper;
-
 
 				boxWrapper.style.left = pos.left + 'px';
 				boxWrapper.style.top = pos.top + 'px';
@@ -515,7 +520,6 @@
 			},
 
 			mapZoomIn: function() {
-				console.log("!!!!");
 				this.map.zoomIn();
 			},
 
@@ -545,6 +549,23 @@
 		    	}
 			},
 
+			filterApply: function() {
+				var filter = this.currentFilter;
+				var entry, annotation;
+				for (var annotationId in this.entries) {
+					entry = this.entries[annotationId];
+					annotation = this.annoRegistry.registry[annotationId];
+					if (annotation.lemma.toUpperCase().indexOf(filter) > -1) {
+						entry.classList.remove('dbv-hidden');
+						this.filterShow(annotation)
+					} else {
+						entry.classList.add('dbv-hidden');
+						this.filterHide(annotation)
+					}
+				}
+			},
+
+
 			filterHide: function(annotation) {
 				// hide in-text annotations
 				var spans = document.querySelectorAll('.dbv-annotation[data-id="' + annotation.id + '"]');
@@ -553,7 +574,7 @@
 				}
 				// hide map markers
 				if (typeof this.markers[annotation.id] !== "undefined") {
-					console.log(this.markers[annotation.id]._path);
+					//console.log(this.markers[annotation.id]._path);
 					this.markers[annotation.id]._path.classList.add('marker-hidden')
 				}
 			},
@@ -618,24 +639,41 @@
 		    	}
 		    },
 
-		    annotationsVisible: true,
 
-        toggleAnnotations: function(to) {
-		    	console.log('toggle annotations to ' , to);
+
+			/**
+			 * hide / show all annotations
+			 *
+			 * @param to
+			 */
+        	toggleAnnotations: function(to) {
+		    	console.log('toggle ALL annotations to ', to);
 
 		    	this.yayboxHide();
 
-		    	this.annotationsVisible = to || !this.annotationsVisible;
-		    	if (!this.annotationsVisible) {
-		    		this.pdfViewer.container.classList.add('dbv-annotations-hidden');
-		    		this.toggleAnnotationButton.classList.remove('toggled');
+		    	this.annotationsVisible['all'] = to || !this.annotationsVisible['all'];
+		    	if (!this.annotationsVisible['all']) {
+					this.toggleAnnotationButton.classList.remove('toggled');
+					this.pdfViewer.container.classList.add('dbv-annotations-hidden');
 		    	} else {
-		    		this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
-		    		this.toggleAnnotationButton.classList.add('toggled');
-		    		this.openAnnotationsSidebar();
-		    	}
+					this.toggleAnnotationButton.classList.add('toggled');
+					this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
+					this.openAnnotationsSidebar();
+				}
 
 		    },
+
+			toggleAnnotationsType: function(to, type) {
+				console.log('toggle annotations to ' , to, 'type', type);
+
+				this.annotationsVisible[type] = (typeof this.annotationsVisible[type] === "undefined") ? true : this.annotationsVisible[type];
+				this.annotationsVisible[type] =	to || !this.annotationsVisible[type];
+				if (!this.annotationsVisible[type]) {
+					this.pdfViewer.container.classList.add('dbv-annotations-hidden-' + type);
+				} else {
+					this.pdfViewer.container.classList.remove('dbv-annotations-hidden-' + type);
+				}
+			},
 
 		    enableAnnotations: function() {
 		    	this.yayboxShow();
@@ -643,8 +681,6 @@
 
 
 		    /* yay box */
-
-
 		    yayboxClick: function() {
 		    	this.yayboxHide();
 		    },
@@ -663,8 +699,12 @@
 		    },
 
 		    openAnnotationsSidebar:  function(view) {
-		    	console.log('sidebar view not bound');
-		    }
+		    	console.warn('openAnnotationsSidebar not bound');
+		    },
+
+			onTextLayerRendered: function(page) {
+		    	this.filterApply();
+			}
 
 
 		}

@@ -1727,6 +1727,7 @@ function webViewerPageRendered(e) {
 function webViewerTextLayerRendered(e) {
   var pageIndex = e.pageNumber - 1;
   var pageView = PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+  PDFViewerApplication.annoViewer.onTextLayerRendered(e.pageNumber);
 
 //#if !PRODUCTION
   if (true) {

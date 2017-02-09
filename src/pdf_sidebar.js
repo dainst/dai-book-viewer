@@ -89,7 +89,6 @@ var PDFSidebar = (function PDFSidebarClosure() {
     
     // buttons
     this.toggleButton 			= options.toggleButton;
-    
     this.thumbnailButton 		= options.thumbnailButton;
     this.outlineButton 			= options.outlineButton;
     this.attachmentsButton 		= options.attachmentsButton;
@@ -113,7 +112,6 @@ var PDFSidebar = (function PDFSidebarClosure() {
     this._addEventListeners();
     
     options.annoRegistry.onGetAnnotations(function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this), function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this));
-    this.annoViewer.openAnnotationsSidebar = function() {this.openAnnotationsView()}.bind(this);
   }
 
   PDFSidebar.prototype = {
@@ -125,12 +123,23 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
       this.outlineButton.disabled = false;
       this.attachmentsButton.disabled = false;
-      
-      
+
     },
+
+	tabs: [
+		'thumbnail',
+		'outline',
+		'attachments',
+		'annotations',
+		'find',
+		'editAnnotations',
+		'info'
+	],
 
     /**
      * @returns {number} One of the values in {SidebarView}.
+	 *
+	 * @ TODO do we need theese 4 ?
      */
     get visibleView() {
       return (this.isOpen ? this.active : 'none');
@@ -147,6 +156,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
     get isAttachmentsViewVisible() {
       return (this.isOpen && this.active === 'attachments');
     },
+
+
 
     /**
      * @param {number} view - The sidebar view that should become visible,
@@ -176,6 +187,9 @@ var PDFSidebar = (function PDFSidebarClosure() {
         // since `this.switchView` dispatched the event if the view changed.
         this._dispatchEvent();
       }
+
+      this.annoViewer.sidebarState.tab = this.active;
+      this.annoViewer.sidebarState.open = this.isOpen;
            
     },
 
@@ -197,15 +211,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		var isViewChanged = (view !== this.active);
 		var shouldForceRendering = false;
 	
-		var tabs = [
-			'thumbnail',
-			'outline',
-			'attachments',
-			'annotations',
-			'find',
-			'editAnnotations',
-			'info'
-		];
+		var tabs = this.tabs;
 
 		
 		if ((typeof this[view + 'Button'] === "undefined") || (this[view + 'Button'].disabled)) {
@@ -219,22 +225,27 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
 		this[view + 'Button'].classList.add('toggled');
 		this[view + 'View'].classList.remove('hidden');
-		
+
+
+		/* Update the active view *after* it has been validated above */
+		this.active = view || 'none';
+		this.annoViewer.sidebarState.tab = this.active;
+		this.annoViewer.sidebarState.open = this.isOpen;
+
+		/* special bahaviour after in some tabs */
 		if (view == 'thumbnail') {
 			if (this.isOpen && isViewChanged) {
 				this._updateThumbnailViewer();
 				shouldForceRendering = true;
 			}
 		}
-		
+
 		if (view == 'annotations') {
 			this.annoViewer.refreshMap();
 		}
-    
-		// Update the active view *after* it has been validated above,
-		// in order to prevent setting it to an invalid state.
-		this.active = view || 'none';
-	
+
+		this.annoViewer.toggleAnnotations(['annotations', 'editAnnotations'].indexOf(view) > -1);
+
 		if (forceOpen && !this.isOpen) {
 			this.open();
 			// NOTE: `this.open` will trigger rendering, and dispatch the event.
@@ -246,12 +257,10 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		if (isViewChanged) {
 			this._dispatchEvent();
 		}
+
+
+
     },
-    
-    openAnnotationsView: function() {
-    	this.switchView('annotations', true);
-    },
-    
     checkAnnotationFeatures: function() {
     	this.toggleAnnotationFeatures(this.editorMode || this.annoRegistry.count() > 0);
     },
@@ -265,6 +274,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
     	}
     	
     },
+
+
 
     open: function PDFSidebar_open() {
       if (this.isOpen) {
@@ -281,6 +292,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
       }
       this._forceRendering();
       this._dispatchEvent();
+
+      this.annoViewer.sidebarState.open = this.isOpen;
     },
 
     close: function PDFSidebar_close() {
@@ -295,6 +308,8 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
       this._forceRendering();
       this._dispatchEvent();
+
+      this.annoViewer.sidebarState.open = this.isOpen;
     },
 
     toggle: function PDFSidebar_toggle() {
@@ -304,6 +319,14 @@ var PDFSidebar = (function PDFSidebarClosure() {
         this.open();
       }
     },
+
+	  /* for annoViewer */
+	  getSidebarState: function() {
+		  return {
+			  tab: this.active,
+			  open: this.isOpen
+		  }
+	  },
 
     /**
      * @private

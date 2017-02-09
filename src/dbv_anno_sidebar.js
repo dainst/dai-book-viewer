@@ -69,7 +69,7 @@
 
 					if (minimizable) {
 						controls = controls ? controls : {};
-						controls['hide'] = {eventListeners: {'click': ['toggleBlock', id]}, icon: 'eye-close'}
+						controls['hide'] = {eventListeners: {'click': ['toggleBlock', id]}, icon: 'eye'}
 					}
 
 					var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading", 'dbv-colors-' + id]});
@@ -127,7 +127,7 @@
 						);
 					} else {
 						controlEl = this.htmlInput(
-							{'classes': ['toolbarField']},
+							{'classes': ['toolbarField'], 'placeholder': control.placeholder},
 							control.caption,
 							control.eventListeners,
 							controls
@@ -213,8 +213,8 @@
 			/**
 			 * 
 			 * click event: click "load more button"
-			 * @param e
-			 * @param id
+			 * @param e <event>
+			 * @param id <blockID>
 			 */
 			toggleBlock: function(e, id) {
 								
@@ -327,6 +327,9 @@
 				attr.data = attr.data || {};
 				try {
 					label = mozL10n.get(label, false, label);
+				} catch(e) {}
+				try {
+					attr.placeholder = mozL10n.get(attr.placeholder , false, '');
 				} catch(e) {}
 				var label = this.htmlElement('label', {'classes':['a'], 'for': attr.id, 'data': attr.data}, label, eventListeners);
 				var input = this.htmlElement('input', attr, '', eventListeners);	

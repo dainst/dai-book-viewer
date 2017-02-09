@@ -65,6 +65,11 @@
 			},
 			currentFilter: '',
 
+			/* information about sidebar, is set by pdf_sidebar controller */
+			 sidebarState: {
+				 tab: '',
+				 open: ''
+			 },
 
 			/**
 			 * prepares the anno viewer controller
@@ -113,27 +118,29 @@
 			 */
 			buildBlocks: function(data) {
 				this.$.clear();
-				this.$.message('dbv-info-annotions_info', false, false, false);
 
-				this.$.block('tools', 'Tools', '', false, true, {
+
+				this.$.block('tools', 'Annotations', '', true, false, {
 					'filter': {
 						type: 'text',
-						caption: 'Filter',
+						placeholder: 'Filter',
 						eventListeners: {
 							'keyup': 'blockCtrlFilter'
 						}
 					}
-				});
-
+				}).appendChild(this.$.htmlElement('p',{data: {'l10n-id': 'dbv-info-annotions_info'}}));
+				//this.$.message('dbv-info-annotions_info', false, false, false);
 
 				this.block('map', 'Map', 'map-marker', data.locations, 'populateMap', false, {
-					"zoomin": {
-						icon: 'zoom-in',
-						eventListeners: {'click': 'mapZoomIn'}
-					},
 					"zoomout": {
 						icon: 'zoom-out',
-						eventListeners: {'click': 'mapZoomOut'}
+						eventListeners: {'click': 'mapZoomOut'},
+						caption: 'zoom out'
+					},
+					"zoomin": {
+						icon: 'zoom-in',
+						eventListeners: {'click': 'mapZoomIn'},
+						caption: 'zoom in'
 					}
 				});
 				this.block('places', 'Places', 'map-marker', data.locations);
@@ -642,27 +649,32 @@
 
 
 			/**
-			 * hide / show all annotations
+			 * hides / shows ALL annotations
+			 *
+			 * gets called from the feature button in the main toolbar,
+
 			 *
 			 * @param to
 			 */
         	toggleAnnotations: function(to) {
-		    	console.log('toggle ALL annotations to ', to);
+		    	this.annotationsVisible['all'] = (typeof to === "undefined") ? !this.annotationsVisible['all'] : to;
 
-		    	this.yayboxHide();
+		    	console.log('toggle ALL annotations TO ', this.annotationsVisible['all']);
 
-		    	this.annotationsVisible['all'] = to || !this.annotationsVisible['all'];
-		    	if (!this.annotationsVisible['all']) {
-					this.toggleAnnotationButton.classList.remove('toggled');
-					this.pdfViewer.container.classList.add('dbv-annotations-hidden');
-		    	} else {
-					this.toggleAnnotationButton.classList.add('toggled');
+		    	if (this.annotationsVisible['all']) {
+					this.yayboxHide();
 					this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
-					this.openAnnotationsSidebar();
+		    	} else { // hide annotations
+					this.pdfViewer.container.classList.add('dbv-annotations-hidden');
 				}
-
 		    },
 
+			/**
+			 * hides shows a single type of annotation
+			 *
+			 * @param to
+			 * @param type
+			 */
 			toggleAnnotationsType: function(to, type) {
 				console.log('toggle annotations to ' , to, 'type', type);
 
@@ -675,12 +687,19 @@
 				}
 			},
 
+			/**
+			 * gets triggered, when annotations are found
+			 */
 		    enableAnnotations: function() {
-		    	this.yayboxShow();
+				if (!this.sidebarState.tab in ['annotations', 'editAnnotations'] || !this.sidebarState.open) {
+					this.yayboxShow();
+				}
 		    },
 
 
 		    /* yay box */
+
+
 		    yayboxClick: function() {
 		    	this.yayboxHide();
 		    },
@@ -688,19 +707,14 @@
 		    yayboxHide: function() {
 		    	this.yayBox.classList.add('hiddenBox');
 		    	this.toggleAnnotationButton.classList.remove('blinkButton');
-
 		    },
 
 		    yayboxShow: function() {
 		    	this.yayBox.classList.remove('hiddenBox');
-		    	this.toggleAnnotationButton.classList.remove('hidden');
 		    	this.toggleAnnotationButton.classList.add('blinkButton');
 		    	setTimeout(function() {this.yayboxHide()}.bind(this), 50000);
 		    },
 
-		    openAnnotationsSidebar:  function(view) {
-		    	console.warn('openAnnotationsSidebar not bound');
-		    },
 
 			onTextLayerRendered: function(page) {
 		    	this.filterApply();

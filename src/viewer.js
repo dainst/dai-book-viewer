@@ -51,9 +51,7 @@ function getViewerConfiguration() {
       viewFind: document.getElementById('viewFind'),
       openFile: document.getElementById('openFile'),
       print: document.getElementById('print'),
-      download: document.getElementById('download'),
-      toggleAnnotations: document.getElementById('toggleAnnotations'),
-      yayBox: document.getElementById('yayBox')
+      download: document.getElementById('download')
     },
     secondaryToolbar: {
       toolbar: document.getElementById('secondaryToolbar'),
@@ -163,7 +161,8 @@ function getViewerConfiguration() {
     openFileInputName: 'fileInput',
     debuggerScriptPath: './debugger.js',
     intextPopup: document.getElementById('intext-popup'),
-    intextPopupInner: document.getElementById('intext-popup-inner')
+    intextPopupInner: document.getElementById('intext-popup-inner'),
+    yayBox: document.getElementById('yayBox')
   };
 }
 

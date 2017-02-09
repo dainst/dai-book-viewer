@@ -400,7 +400,14 @@ html[dir='rtl'] #viewerContainer {
 	transition-property: visibility, opacity;
     transition-duration: 0s, 1s;
     cursor: pointer;
-    color: white
+    color: white;
+	left: 0px;
+}
+
+.sidebarOpen #yayBox {
+	left: 125px;
+
+
 }
 
 #yayBox .glyphicon {
@@ -1588,6 +1595,11 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-zoom-in:before 		{content: "\E015"}
 .glyphicon-zoom-out:before 		{content: "\E016"}
 
+/* specials */
+.glyphicon-eye:before           {content: "\E105"}
+.glyphicon-eye.toggled:before   {content: "\E106"}
+
+
 #intext-popup {
   position: absolute;
   top: 45%;
@@ -1732,6 +1744,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .dbv-colors-file_info {			background-color: rgba(85, 114, 161, 0.6);}
 .dbv-colors-annotation_info {	background-color: rgba(85, 114, 161, 0.45);}
 .dbv-colors-product_info {		background-color: rgba(85, 114, 161, 0.3);}
+
+
 
 .panel-body {
 	border-bottom-left-radius: 2px;

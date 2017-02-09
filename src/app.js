@@ -318,28 +318,29 @@ var PDFViewerApplication = {
 
     this.pdfDocumentProperties = new PDFDocumentProperties(appConfig.documentProperties);
 
-    // paf dai
     this.annoViewer = new annoViewer({
         pdfViewer: this.pdfViewer,
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView}),
-        toggleAnnotationButton: appConfig.toolbar.toggleAnnotations,
-        yayBox: appConfig.toolbar.yayBox,
+		toggleAnnotationButton: appConfig.sidebar.annotationsButton,
+        yayBox: appConfig.yayBox,
 		intextPopup: appConfig.intextPopup,
 		intextPopupInner: appConfig.intextPopupInner
     });
+
     this.annoEditor = this.editorMode ? new annoEditor({
         findController: this.findController,
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
     }) : null;
+
     this.annoInfo = new annoInfo({
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.infoView}),
         pdfDocumentProperties: this.pdfDocumentProperties,
         elements: appConfig.dbvInfo,
-    	  dbvVersion: DBV_VERSION,
-    	  pdfjsVersion: PDFJS_VERSION
+    	dbvVersion: DBV_VERSION,
+        pdfjsVersion: PDFJS_VERSION
     });
 
     this.pdfViewer.setDbvControllers({
@@ -1629,10 +1630,7 @@ function webViewerInitialized() {
     PDFViewerApplication.eventBus.dispatch('download');
   });
 
-  appConfig.toolbar.toggleAnnotations.addEventListener('click', function (e) {
-	  PDFViewerApplication.eventBus.dispatch('toggleannotations');
-  });
-  appConfig.toolbar.yayBox.addEventListener('click', function (e) {
+  appConfig.yayBox.addEventListener('click', function (e) {
 	  PDFViewerApplication.eventBus.dispatch('yayboxclick');
   })
 

@@ -126,8 +126,14 @@
 							control.eventListeners
 						);
 					} else {
+						var attr = {
+							'classes': ['toolbarField']
+						};
+						if (typeof control.placeholder !== "undefined") {
+							attr.placeholder = control.placeholder
+						}
 						controlEl = this.htmlInput(
-							{'classes': ['toolbarField'], 'placeholder': control.placeholder},
+							attr,
 							control.caption,
 							control.eventListeners,
 							controls
@@ -254,6 +260,7 @@
 			 * @param content - creates a textnode inside
 			 * @param eventListeners - obejct in the form: {
 			 *  {<eventname>: [<functionname>, <parameter>] (functionname = method of this class)
+			 *  special: for textboxes you can use "type" insetad of keyup...
 			 * @return el the element
 			 */
 			htmlElement: function(type, attr, content, eventListeners) {
@@ -293,19 +300,35 @@
 					for (var event in eventListeners) {						
 						var fun = (typeof eventListeners[event] === 'object') ? eventListeners[event][0] : eventListeners[event];
 						var param = (typeof eventListeners[event] === 'object') ? eventListeners[event][1] : null;
-						if (typeof self.parent[fun] === 'function') {
-							el.addEventListener(event, function(e) {							
-								return self.parent[fun](e, param);
-							});
-							isActive = true;
-						} else  if (typeof self[fun] === 'function') {
-							el.addEventListener(event, function(e) {							
-								return self[fun](e, param);
-							});	
-							isActive = true;
-						} else {
-							console.log('function not found: ', fun);
+						var timer = false;
+
+						if (event == 'type') {
+							event = 'keyup';
+							timer = true;
 						}
+
+						el.addEventListener(event, function(e) {
+
+							function doIt() {
+								el._hasTimer = false;
+								if (typeof self.parent[fun] === 'function') {
+									return self.parent[fun](e, param);
+								} else  if (typeof self[fun] === 'function') {
+									return self[fun](e, param);
+								} else {
+									console.warn('function not found: ', fun);
+								}
+							}
+
+							if (!el._hasTimer && timer) {
+								el._hasTimer = true;
+								setTimeout(doIt, 1000);
+							} else if (typeof el._hasTimer === "undefined") {
+								doIt();
+							}
+
+						});
+						isActive = true;
 					}
 					if (isActive) {
 						el.classList.add('active');

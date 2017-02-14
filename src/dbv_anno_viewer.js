@@ -125,7 +125,7 @@
 						type: 'text',
 						placeholder: 'Filter',
 						eventListeners: {
-							'keyup': 'blockCtrlFilter'
+							'type': 'blockCtrlFilter'
 						}
 					}
 				}).appendChild(this.$.htmlElement('p',{data: {'l10n-id': 'dbv-info-annotions_info'}}));
@@ -659,8 +659,6 @@
         	toggleAnnotations: function(to) {
 		    	this.annotationsVisible['all'] = (typeof to === "undefined") ? !this.annotationsVisible['all'] : to;
 
-		    	console.log('toggle ALL annotations TO ', this.annotationsVisible['all']);
-
 		    	if (this.annotationsVisible['all']) {
 					this.yayboxHide();
 					this.pdfViewer.container.classList.remove('dbv-annotations-hidden');
@@ -676,8 +674,6 @@
 			 * @param type
 			 */
 			toggleAnnotationsType: function(to, type) {
-				console.log('toggle annotations to ' , to, 'type', type);
-
 				this.annotationsVisible[type] = (typeof this.annotationsVisible[type] === "undefined") ? true : this.annotationsVisible[type];
 				this.annotationsVisible[type] =	to || !this.annotationsVisible[type];
 				if (!this.annotationsVisible[type]) {

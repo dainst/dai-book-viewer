@@ -1311,53 +1311,59 @@ html[dir='rtl'] .outlineItemToggler::before {
 }
 
 #errorMoreInfo {
-  background-color: #FFFFFF;
-  color: black;
-  padding: 3px;
-  margin: 3px;
-  width: 98%;
+	background-color: #FFFFFF;
+	color: black;
+	padding: 3px;
+	margin: 3px;
+	width: 98%;
 }
 
 .overlayButton {
-  width: auto;
-  margin: 3px 4px 2px 4px !important;
-  padding: 2px 6px 3px 6px;
-  	color: black;
+	width: auto;
+	margin: 3px 4px 2px 4px !important;
+	padding: 2px 6px 3px 6px;
 	font-family: sans-serif;
 	cursor: pointer;
 }
 
+.overlayButton:hover {
+	background-color: hsla(0,0%,0%,.24) !important;
+}
+
 #overlayContainer {
-  display: table;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: hsla(0,0%,0%,.2);
-  z-index: 40000;
+	display: table;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: hsla(0,0%,0%,.2);
+	z-index: 40000;
 }
 #overlayContainer > * {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 }
 
 #overlayContainer > .container {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
 }
 
 #overlayContainer > .container > .dialog {
 	display: inline-block;
-	padding: 15px;
-	border-spacing: 4px;
-	color: black;
-	font-size: 12px;
-	line-height: 14px;
-	background-color: white;
-	border: 1px solid hsla(0,0%,0%,.5);
-	border-radius: 7px;
-	box-shadow: 0 1px 70px 7px rgba(0, 0, 0, 0.7);
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    background-color: rgba(85, 114, 161, 1);
+
+    padding: 9px;
+    line-height: 14px;
+    transition-property: visibility, opacity;
+    transition-duration: 0s, 1s;
+    color: hsl(0, 0%, 85%);
 }
+
+
 
 /* only password overlay is left */
 
@@ -2358,8 +2364,7 @@ html[dir='rtl'] .pull-right {
 .embeddedViewer .toolbarLabel,
 .embeddedViewer .toolbarButton,
 .embeddedViewer .dropdownToolbarButton,
-.embeddedViewer .secondaryToolbarButton,
-.embeddedViewer .overlayButton {
+.embeddedViewer .secondaryToolbarButton {
 	color: black
 }
 
@@ -2367,10 +2372,11 @@ html[dir='rtl'] .pull-right {
 .embeddedViewer .toolbarButton.toggled:before,
 .embeddedViewer .splitToolbarButton.toggled > .toolbarButton.toggled,
 .embeddedViewer .secondaryToolbarButton.toggled {
-  background: none;
-  color: rgba(85, 114, 161, 1) !important;
+	background: none;
+	color: rgba(85, 114, 161, 1) !important;
 }
 
+.embeddedViewer .dialog,
 .embeddedViewer #dbv-av-map .leaflet-popup-content-wrapper,
 .embeddedViewer #yayBox,
 .embeddedViewer .message-box,

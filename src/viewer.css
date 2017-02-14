@@ -1775,9 +1775,8 @@ html[dir="ltr"] .dbv-av-block-controls {
 
 .dbv-av-block-controls input {
 	margin-bottom: 0px;
-	margin-top: 0px;
-	padding-top: 6px;
-	padding-bottom: 3px;
+	padding-top: 5px;
+	height: 14px;
 }
 
 
@@ -2079,6 +2078,21 @@ html[dir='rtl'] .pull-right {
 }
 
 
+/* placeholders */
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	color:  hsl(0,0%,95%);
+}
+::-moz-placeholder { /* Firefox 19+ */
+	color:  hsl(0,0%,95%);
+}
+:-ms-input-placeholder { /* IE 10+ */
+	color:  hsl(0,0%,95%);
+}
+:-moz-placeholder { /* Firefox 18- */
+	color:  hsl(0,0%,95%);
+}
+
+
 /* small screen */
 
 @media screen and (min-resolution: 2dppx) {
@@ -2204,6 +2218,7 @@ html[dir='rtl'] .pull-right {
 .visibleSmallView {
   display: none;
 }
+
 
 @media all and (max-width: 1160px) {
   html[dir='ltr'] #outerContainer.sidebarMoving .outerCenter,

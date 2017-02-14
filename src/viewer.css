@@ -2351,20 +2351,19 @@ html[dir='rtl'] .pull-right {
 .embeddedViewer #toolbarContainer {
 	background: #F5F5F5;
 }
-
+/*
 .embeddedViewer .dropdownToolbarButton > select > option,
 .embeddedViewer .findbar,
 .embeddedViewer .secondaryToolbar {
 	background: white
 }
-
+*/
 
 .embeddedViewer .toolbarField,
 .embeddedViewer .dropdownToolbarButton > select,
 .embeddedViewer .toolbarLabel,
 .embeddedViewer .toolbarButton,
-.embeddedViewer .dropdownToolbarButton,
-.embeddedViewer .secondaryToolbarButton {
+.embeddedViewer .dropdownToolbarButton {
 	color: black
 }
 
@@ -2376,6 +2375,7 @@ html[dir='rtl'] .pull-right {
 	color: rgba(85, 114, 161, 1) !important;
 }
 
+.embeddedViewer .secondaryToolbar,
 .embeddedViewer .dialog,
 .embeddedViewer #dbv-av-map .leaflet-popup-content-wrapper,
 .embeddedViewer #yayBox,

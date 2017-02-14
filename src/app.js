@@ -94,7 +94,7 @@
 //var PDFJS_VERSION = version.version;
 //#else
 var PDFJS_VERSION = "1.5";
-var DBV_VERSION = "0.7 DEV";
+var DBV_VERSION = "0.8 DEV";
 //#endif
 
 

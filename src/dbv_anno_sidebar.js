@@ -112,22 +112,23 @@
 				}
 				var controls = this.htmlElement('div', {'classes': ['dbv-av-block-controls', 'btn-group', 'splitToolbarButton']});
 				var controlsCollection = {};
-				var controlEl;
+				var controlEl, control, hideClass, attr;
 				for (var i in ctrl) {
-					var control = ctrl[i];
-					if (typeof control.type === "undefined") { // button
+					control = ctrl[i];
+					hideClass = (typeof control.hide !== "undefined") ? 'dbv-av-block-controls-hide-' + control.hide : '';
+					if ((typeof control.type === "undefined") || (control.type == 'button')) {
 						controlEl = this.htmlElement(
 							'button',
 							{
-								'classes': ['dbv-av-block-control', 'toolbarButton', 'glyphicon-' + control.icon],
+								'classes': ['dbv-av-block-control', 'toolbarButton', 'glyphicon-' + control.icon, hideClass],
 								'title': control.caption
 							},
 							null, //creates an empty textnode
 							control.eventListeners
 						);
 					} else {
-						var attr = {
-							'classes': ['toolbarField']
+						attr = {
+							'classes': ['toolbarField', hideClass]
 						};
 						if (typeof control.placeholder !== "undefined") {
 							attr.placeholder = control.placeholder

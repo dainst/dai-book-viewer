@@ -135,12 +135,14 @@
 					"zoomout": {
 						icon: 'zoom-out',
 						eventListeners: {'click': 'mapZoomOut'},
-						caption: 'zoom out'
+						caption: 'zoom out',
+						hide: 'closed'
 					},
 					"zoomin": {
 						icon: 'zoom-in',
 						eventListeners: {'click': 'mapZoomIn'},
-						caption: 'zoom in'
+						caption: 'zoom in',
+						hide: 'closed'
 					}
 				});
 				this.block('places', 'Places', 'map-marker', data.locations);

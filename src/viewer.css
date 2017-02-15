@@ -1781,11 +1781,15 @@ html[dir="ltr"] .dbv-av-block-controls {
 
 
 .dbv-av-block-controls label {
-  padding: 3px 6px 3px 2px;
-  margin: 4px 2px 4px 0;
+	padding: 3px 6px 3px 2px;
+	margin: 4px 2px 4px 0;
 }
 
 
+.dbv-av-block:not(.dbv-hidden) .dbv-av-block-controls-hide-open,
+.dbv-av-block.dbv-hidden .dbv-av-block-controls-hide-closed {
+	display: none
+}
 
 .dbv-av-block-entry {
 	padding: 2px 0 5px 0px;
@@ -1793,7 +1797,7 @@ html[dir="ltr"] .dbv-av-block-controls {
 }
 
 .dbv-av-block-entry.dbv-hidden {
-  display: none
+	display: none
 }
 
 .dbv-av-block a,

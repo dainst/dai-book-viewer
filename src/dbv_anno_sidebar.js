@@ -218,7 +218,7 @@
 			
 			/**
 			 * 
-			 * click event: click "load more button"
+			 * click event
 			 * @param e <event>
 			 * @param id <blockID>
 			 */
@@ -310,6 +310,7 @@
 						el.addEventListener(event, function(e) {
 
 							function doIt() {
+								console.log('d:one');
 								el._hasTimer = false;
 								if (typeof self.parent[fun] === 'function') {
 									return self.parent[fun](e, param);
@@ -323,7 +324,7 @@
 							if (!el._hasTimer && timer) {
 								el._hasTimer = true;
 								setTimeout(doIt, 1000);
-							} else if (typeof el._hasTimer === "undefined") {
+							} else if(!el._hasTimer) {
 								doIt();
 							}
 

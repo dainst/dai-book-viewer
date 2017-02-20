@@ -1392,35 +1392,34 @@ var PDFViewerApplication = {
   }
 };
 
-//#if GENERIC
-var HOSTED_VIEWER_ORIGINS = ['https://github.com/dainst/dai-book-viewer'];
+	/**
+     * checks if file and viewer have the same origin and if this is allowed in config
+	 * @param file
+	 */
 function validateFileURL(file) {
-  try {
-    var viewerOrigin = new URL(window.location.href).origin || 'null';
-    if (HOSTED_VIEWER_ORIGINS.indexOf(viewerOrigin) >= 0) {
-      // Hosted or local viewer, allow for any file locations
-      return;
-    }
-    var fileOrigin = new URL(file, window.location.href).origin;
-    // Removing of the following line will not guarantee that the viewer will
-    // start accepting URLs from foreign origin -- CORS headers on the remote
-    // server must be properly configured.
-    if (fileOrigin !== viewerOrigin) {
-      throw new Error('file origin does not match viewer\'s');
-    }
-  } catch (e) {
-    var message = e && e.message;
-    var loadingErrorMessage = mozL10n.get('loading_error', null,
-      'An error occurred while loading the PDF.');
+    Preferences.get('allowCorsPDF').then(function(allowCorsPDF) {
+      if (allowCorsPDF) {
+		  try {4
+			  var viewerOrigin = new URL(window.location.href).origin || 'null';
+			  var fileOrigin = new URL(file, window.location.href).origin;
 
-    var moreInfo = {
-      message: message
-    };
-    PDFViewerApplication.error(loadingErrorMessage, moreInfo);
-    throw e;
-  }
+			  if (fileOrigin !== viewerOrigin) {
+                  throw new Error('file origin does not match viewer\'s');
+              }
+          } catch (e) {
+              var message = e && e.message;
+              var loadingErrorMessage = mozL10n.get('loading_error', null, 'An error occurred while loading the PDF.');
+
+              var moreInfo = {
+                  message: message
+              };
+              PDFViewerApplication.error(loadingErrorMessage, moreInfo);
+              throw e;
+          }
+      }
+    });
 }
-//#endif
+
 
 function loadAndEnablePDFBug(enabledTabs) {
   return new Promise(function (resolve, reject) {

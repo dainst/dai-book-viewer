@@ -14,10 +14,10 @@
  *
  *
  * How does preferences work?
- * There is the preferences file, default_preferences.json
+ * There is the preferences file, dev_preferences.json
  * in src-mode it gets loaded
  *
- * in dev mode it is written in viewer.js
+ * in dev mode default_preferences is written in viewer.js
  *
  * so, I you want to build viewer with specific configuration:  use jour own preferences and build
  *

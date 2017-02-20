@@ -15,5 +15,5 @@
 
   "annotationSource": "https://nlp.dainst.org:3000",
   "allowAnnotationEdit": true,
-  "allowCorsPdf": true
+  "allowCorsPDF": true
 }

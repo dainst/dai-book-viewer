@@ -30,7 +30,7 @@ var DEFAULT_PREFERENCES;
     document.dispatchEvent(event);
   }
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'default_preferences.json');
+  xhr.open('GET', 'dev_preferences.json');
   xhr.onload = xhr.onerror = loaded;
   xhr.send();
 })();

@@ -22,7 +22,6 @@ var DEFAULT_URL = 'images/no_file.pdf';
 //var pdfjsWebLibs = {
 //  pdfjsWebPDFJS: window.pdfjsDistBuildPdf
 //};
-//console.log(pdfjsWebLibs);
 
 //(function () {
 //#expand __BUNDLE__

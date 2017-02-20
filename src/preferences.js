@@ -11,6 +11,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ *
+ * How does preferences work?
+ * There is the preferences file, default_preferences.json
+ * in src-mode it gets loaded
+ *
+ * in dev mode it is written in viewer.js
+ *
+ * so, I you want to build viewer with specific configuration:  use jour own preferences and build
+ *
+ *
+ *
  */
 /* globals DEFAULT_PREFERENCES, chrome */
 

@@ -4,7 +4,7 @@
   "sidebarViewOnLoad": 0,
   "enableHandToolOnLoad": false,
   "enableWebGL": false,
-  "pdfBugEnabled": false,
+  "pdfBugEnabled": true,
   "disableRange": false,
   "disableStream": false,
   "disableAutoFetch": false,
@@ -14,6 +14,6 @@
   "externalLinkTarget": 0,
 
   "annotationSource": "https://nlp.dainst.org:3000",
-  "allowAnnotationEdit": false,
-  "allowCorsPdf": false
+  "allowAnnotationEdit": true,
+  "allowCorsPdf": true
 }

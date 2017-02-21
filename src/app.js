@@ -206,7 +206,7 @@ var PDFViewerApplication = {
 
   /** dbv */
   annoViewer: null,
-  editorMode: false,
+  preferenceAllowAnnotationEdit: false,
 
   /** @type {ViewHistory} */
   store: null,
@@ -230,7 +230,6 @@ var PDFViewerApplication = {
 
 	var queryString = document.location.search.substring(1);
 	var params = parseQueryString(queryString);
-	this.editorMode = 'editormode' in params ? (params.editormode === 'true') : false;
 
     configure(pdfjsLib.PDFJS);
     this.appConfig = appConfig;
@@ -327,11 +326,11 @@ var PDFViewerApplication = {
 		intextPopupInner: appConfig.intextPopupInner
     });
 
-    this.annoEditor = this.editorMode ? new annoEditor({
+    this.annoEditor = new annoEditor({
         findController: this.findController,
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
-    }) : null;
+    });
 
     this.annoInfo = new annoInfo({
         annoRegistry: this.annoRegistry,
@@ -388,7 +387,6 @@ var PDFViewerApplication = {
     sidebarConfig.annoViewer = this.annoViewer;
     sidebarConfig.annoEditor = this.annoEditor;
     sidebarConfig.annoRegistry = this.annoRegistry;
-    sidebarConfig.editorMode = this.editorMode;
     this.pdfSidebar = new PDFSidebar(sidebarConfig);
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
 
@@ -398,7 +396,7 @@ var PDFViewerApplication = {
     	eventBus: this.eventBus,
     	pdfSidebar: this.pdfSidebar,
     	annoSidebar: new annoSidebar({container: appConfig.sidebar.findView}),
-    	editorMode: this.editorMode
+    	editorMode: this.preferenceAllowAnnotationEdit
     });
 
     var self = this;
@@ -420,6 +418,11 @@ var PDFViewerApplication = {
       Preferences.get('defaultZoomValue').then(function resolved(value) {
         self.preferenceDefaultZoomValue = value;
       }),
+
+      Preferences.get('allowAnnotationEdit').then(function resolved(value) {
+          self.preferenceAllowAnnotationEdit = value;
+      }),
+
       Preferences.get('disableTextLayer').then(function resolved(value) {
         if (PDFJS.disableTextLayer === true) {
           return;
@@ -516,9 +519,7 @@ var PDFViewerApplication = {
   },
 
   get supportsFullscreen() {
-//#if MOZCENTRAL
-//  var support = document.fullscreenEnabled === true;
-//#else
+
     var doc = document.documentElement;
     var support = !!(doc.requestFullscreen || doc.mozRequestFullScreen ||
                      doc.webkitRequestFullScreen || doc.msRequestFullscreen);
@@ -529,7 +530,7 @@ var PDFViewerApplication = {
         document.msFullscreenEnabled === false) {
       support = false;
     }
-//#endif
+
     if (support && pdfjsLib.PDFJS.disableFullscreen === true) {
       support = false;
     }
@@ -701,6 +702,11 @@ var PDFViewerApplication = {
     	self.annoViewer.load();
     	self.annoInfo.load();
     	self.findBar.load();
+		// load annotation editor if desired
+		self.pdfSidebar.updateTabs('editAnnotations', self.preferenceAllowAnnotationEdit)
+		if (self.preferenceAllowAnnotationEdit) {
+			self.annoEditor.load();
+		}
 
     	var identifier = {filename: parameters.filename || parameters.url};
     	if (typeof args.pubid !== 'undefined') {
@@ -835,7 +841,7 @@ var PDFViewerApplication = {
       }
     }
 
-//#if !(FIREFOX || MOZCENTRAL)
+
     var errorWrapperConfig = this.appConfig.errorWrapper;
     var errorWrapper = errorWrapperConfig.container;
     errorWrapper.removeAttribute('hidden');
@@ -870,10 +876,7 @@ var PDFViewerApplication = {
     moreInfoButton.removeAttribute('hidden');
     lessInfoButton.setAttribute('hidden', 'true');*/
     errorMoreInfo.textContent = moreInfoText;
-//#else
-//  console.error(message + '\n' + moreInfoText);
-//  this.fallback();
-//#endif
+
   },
 
   progress: function pdfViewProgress(level) {
@@ -940,14 +943,6 @@ var PDFViewerApplication = {
     this.pageRotation = 0;
 
     this.pdfThumbnailViewer.setDocument(pdfDocument);
-
-	  // paf dai
-      console.log('DBV initalize Editor & Info');
-	  if (this.editorMode) {
-		  this.annoEditor.load();
-	  }
-
-
 
     firstPagePromise.then(function(pdfPage) {
       downloadedPromise.then(function () {
@@ -1666,18 +1661,7 @@ function webViewerPageRendered(e) {
     return;
   }
 //#endif
-//#if (FIREFOX || MOZCENTRAL)
-  PDFViewerApplication.externalServices.reportTelemetry({
-    type: 'pageInfo'
-  });
-  // It is a good time to report stream and font types.
-  PDFViewerApplication.pdfDocument.getStats().then(function (stats) {
-    PDFViewerApplication.externalServices.reportTelemetry({
-      type: 'documentStats',
-      stats: stats
-    });
-  });
-//#endif
+
 }
 
 function webViewerTextLayerRendered(e) {
@@ -1690,17 +1674,7 @@ function webViewerTextLayerRendered(e) {
     return;
   }
 //#endif
-//#if (FIREFOX || MOZCENTRAL)
-  if (pageView.textLayer && pageView.textLayer.textDivs &&
-      pageView.textLayer.textDivs.length > 0 &&
-      !PDFViewerApplication.supportsDocumentColors) {
-    console.error(mozL10n.get('document_colors_not_allowed', null,
-      'PDF documents are not allowed to use their own colors: ' +
-      '\'Allow pages to choose their own colors\' ' +
-      'is deactivated in the browser.'));
-    PDFViewerApplication.fallback();
-  }
-//#endif
+
 }
 
 function webViewerPageMode(e) {
@@ -1708,20 +1682,22 @@ function webViewerPageMode(e) {
     return;
   }
   // Handle the 'pagemode' hash parameter, see also `PDFLinkService_setHash`.
+  console.log('el modero', mode);
+
   var mode = e.mode, view;
   switch (mode) {
   	case 'thumbnail':
   	case 'thumbnails':
     case 'thumbs':
-      view = 'thumbnail';
-      break;
+        view = 'thumbnail';
+        break;
     case 'bookmarks':
     case 'outline':
-      view = 'outline';
-      break;
+        view = 'outline';
+        break;
     case 'attachments':
-      view = 'attachments';
-      break;
+        view = 'attachments';
+        break;
     case 'annotations':
         view = 'annotations';
         break;
@@ -1730,8 +1706,8 @@ function webViewerPageMode(e) {
         view = 'editAnnotations';
         break;
     case 'none':
-      view = SidebarView.none;
-      break;
+        view = SidebarView.none;
+        break;
     default:
     	view = mode;
 		break;

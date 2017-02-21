@@ -30,111 +30,114 @@ var RenderingStates = pdfRenderingQueue.RenderingStates;
 
 
 
-/**
- * @typedef {Object} PDFSidebarOptions
- * @property {PDFViewer} pdfViewer - The document viewer.
- * @property {PDFThumbnailViewer} pdfThumbnailViewer - The thumbnail viewer.
- * @property {PDFOutlineViewer} pdfOutlineViewer - The outline viewer.
- * @property {HTMLDivElement} mainContainer - The main container
- *   (in which the viewer element is placed).
- * @property {HTMLDivElement} outerContainer - The outer container
- *   (encasing both the viewer and sidebar elements).
- * @property {EventBus} eventBus - The application event bus.
- * @property {HTMLButtonElement} toggleButton - The button used for
- *   opening/closing the sidebar.
- * @property {HTMLButtonElement} thumbnailButton - The button used to show
- *   the thumbnail view.
- * @property {HTMLButtonElement} outlineButton - The button used to show
- *   the outline view.
- * @property {HTMLButtonElement} attachmentsButton - The button used to show
- *   the attachments view.
- * @property {HTMLDivElement} thumbnailView - The container in which
- *   the thumbnails are placed.
- * @property {HTMLDivElement} outlineView - The container in which
- *   the outline is placed.
- * @property {HTMLDivElement} attachmentsView - The container in which
- *   the attachments are placed.
- */
 
-/**
- * @class
- */
 var PDFSidebar = (function PDFSidebarClosure() {
   /**
    * @constructs PDFSidebar
    * @param {PDFSidebarOptions} options
    */
   function PDFSidebar(options) {
-    this.isOpen = false;
-    this.active = 'thumbnail';
-    this.isInitialViewSet = false;
+	  this.isOpen = false;
+	  this.active = 'thumbnail';
+	  this.isInitialViewSet = false;
 
-    /**
-     * Callback used when the sidebar has been opened/closed, to ensure that
-     * the viewers (PDFViewer/PDFThumbnailViewer) are updated correctly.
-     */
-    this.onToggled = null;
-    
-    // controllers
-    this.pdfViewer 				= options.pdfViewer;
-    this.pdfThumbnailViewer 	= options.pdfThumbnailViewer;
-    this.pdfOutlineViewer 		= options.pdfOutlineViewer;
-    this.annoViewer 			= options.annoViewer;
-    this.annoRegistry 			= options.annoRegistry;
-    this.eventBus 				= options.eventBus;
+	  /**
+	   * Callback used when the sidebar has been opened/closed, to ensure that
+	   * the viewers (PDFViewer/PDFThumbnailViewer) are updated correctly.
+	   */
+	  this.onToggled = null;
 
-    // containers
-    this.mainContainer 			= options.mainContainer;
-    this.outerContainer 		= options.outerContainer;
-    
-    // buttons
-    this.toggleButton 			= options.toggleButton;
-    this.thumbnailButton 		= options.thumbnailButton;
-    this.outlineButton 			= options.outlineButton;
-    this.attachmentsButton 		= options.attachmentsButton;
-    this.annotationsButton 		= options.annotationsButton;
-    this.findButton 			= options.findButton;
-    this.editAnnotationsButton 	= options.editAnnotationsButton;
-    this.infoButton 			= options.infoButton;
+	  // controllers
+	  this.pdfViewer = options.pdfViewer;
+	  this.pdfThumbnailViewer = options.pdfThumbnailViewer;
+	  this.pdfOutlineViewer = options.pdfOutlineViewer;
+	  this.annoViewer = options.annoViewer;
+	  this.annoRegistry = options.annoRegistry;
+	  this.eventBus = options.eventBus;
 
-    // views
-    this.thumbnailView 			= options.thumbnailView;
-    this.outlineView 			= options.outlineView;
-    this.attachmentsView 		= options.attachmentsView;
-    this.annotationsView 		= options.annotationsView;
-    this.findView 				= options.findView;
-    this.editAnnotationsView 	= options.editAnnotationsView;
-    this.infoView 				= options.infoView;
-    
-    // mode
-    this.editorMode 			= options.editorMode;
+	  // containers
+	  this.mainContainer = options.mainContainer;
+	  this.outerContainer = options.outerContainer;
 
-    this._addEventListeners();
-    
+	  // buttons
+	  this.toggleButton = options.toggleButton;
+	  this.thumbnailButton = options.thumbnailButton;
+	  this.outlineButton = options.outlineButton;
+	  this.attachmentsButton = options.attachmentsButton;
+	  this.annotationsButton = options.annotationsButton;
+	  this.findButton = options.findButton;
+	  this.editAnnotationsButton = options.editAnnotationsButton;
+	  this.infoButton = options.infoButton;
+
+	  // views
+	  this.thumbnailView = options.thumbnailView;
+	  this.outlineView = options.outlineView;
+	  this.attachmentsView = options.attachmentsView;
+	  this.annotationsView = options.annotationsView;
+	  this.findView = options.findView;
+	  this.editAnnotationsView = options.editAnnotationsView;
+	  this.infoView = options.infoView;
+
+	  // tabs- name: enabled yes/no
+	  this.tabs = {
+		  'thumbnail': true,
+		  'outline': false,
+		  'attachments': false,
+		  'annotations': false,
+		  'find': true,
+		  'editAnnotations': false,
+		  'info': true
+	  };
+
+	  this._addEventListeners();
+
     options.annoRegistry.onGetAnnotations(function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this), function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this));
   }
 
   PDFSidebar.prototype = {
+
     reset: function PDFSidebar_reset() {
       this.isInitialViewSet = false;
 
       this.close();
       this.switchView('thumbnail');
 
-      this.outlineButton.disabled = false;
-      this.attachmentsButton.disabled = false;
+      this.tabs.outline = false;
+      this.tabs.attachments = false;
 
-    },
+      this.updateTabs();
+	},
 
-	tabs: [
-		'thumbnail',
-		'outline',
-		'attachments',
-		'annotations',
-		'find',
-		'editAnnotations',
-		'info'
-	],
+	  /**
+	   * updates the list ob available sidebar tabs
+	   *
+	   * give tab and to paramtester to change one tab, or no parameters to just update view
+	   *
+	   * @param tab - name of a tab
+	   * @param to - true or false <- availability of this tab
+	   */
+	updateTabs: function(tab, to) {
+
+    	if (typeof tab !== "undefined") {
+    		this.tabs[tab] = to;
+
+			this[tab + 'Button'].disabled = !this.tabs[tab];
+			console.log('B1', this.tabs[tab], tab, this[tab + 'Button'].disabled, this[tab + 'Button']);
+		} else {
+			for (var i in this.tabs) {
+				this[i + 'Button'].disabled = !this.tabs[i];
+			}
+		}
+
+		// if disabling active view, switch
+		if (typeof tab !== "undefined") {
+    		if ((!to) && (this.active === tab)) {
+				this.switchView('thumbnail');
+			}
+		}
+
+	},
+
 
     /**
      * @returns {number} One of the values in {SidebarView}.
@@ -164,15 +167,12 @@ var PDFSidebar = (function PDFSidebarClosure() {
      *                        must be one of the values in {SidebarView}.
      */
     setInitialView: function PDFSidebar_setInitialView(view) {
+
       if (this.isInitialViewSet) {
         return;
       }
       this.isInitialViewSet = true;
 
-      if (this.editorMode) {
-    	  this.editAnnotationsButton.classList.remove('hidden');
-      }
-      
       if (this.isOpen && view === 'none') {
         this._dispatchEvent();
         // If the user has already manually opened the sidebar,
@@ -210,17 +210,20 @@ var PDFSidebar = (function PDFSidebarClosure() {
     	
 		var isViewChanged = (view !== this.active);
 		var shouldForceRendering = false;
-	
-		var tabs = this.tabs;
 
-		
-		if ((typeof this[view + 'Button'] === "undefined") || (this[view + 'Button'].disabled)) {
+		if (!this.tabs[view]) {
+			console.warn('tab not allowed: ', view);
+			return;
+		}
+
+		if (typeof this[view + 'Button'] === "undefined") {
+			console.log('error: button not found:', this[view + 'Button']);
 			return;
 		}
 		
-		for (var i = 0; i < tabs.length; i++) {
-			this[tabs[i] + 'Button'].classList.remove('toggled');
-			this[tabs[i] + 'View'].classList.add('hidden');
+		for (var i in this.tabs) {
+			this[i + 'Button'].classList.remove('toggled');
+			this[i + 'View'].classList.add('hidden');
 		}
 
 		this[view + 'Button'].classList.add('toggled');
@@ -262,17 +265,18 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
     },
     checkAnnotationFeatures: function() {
-    	this.toggleAnnotationFeatures(this.editorMode || this.annoRegistry.count() > 0);
+    	this.toggleAnnotationFeatures(this.tabs.annotations || this.annoRegistry.count() > 0);
     },
     
     toggleAnnotationFeatures:  function(to) {
-    	this.annotationsButton.disabled = !to; 	
-    	if (to === false) {
+		this.updateTabs('annotations', to);
+    	/*
+		if (to === false) {
     		if ((this.active === 'annotations') || (this.active === 'editAnnotations')) {
     			this.switchView('thumbnail');
     		}
     	}
-    	
+    	*/
     },
 
 
@@ -320,13 +324,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
       }
     },
 
-	  /* for annoViewer */
-	  getSidebarState: function() {
-		  return {
-			  tab: this.active,
-			  open: this.isOpen
-		  }
-	  },
+
 
     /**
      * @private
@@ -415,21 +413,12 @@ var PDFSidebar = (function PDFSidebarClosure() {
       
       // Disable/enable views.
       self.eventBus.on('outlineloaded', function(e) {
-        var outlineCount = e.outlineCount;
-
-        self.outlineButton.disabled = !outlineCount;
-        if (!outlineCount && self.active === 'outline') {
-          self.switchView('thumbnail');
-        }
+         self.updateTabs('outline', e.outlineCount > 0);
       });
 
       self.eventBus.on('attachmentsloaded', function(e) {
-        var attachmentsCount = e.attachmentsCount;
-
-        self.attachmentsButton.disabled = !attachmentsCount;
-        if (!attachmentsCount && self.active === 'attachments') {
-          self.switchView('thumbnail');
-        }
+      	console.log(e);
+		self.updateTabs('attachments', e.attachmentsCount > 0);
       });
 
       // Update the thumbnailViewer, if visible, when exiting presentation mode.

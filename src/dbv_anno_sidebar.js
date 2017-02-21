@@ -64,6 +64,7 @@
 			 */
 			block: function(id, title, depricated, minimizable, minimized, controls) {
 				var block = document.getElementById('dbv-av-block-' + id);
+				var blockctrl = false;
 				if (!block) {
 					block = this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
 
@@ -78,7 +79,7 @@
 					var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
 
 					blocktitle.appendChild(blockh3);
-					var blockctrl 	= this.blockControls(controls, blocktitle);
+					blockctrl 	= this.blockControls(controls, blocktitle);
 					block.appendChild(blocktitle);
 					block.appendChild(blockbody);
 					block.appendChild(blockfooter);
@@ -87,7 +88,7 @@
 				
 				if (minimized) {
 					block.classList.add('dbv-hidden');
-					if (typeof blockctrl.hide !== "undefined") {
+					if (blockctrl && (typeof blockctrl.hide !== "undefined")) {
 						blockctrl.hide.classList.add('toggled');
 					}
 				}
@@ -311,7 +312,6 @@
 						el.addEventListener(event, function(e) {
 
 							function doIt() {
-								console.log('d:one');
 								el._hasTimer = false;
 								if (typeof self.parent[fun] === 'function') {
 									return self.parent[fun](e, param);

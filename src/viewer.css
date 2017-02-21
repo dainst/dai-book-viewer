@@ -311,6 +311,9 @@ html[dir='rtl'] #viewerContainer {
   margin-bottom: 14px;
 }
 
+#toolbarSidebar button[disabled] {
+  display: none
+}
 
 #toolbarContainer, .findbar, .secondaryToolbar {
   position: relative;

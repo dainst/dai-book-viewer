@@ -160,7 +160,6 @@ function configure(PDFJS) {
 
 var DefaultExernalServices = {
   updateFindControlState: function (data) {},
-  initPassiveLoading: function (callbacks) {},
   fallback: function (data, callback) {},
   reportTelemetry: function (data) {},
   createDownloadManager: function () {
@@ -559,40 +558,6 @@ var PDFViewerApplication = {
   get supportedMouseWheelZoomModifierKeys() {
     return this.externalServices.supportedMouseWheelZoomModifierKeys;
   },
-
-//#if (FIREFOX || MOZCENTRAL || CHROME)
-  initPassiveLoading: function pdfViewInitPassiveLoading() {
-    this.externalServices.initPassiveLoading({
-      onOpenWithTransport: function (url, length, transport) {
-        PDFViewerApplication.open(url, {range: transport});
-
-        if (length) {
-          PDFViewerApplication.pdfDocumentProperties.setFileSize(length);
-        }
-      },
-      onOpenWithData: function (data) {
-        PDFViewerApplication.open(data);
-      },
-      onOpenWithURL: function (url, length, originalURL) {
-        var file = url, args = null;
-        if (length !== undefined) {
-          args = {length: length};
-        }
-        if (originalURL !== undefined) {
-          file = {file: url, originalURL: originalURL};
-        }
-        PDFViewerApplication.open(file, args);
-      },
-      onError: function (e) {
-        PDFViewerApplication.error(mozL10n.get('loading_error', null,
-          'An error occurred while loading the PDF.'), e);
-      },
-      onProgress: function (loaded, total) {
-        PDFViewerApplication.progress(loaded / total);
-      }
-    });
-  },
-//#endif
 
   setTitleUsingUrl: function pdfViewSetTitleUsingUrl(url) {
     this.url = url;
@@ -1121,19 +1086,14 @@ var PDFViewerApplication = {
     	  }
     	  //#endif
 
-          console.log(metadata);
-    	  console.log(info);
-    	  var res;
-    	  res = metadata.metaDocument.getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', 'relation')[0];
+    	  var res = metadata.metaDocument.getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', 'relation')[0];
     	  if (res) {
         	  var list, first, rest;
         	  for (var i = 0; i < res.children[0].children.length; i++) {
         		  list = res.children[0].children[i].innerHTML.split(':');
         		  first = list.shift();
         		  rest = list.join(':');
-        		  console.log('rest', rest);
         		  pdfDocument.dbvMetadata[first] = rest;
-
         	  }
     	  }
 
@@ -1145,7 +1105,6 @@ var PDFViewerApplication = {
 
       if (metadata && metadata.has('dc:description')) {
         pdfDocument.dbvMetadata['description'] = metadata.get('dc:description');
-        console.log(typeof metadata.get('dc:description'));
 	  }
 
       if (metadata && metadata.has('dc:title')) {

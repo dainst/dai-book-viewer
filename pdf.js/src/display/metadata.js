@@ -90,7 +90,7 @@ var error = sharedUtil.error;
             entry = desc.childNodes[ii];
             name = entry.nodeName.toLowerCase();
             this.metadata[name] = entry.textContent.trim();
-            console.log(entry.textContent.trim(), entry);
+            //paf console.log(entry.textContent.trim(), entry);
           }
         }
       }

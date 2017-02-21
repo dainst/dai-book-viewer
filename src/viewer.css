@@ -1603,6 +1603,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 .glyphicon-cog:before 			{content: "\E019"}
 .glyphicon-zoom-in:before 		{content: "\E015"}
 .glyphicon-zoom-out:before 		{content: "\E016"}
+.glyphicon-floppy-saved:before 	{content: "\E173"}
+.glyphicon-floppy-save:before 	{content: "\E175"}
 
 /* specials */
 .glyphicon-eye:before           {content: "\E105"}

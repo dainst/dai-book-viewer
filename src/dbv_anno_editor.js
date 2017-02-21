@@ -72,7 +72,13 @@
 			},
 			
 			editorContentEditor: function() {
-				var block = this.$.block('edit', 'Annotation Editor', 'pencil', {'items': ''});	
+				var block = this.$.block('edit', 'Annotation Editor', '', false, false, {
+					"store": {
+						icon: 'floppy-save',
+						eventListeners: {'click': 'saveAnnotation'},
+						caption: 'save annotation'
+					},
+				});
 				
 				var typesList = block.appendChild(this.$.htmlElement('div', {'classes': ['dbv-edit-types-list']}, ''));
 				
@@ -97,8 +103,6 @@
 				}
 				block.appendChild(typesList);
 				this.editorElements.result = block.appendChild(this.$.htmlElement('pre', {id: 'dbv-edit-annotation-result'}));
-				this.editorElements.submit = block.appendChild(this.$.htmlElement('a', {}, 'Save Annotation', {'click': 'saveAnnotation'}));
-				
 			},
 			
 			editorContentOverview: function() {
@@ -144,8 +148,8 @@
 					tabs[i].classList.add('hidden');
 				}
 				e.target.parentNode.querySelector('.dbv-edit-annotation-tab').classList.remove('hidden');
-				
-				this.$.blocks.edit.block.querySelector('h3.panel-title ').className = 'panel-title dbv-colors-' + at;
+
+				this.$.blocks.edit.header.className = 'panel-heading dbv-colors-' + at;
 				this.editorNewAnnotation.type = at;
 				this.viewNewAnnotation();
 			},

@@ -64,8 +64,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
     this.editorMode = options.editorMode;
     
     if (this.findController === null) {
-      throw new Error('PDFFindBar cannot be used without a ' +
-                      'PDFFindController instance.');
+      throw new Error('PDFFindBar cannot be used without a PDFFindController instance.');
     }
 
     // Add event listeners to the DOM elements.

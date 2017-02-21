@@ -1047,6 +1047,7 @@ var PDFViewerApplication = {
     Promise.all([onePageRendered, this.animationStartedPromise]).then(function() {
       pdfDocument.getOutline().then(function(outline) {
         self.pdfOutlineViewer.render({ outline: outline });
+        self.pdfOutlineViewer.render({ outline: outline });
       });
       pdfDocument.getAttachments().then(function(attachments) {
         self.pdfAttachmentViewer.render({ attachments: attachments });
@@ -2050,6 +2051,8 @@ function dbvTextmarker(e) {
 
     if (PDFViewerApplication.pdfSidebar.active == 'find') {
     	PDFViewerApplication.findBar.onTextmarker(text, pageIdx);
+    } else if (PDFViewerApplication.pdfSidebar.active == 'editAnnotations') {
+		PDFViewerApplication.annoEditor.onTextmarker(text, pageIdx);
     }
 
 }

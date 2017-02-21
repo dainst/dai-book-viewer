@@ -120,9 +120,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
     	if (typeof tab !== "undefined") {
     		this.tabs[tab] = to;
-
 			this[tab + 'Button'].disabled = !this.tabs[tab];
-			console.log('B1', this.tabs[tab], tab, this[tab + 'Button'].disabled, this[tab + 'Button']);
 		} else {
 			for (var i in this.tabs) {
 				this[i + 'Button'].disabled = !this.tabs[i];

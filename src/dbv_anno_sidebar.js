@@ -64,7 +64,7 @@
 			 */
 			block: function(id, title, depricated, minimizable, minimized, controls) {
 				var block = document.getElementById('dbv-av-block-' + id);
-				var blockctrl = false;
+				var blockctrl, blockbody,  blocktitle, blockfooter, blockh3;
 				if (!block) {
 					block = this.htmlElement('div', {'id': 'dbv-av-block-' + id, 'classes': ['dbv-av-block', 'panel', 'panel-default']});
 
@@ -73,10 +73,10 @@
 						controls['hide'] = {eventListeners: {'click': ['toggleBlock', id]}, icon: 'eye'}
 					}
 
-					var blocktitle	= this.htmlElement('div',{'classes': ["panel-heading", 'dbv-colors-' + id]});
-					var blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title);
-					var blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
-					var blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
+					blocktitle	= this.htmlElement('div',{'classes': ["panel-heading", 'dbv-colors-' + id]});
+					blockh3		= this.htmlElement('h3', {'classes': ['panel-title'], 'data': {'l10n-id': 'dbv-' + id + '-heading'}}, title);
+					blockbody	= this.htmlElement('div', {'classes':["panel-body"]});
+					blockfooter	= this.htmlElement('div', {'classes':["panel-footer"]});
 
 					blocktitle.appendChild(blockh3);
 					blockctrl 	= this.blockControls(controls, blocktitle);
@@ -84,6 +84,12 @@
 					block.appendChild(blockbody);
 					block.appendChild(blockfooter);
 					this.container.appendChild(block);
+				} else {
+					blockbody = block.querySelector('.panel-body');
+					blocktitle = block.querySelector('.panel-heading');
+					blockfooter = block.querySelector('.panel-footer');
+					blockh3 = block.querySelector('.panel-heading h3')
+					blockctrl = null;
 				}
 				
 				if (minimized) {
@@ -98,6 +104,7 @@
 					block: block,
 					body: blockbody,
 					headline: blockh3,
+					header: blocktitle,
 					footer: blockfooter,
 					controls: blockctrl,
 					add: function(attr, content, eventListeners) {return this.blockEntry(attr, content, eventListeners, id)}.bind(this),

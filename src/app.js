@@ -320,6 +320,7 @@ var PDFViewerApplication = {
         pdfViewer: this.pdfViewer,
         annoRegistry: this.annoRegistry,
         annoSidebar: new annoSidebar({container: appConfig.sidebar.annotationsView}),
+        eventBus: this.eventBus,
 		toggleAnnotationButton: appConfig.sidebar.annotationsButton,
         yayBox: appConfig.yayBox,
 		intextPopup: appConfig.intextPopup,
@@ -1337,7 +1338,7 @@ var PDFViewerApplication = {
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
     eventBus.on('fileinputchange', webViewerFileInputChange);
 
-    eventBus.on('newsearch', webViewerFindNewSearch)
+    eventBus.on('newsearch', webViewerFindNewSearch);
     eventBus.on('toggleannotations', dbvToggleAnnotations);
     eventBus.on('textmarker', dbvTextmarker);
     eventBus.on('viewNative', dbvViewNative);
@@ -2048,6 +2049,12 @@ function dbvTextmarker(e) {
 	if (parent) {
 		var pageIdx = parseInt(parent.dataset.pageNumber);
 	}
+    /*
+	PDFViewerApplication.pdfSidebar.eventHandler('textmarker', {
+	  text: text,
+      pageIdx: pageIdx
+    });
+    */
 
     if (PDFViewerApplication.pdfSidebar.active == 'find') {
     	PDFViewerApplication.findBar.onTextmarker(text, pageIdx);

@@ -64,7 +64,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     this._bindMouse();
     
     this.annoRegistry = options.annoRegistry;
-    this.annoViewer = options.annoViewer;
     
   }
 
@@ -267,7 +266,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         }
 
         var self = this;
-        var popupFn = function(e) {return self.popupEventHandler(e)};
+        var popupFn = function(e) {return this.popupEventHandler(e)}.bind(this);
         
         var bidiTexts = this.textContent.items;
         var textDivs = this.textDivs;
@@ -301,11 +300,12 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
             	
             	// mouse click / hover of annotation
             	if (!((Object.keys(annotation.references || {}).length === 0) && ((annotation.text || '') == ''))) {
-            		span.addEventListener('mouseover', popupFn);
-            		//span.addEventListener('mouseout', popupHideFn);
-            		span.addEventListener('click', popupFn);
             		className += ' active';
             	}
+				span.addEventListener('mouseover', popupFn);
+				//span.addEventListener('mouseout', popupFn);
+				span.addEventListener('click', popupFn);
+
             }
             
             span.className = className;
@@ -467,21 +467,19 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     },
 
     /**
-     * show the popup
+     * all events, like click, mouseover and more... shall dispatched as system wide events, to react in the sidebar for example
      */
     
     popupEventHandler: function(event) {
-    	var annotation = this.findController.annoRegistry.registry[event.target.dataset.id]; 	
-    	   	
-    	if (event.type == 'click') {
-    		this.annoViewer.renderAnnotationPopup(annotation, event);
-    	}
-
-    	if (event.type == 'mouseover') {
-    		this.annoViewer.hoverAnnotationPopup(annotation, event);
-    	}
-    	
-    	
+    	// @ TODO find other annotations below
+		event.stopPropagation();
+		this.eventBus.dispatch('annotationEvent', {
+			annotation: this.findController.annoRegistry.registry[event.target.dataset.id],
+			pageNumber: this.pageNumber,
+			target: event.target,
+			type: event.type
+		});
+		return false;
     },
     
     /**
@@ -607,7 +605,6 @@ DefaultTextLayerFactory.prototype = {
       textLayerDiv: textLayerDiv,
       pageIndex: pageIndex,
       viewport: viewport,
-      annoViewer: this.annoViewer,
       annoRegistry: this.annoRegistry
     });
   }

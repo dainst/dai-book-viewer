@@ -2127,6 +2127,10 @@ window.addEventListener('DOMMouseScroll', handleMouseWheel);
 window.addEventListener('mousewheel', handleMouseWheel);
 
 window.addEventListener('click', function click(evt) {
+
+  PDFViewerApplication.eventBus.dispatch('windowClicked', {});
+
+  // @ TODO remove the rest of this function and put in event reaction function
   if (!PDFViewerApplication.secondaryToolbar.isOpen) {
     return;
   }

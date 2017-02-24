@@ -39,12 +39,15 @@
 		function AnnoViewer(options) {
 			this.pdfViewer = options.pdfViewer;
 			this.annoRegistry = options.annoRegistry;
+			this.eventBus = options.eventBus;
 			this.toggleAnnotationButton = options.toggleAnnotationButton;
 			this.yayBox = options.yayBox;
 			this.intextPopup = options.intextPopup;
 			this.intextPopupInner = options.intextPopupInner;
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
+
+			this._addEventListeners();
 
 		}
 
@@ -388,10 +391,9 @@
 			 * shows the annotationPopup with content of the annotations (reference links and text)
 			 *
 			 * @param annotation
-			 * @param pageX
-			 * @param pageY
+			 * @param trtarget (a div!)
 			 */
-			renderAnnotationPopup: function(annotation, event) {
+			clickAnnotation: function(annotation, target) {
 
 				var box = this.intextPopupInner;
 				var boxWrapper = this.intextPopup;
@@ -420,7 +422,7 @@
 				}
 
 				boxWrapper.classList.remove('hidden');
-				var el1 = event.target.getBoundingClientRect();
+				var el1 = target.getBoundingClientRect();
 				var el2 = boxWrapper.getBoundingClientRect();
 				var pos = {
 					left: el1.left + window.scrollX + (el1.width/2) - (el2.width/2),
@@ -432,18 +434,12 @@
 
 			},
 
-			hoverAnnotationPopup: function(annotation, pageX, pageY) {
+			hoverAnnotation: function(annotation) {
 				this.mapCenter(annotation);
 			},
 
-			/**
-			 * toggle the annotation
-			 *
-			 */
-			toggleAnnotationPopup: function() {
-				if (!this.annotationPopupDontHide) {
-					this.annotationPopup.classList.add('hidden');
-				}
+			hideInTextPopup: function() {
+				this.intextPopup.classList.add('hidden');
 			},
 
 
@@ -716,6 +712,30 @@
 
 			onTextLayerRendered: function(page) {
 		    	this.filterApply();
+			},
+
+			/**
+			 * @private
+			 */
+			_addEventListeners: function annoViewer_addEventListeners() {
+				this.eventBus.on('annotationEvent', function(e) {
+
+					if (e.type == 'click') {
+						this.clickAnnotation(e.annotation, e.target);
+					}
+					if (e.type == 'mouseover') {
+						this.hoverAnnotation(e.annotation);
+					}
+				}.bind(this));
+
+				this.eventBus.on('windowClicked', function(e) {
+					this.hideInTextPopup();
+
+				}.bind(this));
+
+
+
+
 			}
 
 

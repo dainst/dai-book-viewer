@@ -91,7 +91,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
 
 	  this._addEventListeners();
 
-    options.annoRegistry.onGetAnnotations(function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this), function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this));
+	  options.annoRegistry.onGetAnnotations(function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this), function pdfSidebarCheckAnnotationFeatures(e, x) {this.checkAnnotationFeatures()}.bind(this));
   }
 
   PDFSidebar.prototype = {
@@ -322,8 +322,6 @@ var PDFSidebar = (function PDFSidebarClosure() {
       }
     },
 
-
-
     /**
      * @private
      */
@@ -402,7 +400,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
       });
       
       self.editAnnotationsButton.addEventListener('click', function() { // paf dai
-          self.switchView('editAnnotations');
+		  self.switchView('editAnnotations');
       });
       
       self.infoButton.addEventListener('click', function() { // paf dai
@@ -415,9 +413,14 @@ var PDFSidebar = (function PDFSidebarClosure() {
       });
 
       self.eventBus.on('attachmentsloaded', function(e) {
-      	console.log(e);
 		self.updateTabs('attachments', e.attachmentsCount > 0);
       });
+
+
+
+		self.eventBus.on('textMarker', function(e) {
+			console.log('textmarker event', e);
+		});
 
       // Update the thumbnailViewer, if visible, when exiting presentation mode.
       self.eventBus.on('presentationmodechanged', function(e) {

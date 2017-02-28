@@ -406,6 +406,28 @@
 			clear: function() {
 				this.container.innerHTML = '';
 				this.blocks = {};
+			},
+
+
+			/**
+			 * @private
+			 */
+			_addEventListeners: function annoViewer_addEventListeners() {
+				this.eventBus.on('annotationEvent', function(e) {
+
+					if (e.type == 'click') {
+						this.clickAnnotation(e.annotation, e.target);
+					}
+					if (e.type == 'mouseover') {
+						this.hoverAnnotation(e.annotation);
+					}
+				}.bind(this));
+
+				this.eventBus.on('windowClicked', function(e) {
+					this.hideInTextPopup();
+
+				}.bind(this));
+
 			}
 			
 		};

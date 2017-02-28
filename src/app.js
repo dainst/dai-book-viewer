@@ -330,7 +330,8 @@ var PDFViewerApplication = {
     this.annoEditor = new annoEditor({
         findController: this.findController,
         annoRegistry: this.annoRegistry,
-        annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView})
+        annoSidebar: new annoSidebar({container: appConfig.sidebar.editAnnotationsView}),
+        eventBus: this.eventBus
     });
 
     this.annoInfo = new annoInfo({

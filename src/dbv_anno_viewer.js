@@ -438,6 +438,7 @@
 				this.mapCenter(annotation);
 			},
 
+
 			hideInTextPopup: function() {
 				this.intextPopup.classList.add('hidden');
 			},
@@ -732,9 +733,6 @@
 					this.hideInTextPopup();
 
 				}.bind(this));
-
-
-
 
 			}
 

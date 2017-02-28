@@ -14,8 +14,10 @@
 		function AnnoEditor(options) {
 			this.annoRegistry = options.annoRegistry;
 			this.findController = options.findController;
+			this.eventBus = options.eventBus;
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
+			this._addEventListeners();
 		}
 		
 		function annotation(type) {
@@ -35,7 +37,8 @@
 			terms: {},
 			lemma: {},
 			pages: {},
-			text:  {}
+			text:  {},
+			id: {}
 		}
 		
 		var annotationTypes = {
@@ -52,12 +55,14 @@
 				
 			editorElements: {
 				input: {},
-				types: {}
+				types: {},
+				typeSpecific: {}
 			},
 			
 			editorNewAnnotation: new annotation(),
 			editorNewCollection: {},
-			
+
+
 			load: function() {
 				this.displayEditor();
 			},
@@ -91,7 +96,7 @@
 				
 				for (var type in annotationTypes) {
 					var tab = typesList.appendChild(this.$.htmlElement('div', {'id': 'dbv-edit-annotation-type-' + type, 'classes': ['dbv-edit-annotation-type']}));
-					this.editorElements.types[type] = this.$.htmlInput({'type':'radio'}, type, {'click': ['selectNewAnnoType', type]}, tab);
+					this.editorElements.types[type] = this.$.htmlInput({'type':'radio'}, type, {'click': ['clickAnnoTypeSelector', type]}, tab);
 					var tob = tab.appendChild(this.$.htmlElement('div', {'classes': ['dbv-edit-annotation-tab', 'hidden']}))
 					for (var field in annotationTypes[type]) {
 						var fieldset = annotationTypes[type][field];
@@ -99,6 +104,7 @@
 						fieldset.data = {'id': field};
 						this.editorElements.input[field] = this.$.htmlInput(fieldset, field, {'keyup': ['editNewAnnotation', field]}, tob);
 					}
+					this.editorElements.typeSpecific[type] = tob;
 					this.editorNewCollection[type] = {'items': []};
 				}
 				block.appendChild(typesList);
@@ -127,6 +133,11 @@
 					
 				this.viewNewAnnotation();
 			},
+
+			clickAnnotation: function(annotation) {
+				this.editorNewAnnotation = annotation;
+				this.displayAnnotationInEditor();
+			},
 			
 			saveAnnotation: function() {
 				console.log(this.editorNewCollection);
@@ -141,17 +152,23 @@
 				this.editorElements.overview.textContent = JSON.stringify(this.editorNewCollection, null, "  ");
 				
 			},
+
+			clickAnnoTypeSelector: function(event, at) {
+				this.selectNewAnnoType(at);
+				this.viewNewAnnotation();
+			},
 			
-			selectNewAnnoType: function(e, at) {
-				var tabs = document.getElementsByClassName('dbv-edit-annotation-tab');
-				for (var i = 0; i < tabs.length; i++) {
-					tabs[i].classList.add('hidden');
+			selectNewAnnoType: function(at) {
+				if (typeof this.editorElements.typeSpecific[at] !== "undefined") {
+
+
+					this.editorElements.typeSpecific[at].classList.remove('hidden');
+				} else {
+					console.log('at is', at, this.editorElements.typeSpecific);
 				}
-				e.target.parentNode.querySelector('.dbv-edit-annotation-tab').classList.remove('hidden');
 
 				this.$.blocks.edit.header.className = 'panel-heading dbv-colors-' + at;
 				this.editorNewAnnotation.type = at;
-				this.viewNewAnnotation();
 			},
 			
 			editNewAnnotation: function(e, field) {
@@ -182,28 +199,32 @@
 					//console.log(self.editorElements.input[field]);
 					if (typeof self.editorElements.input[field] !== "undefined") {
 						self.editorElements.input[field].value = value; 
-					} 
-					
+					}
 				}
 				
 				for (var radio in this.editorElements.types) {
 					this.editorElements.types[radio].checked = false;
 				}
-				
+
 				for (var field in this.editorNewAnnotation) {
 					var value = this.editorNewAnnotation[field];
 					var it = '';
-					
 					value = (field == 'terms') ? value.join(', ') : value;					
 					value = (field == 'pages') ? value.join(', ') : value;
-					if (field == 'coordinates') {
+					if (value  && (field == 'coordinates')) {
 						updateInput('longitude', value[0]);
 						updateInput('latitude', value[1]);
 					} else {
 						updateInput(field, value);
 					}
 					if (field == 'type') {
-						this.editorElements.types[value].checked = true;
+						if (typeof this.editorElements.types[value] !== "undefined") {
+							this.editorElements.types[value].checked = true;
+							this.selectNewAnnoType(value);
+						} else {
+							console.log('type not done', type);
+						}
+
 					}
 				}
 				
@@ -213,6 +234,19 @@
 			viewNewAnnotation: function() {
 				this.displayAnnotationInEditor();
 				this.editorElements.result.textContent = JSON.stringify(this.editorNewAnnotation, null, "\t");
+			},
+
+			/**
+			 * @private
+			 */
+			_addEventListeners: function annoViewer_addEventListeners() {
+				this.eventBus.on('annotationEvent', function(e) {
+
+					if (e.type == 'click') {
+						this.clickAnnotation(e.annotation, e.target);
+					}
+				}.bind(this));
+
 			}
 		}
 		return AnnoEditor;

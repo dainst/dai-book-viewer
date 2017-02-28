@@ -68,51 +68,8 @@ var PDFFindBar = (function PDFFindBarClosure() {
     }
 
     // Add event listeners to the DOM elements.
-    var self = this;
+	this._addEventListeners();
 
-    this.findField.addEventListener('input', function() {
-      self.dispatchEvent('');
-    });
-
-    this.bar.addEventListener('keyup', function(evt) {
-      switch (evt.keyCode) {
-        case 13: // Enter
-          if (evt.target === self.findField) {
-            self.dispatchEvent('again', evt.shiftKey);
-          }
-          break;
-        case 27: // Escape
-        	self.findField.value = '';
-        	self.dispatchEvent('instant');
-          break;
-      }
-    });
-
-    this.findPreviousButton.addEventListener('click', function() {
-    	self.dispatchEvent('again', true);
-    });
-
-    this.findNextButton.addEventListener('click', function() {
-    	self.dispatchEvent('again', false);
-    });
-
-    this.findDeleteButton.addEventListener('click', function() {
-    	self.findField.value = '';
-        self.dispatchEvent('clear');
-        self.$.blocks.findResults.clear();
-    });
-    
-    this.caseSensitive.addEventListener('click', function() {
-      self.dispatchEvent('casesensitivitychange');
-    });
-    
-    this.phraseSearch.addEventListener('click', function() {
-        self.dispatchEvent('phrasesearchchange');
-    });
-    
-    this.regex.addEventListener('click', function() {
-    	self.dispatchEvent('regexchange');
-    });
     
     
   }
@@ -273,6 +230,63 @@ var PDFFindBar = (function PDFFindBarClosure() {
     	this.eventBus.dispatch('searchToAnnotation', {
     		
     	});
+    },
+
+
+    /**
+     * @private
+     */
+    _addEventListeners: function annoViewer_addEventListeners() {
+		var self = this;
+
+		this.findField.addEventListener('input', function() {
+			self.dispatchEvent('');
+		});
+
+		this.bar.addEventListener('keyup', function(evt) {
+			switch (evt.keyCode) {
+				case 13: // Enter
+					if (evt.target === self.findField) {
+						self.dispatchEvent('again', evt.shiftKey);
+					}
+					break;
+				case 27: // Escape
+					self.findField.value = '';
+					self.dispatchEvent('instant');
+					break;
+			}
+		});
+
+		this.findPreviousButton.addEventListener('click', function() {
+			self.dispatchEvent('again', true);
+		});
+
+		this.findNextButton.addEventListener('click', function() {
+			self.dispatchEvent('again', false);
+		});
+
+		this.findDeleteButton.addEventListener('click', function() {
+			self.findField.value = '';
+			self.dispatchEvent('clear');
+			self.$.blocks.findResults.clear();
+		});
+
+		this.caseSensitive.addEventListener('click', function() {
+			self.dispatchEvent('casesensitivitychange');
+		});
+
+		this.phraseSearch.addEventListener('click', function() {
+			self.dispatchEvent('phrasesearchchange');
+		});
+
+		this.regex.addEventListener('click', function() {
+			self.dispatchEvent('regexchange');
+		});
+
+        // listen to outside vents
+        this.eventBus.on('textmarker', function(e) {
+            this.onTextmarker(e.text, e.pageIdx);
+        }.bind(this));
     }
 
   };

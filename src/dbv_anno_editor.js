@@ -201,6 +201,10 @@
 						self.editorElements.input[field].value = value; 
 					}
 				}
+
+				function sortStringsLikeNumbers(a, b) {
+					return parseInt(a) - parseInt(b);
+				}
 				
 				for (var radio in this.editorElements.types) {
 					this.editorElements.types[radio].checked = false;
@@ -209,8 +213,8 @@
 				for (var field in this.editorNewAnnotation) {
 					var value = this.editorNewAnnotation[field];
 					var it = '';
-					value = (field == 'terms') ? value.join(', ') : value;					
-					value = (field == 'pages') ? value.join(', ') : value;
+					value = (field == 'terms') ? value.sort().join(', ') : value;
+					value = (field == 'pages') ? value.sort(sortStringsLikeNumbers).join(', ') : value;
 					if (value  && (field == 'coordinates')) {
 						updateInput('longitude', value[0]);
 						updateInput('latitude', value[1]);
@@ -241,12 +245,13 @@
 			 */
 			_addEventListeners: function annoViewer_addEventListeners() {
 				this.eventBus.on('annotationEvent', function(e) {
-
 					if (e.type == 'click') {
 						this.clickAnnotation(e.annotation, e.target);
 					}
 				}.bind(this));
-
+				this.eventBus.on('textmarker', function(e) {
+					this.onTextmarker(e.text, e.pageIdx);
+				}.bind(this));
 			}
 		}
 		return AnnoEditor;

@@ -1341,7 +1341,6 @@ var PDFViewerApplication = {
 
     eventBus.on('newsearch', webViewerFindNewSearch);
     eventBus.on('toggleannotations', dbvToggleAnnotations);
-    eventBus.on('textmarker', dbvTextmarker);
     eventBus.on('viewNative', dbvViewNative);
 
     eventBus.on('yayboxclick', dbvYayboxClick);
@@ -1587,18 +1586,17 @@ function webViewerInitialized() {
   });
 
   appConfig.yayBox.addEventListener('click', function (e) {
-	  PDFViewerApplication.eventBus.dispatch('yayboxclick');
+	PDFViewerApplication.eventBus.dispatch('yayboxclick');
   })
 
   appConfig.viewerContainer.addEventListener('mouseup', function(e) {
-	  PDFViewerApplication.eventBus.dispatch('textmarker', e);
+	dbvTextmarker(e);
   });
 
   Promise.all(waitForBeforeOpening).then(function () {
     webViewerOpenFileViaURL(file, {pubid: pubid});
   }).catch(function (reason) {
-    PDFViewerApplication.error(mozL10n.get('loading_error', null,
-      'An error occurred while opening.'), reason);
+    PDFViewerApplication.error(mozL10n.get('loading_error', null, 'An error occurred while opening.'), reason);
   });
 }
 
@@ -2033,6 +2031,12 @@ function dbvToggleAnnotations() {
 	PDFViewerApplication.annoViewer.toggleAnnotations();
 }
 
+
+/**
+ * this (without any doubt) marvellous function gets called, on mouse or keyup,
+ * and checks if something is marked.
+ * @param e <event>
+ */
 function dbvTextmarker(e) {
 
     var text = "";
@@ -2050,18 +2054,18 @@ function dbvTextmarker(e) {
 	if (parent) {
 		var pageIdx = parseInt(parent.dataset.pageNumber);
 	}
-    /*
-	PDFViewerApplication.pdfSidebar.eventHandler('textmarker', {
-	  text: text,
-      pageIdx: pageIdx
-    });
-    */
 
-    if (PDFViewerApplication.pdfSidebar.active == 'find') {
-    	PDFViewerApplication.findBar.onTextmarker(text, pageIdx);
-    } else if (PDFViewerApplication.pdfSidebar.active == 'editAnnotations') {
-		PDFViewerApplication.annoEditor.onTextmarker(text, pageIdx);
+	if (text !== "") {
+	    window.dbv_textsection = true;
+		PDFViewerApplication.eventBus.dispatch('textmarker', {
+			text: text,
+			pageIdx: pageIdx
+		});
+	} else if (window.dbv_textsection == true) {
+		window.dbv_textsection = false;
+		PDFViewerApplication.eventBus.dispatch('textmarker_deselect', {});
     }
+
 
 }
 

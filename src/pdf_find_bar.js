@@ -214,7 +214,7 @@ var PDFFindBar = (function PDFFindBarClosure() {
     },
     
     onTextmarker: function(tm) {
-    	if (tm.length >  100  || (this.findField.value != '')) {
+    	if ((tm.length > 100) || (this.findField.value != '') || (tm.length < 3)) {
     		return
     	}
     	
@@ -283,9 +283,11 @@ var PDFFindBar = (function PDFFindBarClosure() {
 			self.dispatchEvent('regexchange');
 		});
 
-        // listen to outside vents
+        // listen to outside events
         this.eventBus.on('textmarker', function(e) {
-            this.onTextmarker(e.text, e.pageIdx);
+			if (this.pdfSidebar.open && (this.pdfSidebar.active == 'find')) {
+				this.onTextmarker(e.text, e.pageIdx);
+			}
         }.bind(this));
     }
 

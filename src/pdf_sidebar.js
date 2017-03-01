@@ -201,7 +201,7 @@ var PDFSidebar = (function PDFSidebarClosure() {
     	
     	console.log('Switch to view: ' + view);
       
-    	if (view === 'none') {
+    	if (view == 'none') {
     		this.close();
     		return;
     	}

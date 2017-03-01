@@ -15,35 +15,45 @@
 
 @import url(pdf_viewer.css);
 
-/* \__/ */
+
 @font-face {
     font-family: 'Glyphicons Halflings';
     src: url("inc/fonts/bootstrap/glyphicons-halflings-regular.eot");
-    src: url("inc/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("inc/fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../../idai-components/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg");
+    src: url("inc/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"),
+      url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"),
+      url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"),
+      url("inc/fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype");
+}
+
+@font-face{
+  font-family:'Source Sans Pro';
+  font-style:normal;
+  font-weight:400;
+  src:local('Source Sans Pro'),local('SourceSansPro'),url("inc/fonts/google/SourceSansPro-Regular.ttf") format('truetype')
 }
 
 @font-face{
 	font-family:'Source Sans Pro';
 	font-style:normal;
-	font-weight:400;
-	src:local('Source Sans Pro Bold'),local('SourceSansPro-Bold'),url(inc/fonts/fonts.gstatic.com/s/sourcesanspro/v9/toadOcfmlt9b38dHJxOBGGAlZ1PukdtTN2z-JxSzbe8.ttf) format('truetype')
+	font-weight:600;
+	src:local('Source Sans Pro Bold'),local('SourceSansPro-Bold'),url("inc/fonts/google/SourceSansPro-Bold.ttf") format('truetype')
 }
 
 @font-face{
 	font-family:'Source Sans Pro';
 	font-style:italic;
 	font-weight:400;
-	src:local('Source Sans Pro Italic'),local('SourceSansPro-It'),url(inc/fonts/fonts.gstatic.com/s/sourcesanspro/v9/M2Jd71oPJhLKp0zdtTvoM6xot8ENfkYez2Lz7rcrw70.ttf) format('truetype')
+	src:local('Source Sans Pro Italic'),local('SourceSansPro-It'),url("inc/fonts/google/SourceSansPro-Italic.ttf") format('truetype')
 }
 
 @font-face{
 	font-family:'Source Sans Pro';
 	font-style:italic;
-	font-weight:700;
-	src:local('Source Sans Pro Bold Italic'),local('SourceSansPro-BoldIt'),url(inc/fonts/fonts.gstatic.com/s/sourcesanspro/v9/fpTVHK8qsXbIeTHTrnQH6KQ4IK8jcFikBX2R8jKe4LU.ttf) format('truetype')
+	font-weight:600;
+	src:local('Source Sans Pro Bold Italic'),local('SourceSansPro-BoldIt'),url("inc/fonts/google/SourceSansPro-BoldItalic.ttf") format('truetype')
 }
 
-/* /__\ */
+
 
 
 * {
@@ -55,7 +65,7 @@ html {
   height: 100%;
   width: 100%;
   /* Font size is needed to make the activity bar the correct size. */
-  font-size: 14px;
+  font-size: 16px;
 }
 
 body {
@@ -68,8 +78,7 @@ body,
 input,
 button,
 select {
-	font: message-box;
-	/*font-family: "Source Sans Pro",Helvetica,sans-serif;*/
+	font-family: "Source Sans Pro",Helvetica,sans-serif;
 	outline: none;
 }
 
@@ -386,7 +395,7 @@ html[dir='rtl'] #viewerContainer {
 	padding: 0px 6px 0px 6px;
 	margin: 14px 2px 4px 2px;
 	color: hsl(0,0%,85%);
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 14px;
 	text-align: left;
 	cursor: default;
@@ -693,7 +702,7 @@ html[dir='rtl'] .splitToolbarButtonSeparator {
 	border: 1px solid transparent;
 	border-radius: 2px;
 	color: hsla(0,0%,100%,.8);
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 14px;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -780,10 +789,10 @@ html[dir='rtl'] .dropdownToolbarButton {
 
 .dropdownToolbarButton > select {
 	min-width: 140px;
-	font-size: 12px;
+	font-size: 14px;
 	color: hsl(0,0%,95%);
 	margin: 0;
-	padding: 4px 2px 2px;
+    padding: 2px 2px 1px;
 	border: none;
 	background: rgba(0,0,0,0); /* Opera does not support 'transparent' <select> background */
 }
@@ -982,6 +991,11 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   min-width: 100%;
   white-space: normal;
 }
+.secondaryToolbarButton > span {
+  font-size: 16px;
+}
+
+
 html[dir="ltr"] .secondaryToolbarButton {
   padding-left: 24px;
   text-align: left;
@@ -1067,7 +1081,7 @@ html[dir='rtl'] .verticalToolbarSeparator {
 			  0 1px 0 hsla(0,0%,100%,.05);
 	color: hsl(0,0%,95%);*/
 	background-color: rgba(0, 0, 0, 0.15);
-	font-size: 12px;
+    font-size: 14px;
 	line-height: 14px;
 	outline-style: none;
 	transition-property: background-color, border-color, box-shadow;
@@ -1114,7 +1128,7 @@ html[dir='rtl'] .verticalToolbarSeparator {
 	border: 1px solid transparent;
 	border-radius: 2px;
 	color: hsl(0,0%,85%);
-	font-size: 12px;
+    font-size: 14px;
 	line-height: 14px;
 	text-align: left;
 	-webkit-user-select: none;
@@ -1289,15 +1303,12 @@ html[dir='rtl'] .outlineItemToggler::before {
 }
 
 .noResults {
-  font-size: 12px;
+  font-size: 14px;
   color: hsla(0,0%,100%,.8);
   font-style: italic;
   cursor: default;
 }
 
-/* TODO: file FF bug to support ::-moz-selection:window-inactive
-   so we can override the opaque grey background when the window is inactive;
-   see https://bugzilla.mozilla.org/show_bug.cgi?id=706209 */
 ::selection { background: rgba(0,0,255,0.3); }
 ::-moz-selection { background: rgba(0,0,255,0.3); }
 
@@ -1620,7 +1631,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 #intext-popup h5 {
-  color: white
+  color: white;
+  font-size: 16px
 }
 
 #intext-popup-inner {
@@ -1637,8 +1649,15 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .intext-popup-entry {
-  margin-bottom: 1px;
-  margin-top: 1px;
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+#intext-popup-inner .intext-popup-entry:first-child {
+  margin-top: 0;
+}
+#intext-popup-inner .intext-popup-entry:last-child {
+margin-bottom:0
 }
 
 .intext-popup-entry h5 {
@@ -1899,7 +1918,7 @@ html[dir='rtl'] .pull-right {
     display: inline-block;
     min-width: 10px;
     padding: 1px 5px;
-    font-size: 12px;
+    font-size: 16px;
     color: #fff;
     vertical-align: middle;
     text-align: center;
@@ -2025,7 +2044,7 @@ html[dir='rtl'] .pull-right {
 	margin-top: 4px
 }
 
-.panel-body label + input:[type="radio"][type="checkbox"] {
+.panel-body label + input[type="radio"][type="checkbox"] {
 	display: inline;
 }
 

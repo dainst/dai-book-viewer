@@ -21,7 +21,6 @@
   bottom: 0;
   overflow: hidden;
   opacity: 0.3;
-  xxxline-height: 1.0;
 }
 
 .textLayer > div {
@@ -62,8 +61,6 @@
 
 .textLayer .dbv-annotation.blink {
 
-	xxborder:2px solid red;
-	xxmargin: -1px;
 }
 
 .textLayer .dbv-annotation.blink:before {

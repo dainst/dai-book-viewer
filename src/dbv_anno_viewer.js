@@ -413,7 +413,10 @@
 					bullet = this.$.htmlElement('span', {'classes': ['intext-popup-bullet']});
 					bullet.appendChild(this.$.htmlElement('span', {'classes': ['dbv-colors-' + annotation.type], 'title': annotation.type}, ''));
 					box.appendChild(bullet);
-					box.appendChild(this.$.htmlElement('h5', {}, annotation.lemma));
+					box.appendChild(this.$.htmlElement('h5', {}, annotation.lemma, {
+				//		'mouseover':['inTextPopUpHoverAnnotation', annotation],
+						'click':['inTextPopUpClickAnnotation', annotation]
+					}));
 
 					if (typeof annotation.references !== "undefined" && (annotation.references.length != 0)) {
 						referenceList = this.$.htmlElement('div', {"class": "intext-popup-references"});
@@ -446,6 +449,27 @@
 				boxWrapper.style.left = pos.left + 'px';
 				boxWrapper.style.top = pos.top + 'px';
 
+			},
+
+			/**
+			 * get triggered when user clicks on the annotation in the in-text popup. don't triggers itself because
+			 * annotation*s* is null, but triggers everything else  ...
+			 * @param e
+			 * @param annotation
+			 */
+			inTextPopUpClickAnnotation: function(e, annotation) {
+				console.log("!!!");
+				this.eventBus.dispatch('annotationEvent', {
+					annotation: annotation,
+					pageNumber: '<unknown>', // @ TODO fixme
+					target: e.target,
+					type: 'click',
+					annotations: []
+				});
+			},
+
+			inTextPopUpHoverAnnotation: function(e, annotation) {
+				this.hoverAnnotation(annotation)
 			},
 
 			hoverAnnotation: function(annotation) {

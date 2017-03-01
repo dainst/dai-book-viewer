@@ -1641,7 +1641,11 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   margin-top: 1px;
 }
 
-#intext-popup h5,
+.intext-popup-entry h5 {
+  cursor: pointer
+}
+
+.intext-popup-entry h5,
 .intext-popup-entry div {
   display: inline-block;
 }
@@ -1682,7 +1686,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   margin-left: 2em
 }
 
-.intext-popu-entryp a:hover,
+.intext-popup-entry h5:hover,
+.intext-popup-entry a:hover,
 .intext-popup-entry a:visited,
 .intext-popup-entry a:active {
   text-decoration: underline

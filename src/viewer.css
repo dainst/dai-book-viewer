@@ -1616,6 +1616,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   top: 45%;
   left: 45%;
   max-width: 250px;
+  cursor: pointer
 }
 
 #intext-popup h5 {
@@ -1634,6 +1635,59 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   transition-duration: 0s, 1s;
   color: hsl(0, 0%, 85%);
 }
+
+.intext-popup-entry {
+  margin-bottom: 1px;
+  margin-top: 1px;
+}
+
+#intext-popup h5,
+.intext-popup-entry div {
+  display: inline-block;
+}
+
+.intext-popup-bullet {
+  background: white
+}
+
+.intext-popup-bullet,
+.intext-popup-bullet span {
+  width: 10px;
+  height: 10px;
+  border-radius: 6px;
+  margin-right: 6px;
+  display: inline-block;
+}
+
+.intext-popup-bullet span {
+  position:absolute
+}
+
+
+.intext-popup-entry p {
+  margin-bottom: 4px;
+  text-align: justify;
+}
+
+
+.intext-popup-entry a {
+  color: hsl(0,0%,85%);
+  text-decoration: none;
+  display: block;
+  text-align: right;
+}
+
+.intext-popup-entry a:first-of-type {
+  float: right;
+  margin-left: 2em
+}
+
+.intext-popu-entryp a:hover,
+.intext-popup-entry a:visited,
+.intext-popup-entry a:active {
+  text-decoration: underline
+}
+
 
 .intext-popup-tip-container {
   margin: 0 auto;
@@ -1662,16 +1716,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 
-#intext-popup a {
-  color: hsl(0,0%,85%);
-  text-decoration: none
-}
 
-#intext-popup a:hover,
-#intext-popup a:visited,
-#intext-popup a:active {
-	text-decoration: underline
-}
 
 .dbv-av-state {
 	position:absolute;

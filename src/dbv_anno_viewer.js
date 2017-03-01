@@ -390,37 +390,51 @@
 			/**
 			 * shows the annotationPopup with content of the annotations (reference links and text)
 			 *
-			 * @param annotation
-			 * @param trtarget (a div!)
+			 * @param annotations - list of clicked annotations
+			 * @param target (a div!)
 			 */
-			clickAnnotation: function(annotation, target) {
+			clickAnnotation: function(annotations, target) {
 
-				var box = this.intextPopupInner;
-				var boxWrapper = this.intextPopup;
-
-				var text = annotation.text || '';
-				var refs = annotation.references || {};
-
-				if ((Object.keys(refs).length === 0) && (text == '')) {
+				if (!annotations.length) {
 					return;
 				}
 
-				box.innerHTML = '';
-				box.appendChild(this.$.htmlElement('h5', {}, annotation.lemma));
+				var boxWrapper = this.intextPopup;
+				var annotation, text, refs, box, bullet, i, ref, d, referenceList;
 
-				if (annotation.text) {
-					box.appendChild(this.$.htmlElement('div', {}, annotation.text));
-				}
+				var inTextPopUpEntries = document.createDocumentFragment();
 
-				if (typeof annotation.references !== "undefined" && (annotation.references.length != 0)) {
-					for (var i = 0; i < annotation.references.length; i++) {
-						var ref = annotation.references[i];
-						var d = this.$.htmlElement('div');
-						d.appendChild(this.$.htmlElement('a', {"target": "_blank", "href": ref.url || ""}, ref.name || ref.type || ref.url));
-						box.appendChild(d);
+				for (var ii = 0; ii < annotations.length; ii++) {
+					annotation = annotations[ii];
+					text = annotation.text || '';
+					refs = annotation.references || {};
+
+					box = this.$.htmlElement('div', {'class': 'intext-popup-entry'});
+					bullet = this.$.htmlElement('span', {'classes': ['intext-popup-bullet']});
+					bullet.appendChild(this.$.htmlElement('span', {'classes': ['dbv-colors-' + annotation.type], 'title': annotation.type}, ''));
+					box.appendChild(bullet);
+					box.appendChild(this.$.htmlElement('h5', {}, annotation.lemma));
+
+					if (typeof annotation.references !== "undefined" && (annotation.references.length != 0)) {
+						referenceList = this.$.htmlElement('div', {"class": "intext-popup-references"});
+						for (i = 0; i < annotation.references.length; i++) {
+							ref = annotation.references[i];
+
+							box.appendChild(this.$.htmlElement('a', {"target": "_blank", "href": ref.url || ""}, ref.name || ref.type || ref.url));
+
+						}
+						//box.appendChild(referenceList);
 					}
+
+					if (annotation.text) {
+						box.appendChild(this.$.htmlElement('p', {}, annotation.text));
+					}
+					inTextPopUpEntries.appendChild(box);
 				}
 
+
+				this.intextPopupInner.innerHTML = '';
+				this.intextPopupInner.appendChild(inTextPopUpEntries);
 				boxWrapper.classList.remove('hidden');
 				var el1 = target.getBoundingClientRect();
 				var el2 = boxWrapper.getBoundingClientRect();
@@ -517,6 +531,9 @@
 			 * center map on annotation
 			 */
 			mapCenter: function(annotation) {
+				if (typeof annotation === "undefined") {
+					return;
+				}
 				if (annotation.coordinates && annotation.coordinates.length == 2) {
 					if (!annotation.coordinates[0] !== "" && annotation.coordinates[1] !== "") {
 						this.map.panTo(new L.LatLng(annotation.coordinates[0], annotation.coordinates[1]));
@@ -722,7 +739,7 @@
 				this.eventBus.on('annotationEvent', function(e) {
 
 					if (e.type == 'click') {
-						this.clickAnnotation(e.annotation, e.target);
+						this.clickAnnotation(e.annotations, e.target);
 					}
 					if (e.type == 'mouseover') {
 						this.hoverAnnotation(e.annotation);

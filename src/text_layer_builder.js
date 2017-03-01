@@ -297,10 +297,8 @@
 						if (typeof annotation === "object") {
 							span.dataset.id = annotation.id;
 
-							// mouse click / hover of annotation
-							if (!((Object.keys(annotation.references || {}).length === 0) && ((annotation.text || '') == ''))) {
-								className += ' active';
-							}
+							className += ' active';
+
 							span.addEventListener('mouseover', function (e) {
 								return this.onAnnotationHover(e)
 							}.bind(this));
@@ -526,7 +524,6 @@
 					elementMouseIsOver = null,
 					annotations = []
 
-				//
 				do {
 					if (elementMouseIsOver !== null) {
 						lastElement = stack[stack.length - 1];
@@ -535,14 +532,17 @@
 					elementMouseIsOver = document.elementFromPoint(x, y);
 					elementMouseIsOver.classList.add('pointerEventsNone');
 				} while ((elementMouseIsOver.className != "pointerEventsNone") &&
-				(lastElement !== elementMouseIsOver) &&
-				(elementMouseIsOver !== textLayerDiv))
+					(lastElement !== elementMouseIsOver) &&
+					(elementMouseIsOver !== textLayerDiv)
+				)
 
 				// clean it up
 				elementMouseIsOver.classList.remove('pointerEventsNone');
 				for (var i = 0; i < stack.length; i += 1) {
 					stack[i].classList.remove('pointerEventsNone');
-					annotations.push(this.findController.annoRegistry.registry[stack[i].dataset.id]);
+					if (typeof this.findController.annoRegistry.registry[stack[i].dataset.id] !== "undefined") {
+						annotations.push(this.findController.annoRegistry.registry[stack[i].dataset.id]);
+					}
 				}
 				this.eventBus.dispatch('annotationEvent', {
 					annotation: annotations[0],

@@ -37,556 +37,634 @@
  * @property {PDFFindController} findController
  */
 
-/**
- * TextLayerBuilder provides text-selection functionality for the PDF.
- * It does this by creating overlay divs over the PDF text. These divs
- * contain text that matches the PDF text they are overlaying. This object
- * also provides a way to highlight text that is being searched for.
- * @class
- */
-var TextLayerBuilder = (function TextLayerBuilderClosure() {
-  function TextLayerBuilder(options) {
-    this.textLayerDiv = options.textLayerDiv;
-    this.eventBus = options.eventBus || domEvents.getGlobalEventBus();
-    this.renderingDone = false;
-    
-    this.renderingPromise = false; // Promise gets resolved when page is renderes
-    this.renderingPromiseResolve = false;
-    
-    this.divContentDone = false;
-    this.pageIdx = options.pageIndex;
-    this.pageNumber = this.pageIdx + 1;
-    this.matches = [];
-    this.viewport = options.viewport;
-    this.textDivs = [];
-    this.findController = options.findController || null;
-    this.textLayerRenderTask = null; // gets resolved when text context is there
-    this._bindMouse();
-    
-    this.annoRegistry = options.annoRegistry;
-    
-  }
+	/**
+	 * TextLayerBuilder provides text-selection functionality for the PDF.
+	 * It does this by creating overlay divs over the PDF text. These divs
+	 * contain text that matches the PDF text they are overlaying. This object
+	 * also provides a way to highlight text that is being searched for.
+	 * @class
+	 */
+	var TextLayerBuilder;
+	TextLayerBuilder = (function TextLayerBuilderClosure() {
+		function TextLayerBuilder(options) {
+			this.textLayerDiv = options.textLayerDiv;
+			this.eventBus = options.eventBus || domEvents.getGlobalEventBus();
+			this.renderingDone = false;
 
-  TextLayerBuilder.prototype = {
-    _finishRendering: function TextLayerBuilder_finishRendering() {
-      this.renderingDone = true;
+			this.renderingPromise = false; // Promise gets resolved when page is renderes
+			this.renderingPromiseResolve = false;
 
-      var endOfContent = document.createElement('div');
-      endOfContent.className = 'endOfContent';
-      this.textLayerDiv.appendChild(endOfContent);
-      
-      this.eventBus.dispatch('textlayerrendered', {
-        source: this,
-        pageNumber: this.pageNumber
-      });
-    },
+			this.divContentDone = false;
+			this.pageIdx = options.pageIndex;
+			this.pageNumber = this.pageIdx + 1;
+			this.matches = [];
+			this.viewport = options.viewport;
+			this.textDivs = [];
+			this.findController = options.findController || null;
+			this.textLayerRenderTask = null; // gets resolved when text context is there
+			this._bindMouse();
 
-    /**
-     * Renders the text layer.
-     * @param {number} timeout (optional) if specified, the rendering waits
-     *   for specified amount of ms.
-     */
-    render: function TextLayerBuilder_render(timeout) {
-    	
-      if (!this.divContentDone || this.renderingDone) {
-        return;
-      }
-      
-      //console.log('RENDER PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
+			this.annoRegistry = options.annoRegistry;
 
-      if (this.textLayerRenderTask) {
-        this.textLayerRenderTask.cancel();
-        this.textLayerRenderTask = null;
-      }
+		}
 
-      this.textDivs = [];
-      var textLayerFrag = document.createDocumentFragment();
-      this.textLayerRenderTask = pdfjsLib.renderTextLayer({
-        textContent: this.textContent,
-        container: textLayerFrag,
-        viewport: this.viewport,
-        textDivs: this.textDivs,
-        timeout: timeout
-      });
+		TextLayerBuilder.prototype = {
+			_finishRendering: function TextLayerBuilder_finishRendering() {
+				this.renderingDone = true;
 
-      Promise.all([this.textLayerRenderTask.promise, this.annoRegistry.loadingPromiseAlways])      
-      .then(function textLayerRenderTaskPromiseThen() {
-        this.textLayerDiv.appendChild(textLayerFrag);
-        this.pUpdateAnnotations();
-        this._finishRendering();
-      }.bind(this), function (reason) {
-        // canceled or failed to render text layer -- skipping errors
-      });
-    },
+				var endOfContent = document.createElement('div');
+				endOfContent.className = 'endOfContent';
+				this.textLayerDiv.appendChild(endOfContent);
 
-    setTextContent: function TextLayerBuilder_setTextContent(textContent) {
-      if (this.textLayerRenderTask) {
-        this.textLayerRenderTask.cancel();
-        this.textLayerRenderTask = null;
-      }
-      this.textContent = textContent;
-      this.divContentDone = true;
-    },
+				this.eventBus.dispatch('textlayerrendered', {
+					source: this,
+					pageNumber: this.pageNumber
+				});
+			},
 
-    convertMatches: function TextLayerBuilder_convertMatches(matches, matchesLength) {
-      var i = 0;
-      var iIndex = 0;
-      if (typeof this.textContent === "undefined") {
-    	  //console.warn("convertMatches not possible, this.textContent empty");
-    	  return;
-      }
-      
-      var bidiTexts = this.textContent.items;
-      var end = bidiTexts.length - 1;
-      var queryLen = ((this.findController === null || this.findController.state === null) ? 0 : this.findController.state.query.length); // paf
-      var ret = [];
-      if (!matches) {
-        return ret;
-      }
-      for (var m = 0, len = matches.length; m < len; m++) {
-        // Calculate the start position.
-        var matchIdx = matches[m];
+			/**
+			 * Renders the text layer.
+			 * @param {number} timeout (optional) if specified, the rendering waits
+			 *   for specified amount of ms.
+			 */
+			render: function TextLayerBuilder_render(timeout) {
 
-        // if match has no begin (in case of dbvAnnotation)
-        if (typeof matches[m] === "undefined") {       	
-        	console.log('match not found');
-	        return ret;
-        }
-        
-        // Loop over the divIdxs.
-        while (i !== end && matchIdx >= (iIndex + bidiTexts[i].str.length)) {
-          iIndex += bidiTexts[i].str.length;
-          i++;
-        }
+				if (!this.divContentDone || this.renderingDone) {
+					return;
+				}
 
-        if (i === bidiTexts.length) {
-          console.error('Could not find a matching mapping');
-        }
+				//console.log('RENDER PAGE ' + this.pageIdx, !this.divContentDone, this.renderingDone);
 
-        var match = {
-          begin: {
-            divIdx: i,
-            offset: matchIdx - iIndex
-          }
-        };
+				if (this.textLayerRenderTask) {
+					this.textLayerRenderTask.cancel();
+					this.textLayerRenderTask = null;
+				}
 
-        // Calculate the end position.
-        if (matchesLength) { // multiterm search
-          matchIdx += matchesLength[m];
-        } else { // phrase search
-          matchIdx += queryLen;
-        }
+				this.textDivs = [];
+				var textLayerFrag = document.createDocumentFragment();
+				this.textLayerRenderTask = pdfjsLib.renderTextLayer({
+					textContent: this.textContent,
+					container: textLayerFrag,
+					viewport: this.viewport,
+					textDivs: this.textDivs,
+					timeout: timeout
+				});
 
-        // Somewhat the same array as above, but use > instead of >= to get
-        // the end position right.
-        while (i !== end && matchIdx > (iIndex + bidiTexts[i].str.length)) {
-          iIndex += bidiTexts[i].str.length;
-          i++;
-        }
+				Promise.all([this.textLayerRenderTask.promise, this.annoRegistry.loadingPromiseAlways])
+					.then(function textLayerRenderTaskPromiseThen() {
+						this.textLayerDiv.appendChild(textLayerFrag);
+						this.pUpdateAnnotations();
+						this._finishRendering();
+					}.bind(this), function (reason) {
+						// canceled or failed to render text layer -- skipping errors
+					});
+			},
 
-        match.end = {
-          divIdx: i,
-          offset: matchIdx - iIndex
-        };
-        ret.push(match);
-        //console.log(match);
-      }
+			setTextContent: function TextLayerBuilder_setTextContent(textContent) {
+				if (this.textLayerRenderTask) {
+					this.textLayerRenderTask.cancel();
+					this.textLayerRenderTask = null;
+				}
+				this.textContent = textContent;
+				this.divContentDone = true;
+			},
 
-      return ret;
-    },
-    
-    pConvertAnnotations: function TextLayerBuilder_pConvertAnnotations(annotations) {
-    	var ret = [];
-    	var conv;
-    	for (var i = 0; i < annotations.length; i++) {   		
-	        conv = this.convertMatches([annotations[i].position.begin], [annotations[i].position.length]);
-    		if ((typeof conv !== "undefined") && (typeof conv[0] !== "undefined")) {
-    			
-    			for (var row = conv[0].begin.divIdx; row <= conv[0].end.divIdx; row++) {
-        			ret.push({
-        				base: annotations[i].base,
-        				position: {
-       						divIdx: row,
-        					begin: 	(row == conv[0].begin.divIdx) 	? conv[0].begin.offset	: -1,
-        					end: 	(row == conv[0].end.divIdx) 	? conv[0].end.offset	: 1000000       					
-        				}
-        			});
-    			}
+			convertMatches: function TextLayerBuilder_convertMatches(matches, matchesLength) {
+				var i = 0;
+				var iIndex = 0;
+				if (typeof this.textContent === "undefined") {
+					//console.warn("convertMatches not possible, this.textContent empty");
+					return;
+				}
 
-    		}
-    	}
-    	
-    	return ret;
-    },
-   
-    /**
-     * clears all textlayers
-     */
-    clearRows: function() {
-    	//console.log('CLEAR CANVAS PAGE ' + this.pageIdx);
-    	for(var i = 0; i < this.textDivs.length; i++) {
-      	  this.textDivs[i].textContent = '';
-    	}
-    },
-    
-    /**
-     * fills all empty rows with hidden text
-     * 
-     * @param true* - if set true, it will fill even filled rows
-     */
-    fillRows: function(force) {
-    	for(var i = 0; i < this.textDivs.length; i++) {
-      	  if ((this.textDivs[i].textContent == '') || (force === true)) {
-              var div = this.textDivs[i];
-              var content = this.textContent.items[i].str; // .substring(0, undefined)
-              var node = document.createTextNode(content);
-              div.appendChild(node);
-      	  }
-    	}
-    },
-    
-    /**
-     * 
-     * rendering function for annotations
-     * 
-     * parallels renderMatches for matches
-     * 
-     * 
-     * @param annotations
-     */
-    pRenderAnnotations: function TextLayerBuilder_pRenderAnnotations(annotations) {
-    	
-    	//console.log('RENDER: ', annotations);
-    	
-    	this.clearRows();
-    	
-    	// Early exit if there is nothing to render.
-        if (annotations.length === 0) {
-          return;
-        }
+				var bidiTexts = this.textContent.items;
+				var end = bidiTexts.length - 1;
+				var queryLen = ((this.findController === null || this.findController.state === null) ? 0 : this.findController.state.query.length); // paf
+				var ret = [];
+				if (!matches) {
+					return ret;
+				}
+				for (var m = 0, len = matches.length; m < len; m++) {
+					// Calculate the start position.
+					var matchIdx = matches[m];
 
-        var self = this;
-        var popupFn = function(e) {return this.popupEventHandler(e)}.bind(this);
-        
-        var bidiTexts = this.textContent.items;
-        var textDivs = this.textDivs;
-        var pageIdx = this.pageIdx;
+					// if match has no begin (in case of dbvAnnotation)
+					if (typeof matches[m] === "undefined") {
+						console.log('match not found');
+						return ret;
+					}
 
-        var infinity = {
-          divIdx: -1,
-          offset: undefined
-        };
+					// Loop over the divIdxs.
+					while (i !== end && matchIdx >= (iIndex + bidiTexts[i].str.length)) {
+						iIndex += bidiTexts[i].str.length;
+						i++;
+					}
 
-        /**
-         * divIdx - row
-         * 
-         * 
-         * 
-         * className - if given, a span will be created (for an annotation for example)
-         */
-        function appendTextToDiv(divIdx, fromOffset, toOffset, className, annotation) {
-        	if (toOffset <= 0) {
-        		return;
-        	}
-        	
-        	
-          var div = textDivs[divIdx];
-          var content = bidiTexts[divIdx].str.substring(fromOffset, toOffset);        
-          var node = document.createTextNode(content);
-          if (className) {
-            var span = document.createElement('span');
-            if (typeof annotation === "object") {
-           		span.dataset.id = annotation.id; 
-            	
-            	// mouse click / hover of annotation
-            	if (!((Object.keys(annotation.references || {}).length === 0) && ((annotation.text || '') == ''))) {
-            		className += ' active';
-            	}
-				span.addEventListener('mouseover', popupFn);
-				//span.addEventListener('mouseout', popupFn);
-				span.addEventListener('click', popupFn);
+					if (i === bidiTexts.length) {
+						console.error('Could not find a matching mapping');
+					}
 
-            }
-            
-            span.className = className;
-            span.appendChild(node);
-            
-            div.appendChild(span);
-            return;
-          }
-          div.appendChild(node);
-        }
-        
-        // unfortunately we have to sort this stuff twice and iterate a lot over it, although it's expensive
-        //var t = [];t.push(performance.now()); 
-        
-        // step 1: sort by divIdx, id, begin
-        annotations.sort(function(a, b) {
-            if (a.position.divIdx < b.position.divIdx) 	{return -1}
-            if (a.position.divIdx > b.position.divIdx) 	{return 1}
-            if (a.base.id < b.base.id) 					{return -1}
-            if (a.base.id > b.base.id) 					{return 1}
-            if (a.position.begin < b.position.begin) 	{return -1}
-            if (a.position.begin > b.position.begin) 	{return 1}
-            return 0;
-        });
-        //t.push(performance.now()); 
+					var match = {
+						begin: {
+							divIdx: i,
+							offset: matchIdx - iIndex
+						}
+					};
 
-        // step 2: eliminate annotations wich overlap with themselves
-        var i = 0;
-        var a,b;
-        while(i < annotations.length - 1) {
-          a = annotations[i];
-          b = annotations[i + 1];
-             
-          if ((a.position.divIdx != b.position.divIdx) || (a.base.id != b.base.id)) {
-        	  i++; 
-        	  continue;
-          }
-          
-          if (a.position.end < b.position.begin) {
-        	  i++;
-        	  continue;
-          }
-          
-          if (a.position.end >= b.position.end) {
-        	  annotations.splice(i + 1, 1);
-        	  //annotations[i + 1].skip = true;
-          } else if (a.position.begin < b.position.begin) {
-        	  annotations[i].position = {
-	              begin:	a.position.begin,
-	              end:		b.position.end,
-	              divIdx:	a.position.divIdx
-        	  }
-        	  annotations.splice(i + 1, 1);
-        	  //annotations[i + 1].skip = true;
-          } else {
-        	  annotations.splice(i, 1);
-        	  //annotations[i].skip = true;
-          }
-        }
-        //t.push(performance.now()); 
+					// Calculate the end position.
+					if (matchesLength) { // multiterm search
+						matchIdx += matchesLength[m];
+					} else { // phrase search
+						matchIdx += queryLen;
+					}
 
-        // step 3: sort by divIdx, begin  
-        annotations.sort(function(a, b) {
-        	if (a.position.divIdx < b.position.divIdx) 		{return -1}
-            if (a.position.divIdx > b.position.divIdx) 		{return 1}
-            if (a.position.begin < b.position.begin) 		{return -1}
-            if (a.position.begin > b.position.begin) 		{return 1}
-            return 0;
-        });
-        //t.push(performance.now()); 
+					// Somewhat the same array as above, but use > instead of >= to get
+					// the end position right.
+					while (i !== end && matchIdx > (iIndex + bidiTexts[i].str.length)) {
+						iIndex += bidiTexts[i].str.length;
+						i++;
+					}
 
-        /*
-        for (var ttt = 1; ttt < t.length; ttt++) {
-        	var d = t[ttt] - t[ttt - 1];
-        	console.log('PERF Step ' + ttt + ' took ' + d);
-        }
-        var d = t[ttt-1] - t[0];
-    	console.log('PERF Alltt ' + ttt + ' took ' + d);
-        */
-        
-        // step 4 draw
-        
-        var ann = null; 
-        var prev = null;
-        var next = null;
-        var position = null;
-        var end = 0;
-        var begin = 0;
-        var tEnd = 0;
-        
-        var highlightSuffix = '';
-        var behindTxtLength = 0;
-        
-        function nextAnnoSameRow(i) {      	         	
-        	if (i + 1 == annotations.length) {return false;}
-        	return (annotations[i].position.divIdx == annotations[i+1].position.divIdx) ? annotations[i+1] : false;
-        }
-        function prevAnnoSameRow(i) {      	         	
-        	if (i == 0) {return false;}
-        	return (annotations[i].position.divIdx == annotations[i-1].position.divIdx) ? annotations[i-1] : false;
-        }
-        
-        var selectedMatch = (this.findController.selected.pageIdx == this.pageIdx) ? this.findController.selected.matchIdx : -1;
-        
-        
-        for (var i = 0; i < annotations.length; i++) {
-          ann = annotations[i];
-          position = ann.position;
-          next = nextAnnoSameRow(i);
-          prev = prevAnnoSameRow(i);
-          highlightSuffix = 'dbv-annotation ' + ann.base.type + ' ';
-          end = position.end == 1000000 ? infinity.offset : position.end;
-          begin = position.begin == -1 ? 0 : position.begin;
-          tEnd = next ? next.position.begin : infinity.offset;
-          
-          // console.log('coords: ' + position.divIdx + '/' + position.begin + ' - ' + position.divIdx + '/' + position.end/*, 'for', JSON.stringify(ann.base)*/);
-          //console.log(prev,ann,next);
+					match.end = {
+						divIdx: i,
+						offset: matchIdx - iIndex
+					};
+					ret.push(match);
+					//console.log(match);
+				}
 
-			if ((selectedMatch > -1) && (ann.base.type == "_search") && (ann.base.id == "_searchresult_" + selectedMatch)) {				
-				highlightSuffix += ' blink ';
-			} 
+				return ret;
+			},
 
-			if (prev && ((position.begin < prev.position.end))) {
-				highlightSuffix += ' overlap ';
-			}
-			
-			if (next && ((position.end > next.position.begin))) {
-				highlightSuffix += ' overlap ';
-			}
-			
-			if (position.end == 1000000) {
-				highlightSuffix += ' nr ';
-			}
-			
-			if (position.begin == -1) {
-				highlightSuffix += ' nl ';
-			}
-          
-			// first annotation or first annotation in new row
-			if (!prev) {
-				appendTextToDiv(position.divIdx, 0, position.begin);
-			}
-          
+			pConvertAnnotations: function TextLayerBuilder_pConvertAnnotations(annotations) {
+				var ret = [];
+				var conv;
+				for (var i = 0; i < annotations.length; i++) {
+					conv = this.convertMatches([annotations[i].position.begin], [annotations[i].position.length]);
+					if ((typeof conv !== "undefined") && (typeof conv[0] !== "undefined")) {
+
+						for (var row = conv[0].begin.divIdx; row <= conv[0].end.divIdx; row++) {
+							ret.push({
+								base: annotations[i].base,
+								position: {
+									divIdx: row,
+									begin: (row == conv[0].begin.divIdx) ? conv[0].begin.offset : -1,
+									end: (row == conv[0].end.divIdx) ? conv[0].end.offset : 1000000
+								}
+							});
+						}
+
+					}
+				}
+
+				return ret;
+			},
+
+			/**
+			 * clears all textlayers
+			 */
+			clearRows: function () {
+				//console.log('CLEAR CANVAS PAGE ' + this.pageIdx);
+				for (var i = 0; i < this.textDivs.length; i++) {
+					this.textDivs[i].textContent = '';
+				}
+			},
+
+			/**
+			 * fills all empty rows with hidden text
+			 *
+			 * @param true* - if set true, it will fill even filled rows
+			 */
+			fillRows: function (force) {
+				for (var i = 0; i < this.textDivs.length; i++) {
+					if ((this.textDivs[i].textContent == '') || (force === true)) {
+						var div = this.textDivs[i];
+						var content = this.textContent.items[i].str; // .substring(0, undefined)
+						var node = document.createTextNode(content);
+						div.appendChild(node);
+					}
+				}
+			},
+
+			/**
+			 *
+			 * rendering function for annotations
+			 *
+			 * parallels renderMatches for matches
+			 *
+			 *
+			 * @param annotations
+			 */
+			pRenderAnnotations: function TextLayerBuilder_pRenderAnnotations(annotations) {
+
+				//console.log('RENDER: ', annotations);
+
+				this.clearRows();
+
+				// Early exit if there is nothing to render.
+				if (annotations.length === 0) {
+					return;
+				}
+
+				var self = this;
+
+				var bidiTexts = this.textContent.items;
+				var textDivs = this.textDivs;
+				var pageIdx = this.pageIdx;
+
+				var infinity = {
+					divIdx: -1,
+					offset: undefined
+				};
+
+				/**
+				 * divIdx - row
+				 *
+				 *
+				 *
+				 * className - if given, a span will be created (for an annotation for example)
+				 */
+				var appendTextToDiv = function(divIdx, fromOffset, toOffset, className, annotation) {
+					if (toOffset <= 0) {
+						return;
+					}
+
+					var div = textDivs[divIdx];
+					var content = bidiTexts[divIdx].str.substring(fromOffset, toOffset);
+					var node = document.createTextNode(content);
+					if (className) {
+						var span = document.createElement('span');
+						if (typeof annotation === "object") {
+							span.dataset.id = annotation.id;
+
+							// mouse click / hover of annotation
+							if (!((Object.keys(annotation.references || {}).length === 0) && ((annotation.text || '') == ''))) {
+								className += ' active';
+							}
+							span.addEventListener('mouseover', function (e) {
+								return this.onAnnotationHover(e)
+							}.bind(this));
+							span.addEventListener('click', function (e) {
+								return this.onAnnotationClick(e)
+							}.bind(this));
+
+						}
+
+						span.className = className;
+						span.appendChild(node);
+
+						div.appendChild(span);
+						return;
+					}
+					div.appendChild(node);
+				}.bind(this);
+
+				// unfortunately we have to sort this stuff twice and iterate a lot over it, although it's expensive
+				//var t = [];t.push(performance.now());
+
+				// step 1: sort by divIdx, id, begin
+				annotations.sort(function (a, b) {
+					if (a.position.divIdx < b.position.divIdx) {
+						return -1
+					}
+					if (a.position.divIdx > b.position.divIdx) {
+						return 1
+					}
+					if (a.base.id < b.base.id) {
+						return -1
+					}
+					if (a.base.id > b.base.id) {
+						return 1
+					}
+					if (a.position.begin < b.position.begin) {
+						return -1
+					}
+					if (a.position.begin > b.position.begin) {
+						return 1
+					}
+					return 0;
+				});
+				//t.push(performance.now());
+
+				// step 2: eliminate annotations wich overlap with themselves
+				var i = 0;
+				var a, b;
+				while (i < annotations.length - 1) {
+					a = annotations[i];
+					b = annotations[i + 1];
+
+					if ((a.position.divIdx != b.position.divIdx) || (a.base.id != b.base.id)) {
+						i++;
+						continue;
+					}
+
+					if (a.position.end < b.position.begin) {
+						i++;
+						continue;
+					}
+
+					if (a.position.end >= b.position.end) {
+						annotations.splice(i + 1, 1);
+						//annotations[i + 1].skip = true;
+					} else if (a.position.begin < b.position.begin) {
+						annotations[i].position = {
+							begin: a.position.begin,
+							end: b.position.end,
+							divIdx: a.position.divIdx
+						}
+						annotations.splice(i + 1, 1);
+						//annotations[i + 1].skip = true;
+					} else {
+						annotations.splice(i, 1);
+						//annotations[i].skip = true;
+					}
+				}
+				//t.push(performance.now());
+
+				// step 3: sort by divIdx, begin
+				annotations.sort(function (a, b) {
+					if (a.position.divIdx < b.position.divIdx) {
+						return -1
+					}
+					if (a.position.divIdx > b.position.divIdx) {
+						return 1
+					}
+					if (a.position.begin < b.position.begin) {
+						return -1
+					}
+					if (a.position.begin > b.position.begin) {
+						return 1
+					}
+					return 0;
+				});
+				//t.push(performance.now());
+
+				/*
+				 for (var ttt = 1; ttt < t.length; ttt++) {
+				 var d = t[ttt] - t[ttt - 1];
+				 console.log('PERF Step ' + ttt + ' took ' + d);
+				 }
+				 var d = t[ttt-1] - t[0];
+				 console.log('PERF Alltt ' + ttt + ' took ' + d);
+				 */
+
+				// step 4 draw
+
+				var ann = null;
+				var prev = null;
+				var next = null;
+				var position = null;
+				var end = 0;
+				var begin = 0;
+				var tEnd = 0;
+
+				var highlightSuffix = '';
+				var behindTxtLength = 0;
+
+				function nextAnnoSameRow(i) {
+					if (i + 1 == annotations.length) {
+						return false;
+					}
+					return (annotations[i].position.divIdx == annotations[i + 1].position.divIdx) ? annotations[i + 1] : false;
+				}
+
+				function prevAnnoSameRow(i) {
+					if (i == 0) {
+						return false;
+					}
+					return (annotations[i].position.divIdx == annotations[i - 1].position.divIdx) ? annotations[i - 1] : false;
+				}
+
+				var selectedMatch = (this.findController.selected.pageIdx == this.pageIdx) ? this.findController.selected.matchIdx : -1;
 
 
-          // add the annotation div
-          appendTextToDiv(position.divIdx, begin, end, highlightSuffix, ann.base);
+				for (var i = 0; i < annotations.length; i++) {
+					ann = annotations[i];
+					position = ann.position;
+					next = nextAnnoSameRow(i);
+					prev = prevAnnoSameRow(i);
+					highlightSuffix = 'dbv-annotation ' + ann.base.type + ' ';
+					end = position.end == 1000000 ? infinity.offset : position.end;
+					begin = position.begin == -1 ? 0 : position.begin;
+					tEnd = next ? next.position.begin : infinity.offset;
 
-          // add text again because annotation is position:absolute now!        
-          appendTextToDiv(position.divIdx, begin, tEnd);
-          
-        }
-        
-        
-        // fill remaining text layers
-        this.fillRows();
-        
+					// console.log('coords: ' + position.divIdx + '/' + position.begin + ' - ' + position.divIdx + '/' + position.end/*, 'for', JSON.stringify(ann.base)*/);
+					//console.log(prev,ann,next);
 
-    },
+					if ((selectedMatch > -1) && (ann.base.type == "_search") && (ann.base.id == "_searchresult_" + selectedMatch)) {
+						highlightSuffix += ' blink ';
+					}
 
-    /**
-     * all events, like click, mouseover and more... shall dispatched as system wide events, to react in the sidebar for example
-     */
-    
-    popupEventHandler: function(event) {
-    	// @ TODO find other annotations below
-		event.stopPropagation();
-		this.eventBus.dispatch('annotationEvent', {
-			annotation: this.findController.annoRegistry.registry[event.target.dataset.id],
-			pageNumber: this.pageNumber,
-			target: event.target,
-			type: event.type
-		});
-		return false;
-    },
-    
-    /**
-     * highlights one search match on this page
-     * @param matchIdx
-     * 
-     * @return the row div with this match
-     */
-    highlightMatch: function(matchIdx, then) {
-    	if (typeof this.renderingPromise.then !== "function") {
-    		then(this.pageIdx, this.showHighlight(matchIdx));
-    	} else {
-    		this.renderingPromise.then(function() {
-    			then(this.pageIdx, this.showHighlight(matchIdx));
-    		}.bind(this))
-    	}
-    	
-    },
-    
-	showHighlight: function(matchIdx) {
-    	var spans = this.textLayerDiv.querySelectorAll('.dbv-annotation');
-    	for (var i = 0; i < spans.length; i++) {
-    		spans[i].classList.remove('blink');
-    	}
-    	var spans = this.textLayerDiv.querySelectorAll('.dbv-annotation[data-id="_searchresult_' + matchIdx + '"]');
-    	//console.log('highlight ' + matchIdx, this.textLayerDiv,spans.length);
-    	for (var i = 0; i < spans.length; i++) {
-    		spans[i].classList.add('blink');	
-    	}
-    	if (spans.length > 0) {
-    		return spans[0].parentNode;	
-    	}
-	},
-    
-    /**
-     * dbv extension to show DAI computer generated annotations
-     * 
-     */
-    pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations() {
-    	
-        this.renderingPromise = new Promise(function(resolver) {// <-- womöglich woanders hin, 
-      	  this.renderingPromiseResolve = resolver;
-        }.bind(this));
-    	
-    	//var c = this.findController.dbvAnnoMatchesReady[this.pageIdx] ? this.findController.dbvAnnoMatchesReady[this.pageIdx].length : 'NONE';
-    	//console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);
-        
-    	if (this.findController === null) { console.log('no findcontroller');  return; }
-        var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;
-        if (dbvAnnotations === null) {  console.log('no annotations for page ' + this.pageIdx);  return;  }
-        this.dbvAnnoMatchesReady = this.pConvertAnnotations(dbvAnnotations); // dontRecalculate ? this.dbvAnnoMatchesReady : 
-        if (this.dbvAnnoMatchesReady && (this.dbvAnnoMatchesReady.length > 0)) {
-        	//console.log("RENDER THEM ON PAGE " + this.pageIdx, this.dbvAnnoMatchesReady.length, this.dbvAnnoMatchesReady);
-            this.pRenderAnnotations(this.dbvAnnoMatchesReady);
-        } else {
-        	//console.log('NOTHING TO RENDER ON PAGE ' + this.pageIdx, this.dbvAnnoMatchesReady.length);
-        	this.clearRows();
-        	this.fillRows(true);
-        }
-        
-        this.renderingPromiseResolve();
-    },
+					if (prev && ((position.begin < prev.position.end))) {
+						highlightSuffix += ' overlap ';
+					}
 
-    /**
-     * Fixes text selection: adds additional div where mouse was clicked.
-     * This reduces flickering of the content if mouse slowly dragged down/up.
-     * @private
-     */
-    _bindMouse: function TextLayerBuilder_bindMouse() {
-      var div = this.textLayerDiv;
-      div.addEventListener('mousedown', function (e) {
-        var end = div.querySelector('.endOfContent');
-        if (!end) {
-          return;
-        }
+					if (next && ((position.end > next.position.begin))) {
+						highlightSuffix += ' overlap ';
+					}
+
+					if (position.end == 1000000) {
+						highlightSuffix += ' nr ';
+					}
+
+					if (position.begin == -1) {
+						highlightSuffix += ' nl ';
+					}
+
+					// first annotation or first annotation in new row
+					if (!prev) {
+						appendTextToDiv(position.divIdx, 0, position.begin);
+					}
+
+
+					// add the annotation div
+					appendTextToDiv(position.divIdx, begin, end, highlightSuffix, ann.base);
+
+					// add text again because annotation is position:absolute now!
+					appendTextToDiv(position.divIdx, begin, tEnd);
+
+				}
+
+
+				// fill remaining text layers
+				this.fillRows();
+
+
+			},
+
+			/**
+			 * all events, like click, mouseover and more... shall dispatched as system wide events, to react in the sidebar for example
+			 */
+
+			onAnnotationHover: function extLayerBuilder_onAnnotationHover(event) {
+				event.stopPropagation();
+				this.eventBus.dispatch('annotationEvent', {
+					annotation: this.findController.annoRegistry.registry[event.target.dataset.id],
+					pageNumber: this.pageNumber,
+					target: event.target,
+					type: event.type
+				});
+				return false;
+			},
+
+
+			/**
+			 * If we click on annotation, we want to know about underlying annotations as well, that's why it's is not done with
+			 * as simple click event on the annotation itself.
+			 * such a function si not naturally implemendet by js,
+			 * but we can emulate it like this:
+			 */
+			onAnnotationClick: function extLayerBuilder_onAnnotationClick(event) {
+				event.stopPropagation();
+				var textLayerDiv = this.textLayerDiv;
+
+				//textLayerDiv.addEventListener('click', function(e) {
+				var x = event.clientX,
+					y = event.clientY,
+					stack = [],
+					lastElement = null,
+					elementMouseIsOver = null,
+					annotations = []
+
+				//
+				do {
+					if (elementMouseIsOver !== null) {
+						lastElement = stack[stack.length - 1];
+						stack.push(elementMouseIsOver);
+					}
+					elementMouseIsOver = document.elementFromPoint(x, y);
+					elementMouseIsOver.classList.add('pointerEventsNone');
+				} while ((elementMouseIsOver.className != "pointerEventsNone") &&
+				(lastElement !== elementMouseIsOver) &&
+				(elementMouseIsOver !== textLayerDiv))
+
+				// clean it up
+				elementMouseIsOver.classList.remove('pointerEventsNone');
+				for (var i = 0; i < stack.length; i += 1) {
+					stack[i].classList.remove('pointerEventsNone');
+					annotations.push(this.findController.annoRegistry.registry[stack[i].dataset.id]);
+				}
+				this.eventBus.dispatch('annotationEvent', {
+					annotation: annotations[0],
+					pageNumber: this.pageNumber,
+					target: stack[0],
+					type: 'click',
+					annotations: annotations
+				});
+			},
+
+			/**
+			 * highlights one search match on this page
+			 * @param matchIdx
+			 *
+			 * @return the row div with this match
+			 */
+			highlightMatch: function (matchIdx, then) {
+				if (typeof this.renderingPromise.then !== "function") {
+					then(this.pageIdx, this.showHighlight(matchIdx));
+				} else {
+					this.renderingPromise.then(function () {
+						then(this.pageIdx, this.showHighlight(matchIdx));
+					}.bind(this))
+				}
+
+			},
+
+			showHighlight: function (matchIdx) {
+				var spans = this.textLayerDiv.querySelectorAll('.dbv-annotation');
+				for (var i = 0; i < spans.length; i++) {
+					spans[i].classList.remove('blink');
+				}
+				var spans = this.textLayerDiv.querySelectorAll('.dbv-annotation[data-id="_searchresult_' + matchIdx + '"]');
+				//console.log('highlight ' + matchIdx, this.textLayerDiv,spans.length);
+				for (var i = 0; i < spans.length; i++) {
+					spans[i].classList.add('blink');
+				}
+				if (spans.length > 0) {
+					return spans[0].parentNode;
+				}
+			},
+
+			/**
+			 * dbv extension to show DAI computer generated annotations
+			 *
+			 */
+			pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations() {
+
+				this.renderingPromise = new Promise(function (resolver) {// <-- womöglich woanders hin,
+					this.renderingPromiseResolve = resolver;
+				}.bind(this));
+
+				//var c = this.findController.dbvAnnoMatchesReady[this.pageIdx] ? this.findController.dbvAnnoMatchesReady[this.pageIdx].length : 'NONE';
+				//console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);
+
+				if (this.findController === null) {
+					console.log('no findcontroller');
+					return;
+				}
+				var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;
+				if (dbvAnnotations === null) {
+					console.log('no annotations for page ' + this.pageIdx);
+					return;
+				}
+				this.dbvAnnoMatchesReady = this.pConvertAnnotations(dbvAnnotations); // dontRecalculate ? this.dbvAnnoMatchesReady :
+				if (this.dbvAnnoMatchesReady && (this.dbvAnnoMatchesReady.length > 0)) {
+					//console.log("RENDER THEM ON PAGE " + this.pageIdx, this.dbvAnnoMatchesReady.length, this.dbvAnnoMatchesReady);
+					this.pRenderAnnotations(this.dbvAnnoMatchesReady);
+				} else {
+					//console.log('NOTHING TO RENDER ON PAGE ' + this.pageIdx, this.dbvAnnoMatchesReady.length);
+					this.clearRows();
+					this.fillRows(true);
+				}
+
+				this.renderingPromiseResolve();
+			},
+
+			/**
+			 * Fixes text selection: adds additional div where mouse was clicked.
+			 * This reduces flickering of the content if mouse slowly dragged down/up.
+			 * @private
+			 */
+			_bindMouse: function TextLayerBuilder_bindMouse() {
+				var div = this.textLayerDiv;
+				div.addEventListener('mousedown', function (e) {
+					var end = div.querySelector('.endOfContent');
+					if (!end) {
+						return;
+					}
 //#if !(MOZCENTRAL || FIREFOX)
-        // On non-Firefox browsers, the selection will feel better if the height
-        // of the endOfContent div will be adjusted to start at mouse click
-        // location -- this will avoid flickering when selections moves up.
-        // However it does not work when selection started on empty space.
-        var adjustTop = e.target !== div;
+					// On non-Firefox browsers, the selection will feel better if the height
+					// of the endOfContent div will be adjusted to start at mouse click
+					// location -- this will avoid flickering when selections moves up.
+					// However it does not work when selection started on empty space.
+					var adjustTop = e.target !== div;
 //#if GENERIC
-        adjustTop = adjustTop && window.getComputedStyle(end).
-          getPropertyValue('-moz-user-select') !== 'none';
+					adjustTop = adjustTop && window.getComputedStyle(end).getPropertyValue('-moz-user-select') !== 'none';
 //#endif
-        if (adjustTop) {
-          var divBounds = div.getBoundingClientRect();
-          var r = Math.max(0, (e.pageY - divBounds.top) / divBounds.height);
-          end.style.top = (r * 100).toFixed(2) + '%';
-        }
+					if (adjustTop) {
+						var divBounds = div.getBoundingClientRect();
+						var r = Math.max(0, (e.pageY - divBounds.top) / divBounds.height);
+						end.style.top = (r * 100).toFixed(2) + '%';
+					}
 //#endif
-        end.classList.add('active');
-      });
-      div.addEventListener('mouseup', function (e) {
-        var end = div.querySelector('.endOfContent');
-        if (!end) {
-          return;
-        }
+					end.classList.add('active');
+				});
+				div.addEventListener('mouseup', function (e) {
+					var end = div.querySelector('.endOfContent');
+					if (!end) {
+						return;
+					}
 //#if !(MOZCENTRAL || FIREFOX)
-        end.style.top = '';
+					end.style.top = '';
 //#endif
-        end.classList.remove('active');
-      });
-    },
-  };
-  return TextLayerBuilder;
-})();
+					end.classList.remove('active');
+				});
+			}
+
+
+		};
+		return TextLayerBuilder;
+	})();
 
 /**
  * @constructor

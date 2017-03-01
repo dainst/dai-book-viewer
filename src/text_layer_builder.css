@@ -173,3 +173,8 @@
 .textLayer .endOfContent.active {
   top: 0px;
 }
+
+/* important ! */
+.pointerEventsNone {
+	pointer-events: none;
+}

@@ -722,20 +722,16 @@ var PDFViewerApplication = {
       },
       function getDocumentError(exception) {
         var message = exception && exception.message;
-        var loadingErrorMessage = mozL10n.get('loading_error', null,
-          'An error occurred while loading the PDF.');
+        var loadingErrorMessage = mozL10n.get('loading_error', null, 'An error occurred while loading the PDF.');
 
         if (exception instanceof pdfjsLib.InvalidPDFException) {
           // change error message also for other builds
-          loadingErrorMessage = mozL10n.get('invalid_file_error', null,
-                                            'Invalid or corrupted PDF file.');
+          loadingErrorMessage = mozL10n.get('invalid_file_error', null, 'Invalid or corrupted PDF file.');
         } else if (exception instanceof pdfjsLib.MissingPDFException) {
           // special message for missing PDF's
-          loadingErrorMessage = mozL10n.get('missing_file_error', null,
-                                            'Missing PDF file.');
+          loadingErrorMessage = mozL10n.get('missing_file_error', null, 'Missing PDF file.');
         } else if (exception instanceof pdfjsLib.UnexpectedResponseException) {
-          loadingErrorMessage = mozL10n.get('unexpected_response_error', null,
-                                            'Unexpected server response.');
+          loadingErrorMessage = mozL10n.get('unexpected_response_error', null, 'Unexpected server response.');
         }
 
         var moreInfo = {
@@ -822,23 +818,15 @@ var PDFViewerApplication = {
       {version: pdfjsLib.version || '?', build: pdfjsLib.build || '?'},
       'PDF.js v{{version}} (build: {{build}})') + '\n';
     if (moreInfo) {
-      moreInfoText +=
-        mozL10n.get('error_message', {message: moreInfo.message},
-        'Message: {{message}}');
+      moreInfoText += mozL10n.get('error_message', {message: moreInfo.message}, 'Message: {{message}}');
       if (moreInfo.stack) {
-        moreInfoText += '\n' +
-          mozL10n.get('error_stack', {stack: moreInfo.stack},
-          'Stack: {{stack}}');
+        moreInfoText += '\n' + mozL10n.get('error_stack', {stack: moreInfo.stack}, 'Stack: {{stack}}');
       } else {
         if (moreInfo.filename) {
-          moreInfoText += '\n' +
-            mozL10n.get('error_file', {file: moreInfo.filename},
-            'File: {{file}}');
+          moreInfoText += '\n' + mozL10n.get('error_file', {file: moreInfo.filename}, 'File: {{file}}');
         }
         if (moreInfo.lineNumber) {
-          moreInfoText += '\n' +
-            mozL10n.get('error_line', {line: moreInfo.lineNumber},
-            'Line: {{line}}');
+          moreInfoText += '\n' + mozL10n.get('error_line', {line: moreInfo.lineNumber}, 'Line: {{line}}');
         }
       }
     }

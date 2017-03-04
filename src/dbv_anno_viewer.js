@@ -775,9 +775,11 @@
 
 				this.eventBus.on('windowClicked', function(e) {
 					this.hideInTextPopup();
-
 				}.bind(this));
 
+				this.eventBus.on('updateviewarea', function(e) {
+					this.hideInTextPopup();
+				}.bind(this));
 			}
 
 

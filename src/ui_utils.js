@@ -423,6 +423,8 @@ var EventBus = (function EventBusClosure() {
       if (!eventListeners || eventListeners.length === 0) {
         return;
       }
+      //var overlay = document.getElementById('intext-popup');
+      //overlay.classList.add('hidden');
       
       // Passing all arguments after the eventName to the listeners.
       var args = Array.prototype.slice.call(arguments, 1);

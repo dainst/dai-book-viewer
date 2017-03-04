@@ -429,7 +429,7 @@ html[dir='rtl'] #viewerContainer {
 }
 
 .sidebarOpen #yayBox {
-    left: 125px;
+    left: 40px;
 }
 
 #yayBox .glyphicon {

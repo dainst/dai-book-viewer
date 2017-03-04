@@ -416,11 +416,16 @@ var PDFSidebar = (function PDFSidebarClosure() {
 		self.updateTabs('attachments', e.attachmentsCount > 0);
       });
 
-
-
-		self.eventBus.on('textMarker', function(e) {
-			console.log('textmarker event', e);
-		});
+      self.eventBus.on('textmarker', function(e) {
+      	if (self.isOpen) {
+			self.eventBus.dispatch('textmarker::' + self.active, e);
+		}
+	  });
+      self.eventBus.on('annotationEvent', function(e) {
+      	if (self.isOpen) {
+			self.eventBus.dispatch('annotationEvent::' + self.active, e);
+		}
+	  });
 
       // Update the thumbnailViewer, if visible, when exiting presentation mode.
       self.eventBus.on('presentationmodechanged', function(e) {

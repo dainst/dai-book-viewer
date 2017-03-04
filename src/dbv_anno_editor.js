@@ -29,7 +29,8 @@
 				text: '',
 				references: {},
 				coordinates: [],
-				id: 'id#' + Math.random()
+				id: 'id#' + Math.random(),
+				new: true
 			}
 		};
 		
@@ -118,6 +119,10 @@
 			
 			onTextmarker: function(text, pageIdx) {
 
+				if (typeof this.editorNewAnnotation.new !== "undefined" || !this.editorNewAnnotation.new) {
+					return;
+				}
+
 			    if (text != '') {
 				    this.updateNewAnnotation('terms', text);
 				    this.updateNewAnnotation('lemma', text);
@@ -141,7 +146,7 @@
 			
 			saveAnnotation: function() {
 				console.log(this.editorNewCollection);
-				
+
 				this.editorNewCollection[this.editorNewAnnotation.type].items.push(this.editorNewAnnotation);
 				
 				this.annoRegistry.registerAnnotation(this.editorNewAnnotation);
@@ -244,12 +249,12 @@
 			 * @private
 			 */
 			_addEventListeners: function annoViewer_addEventListeners() {
-				this.eventBus.on('annotationEvent', function(e) {
+				this.eventBus.on('annotationEvent::editAnnotations', function(e) {
 					if (e.type == 'click') {
 						this.clickAnnotation(e.annotation, e.target);
 					}
 				}.bind(this));
-				this.eventBus.on('textmarker', function(e) {
+				this.eventBus.on('textmarker::editAnnotations', function(e) {
 					this.onTextmarker(e.text, e.pageIdx);
 				}.bind(this));
 			}

@@ -37,16 +37,23 @@
 	 */
 	var AnnoViewer = (function AnnoViewerClosure() {
 		function AnnoViewer(options) {
+
+			/* controllers */
 			this.pdfViewer = options.pdfViewer;
 			this.annoRegistry = options.annoRegistry;
 			this.eventBus = options.eventBus;
+
+			/* elements */
 			this.toggleAnnotationButton = options.toggleAnnotationButton;
 			this.yayBox = options.yayBox;
 			this.intextPopup = options.intextPopup;
 			this.intextPopupInner = options.intextPopupInner;
+
+			/* sidebar components */
 			this.$ = options.annoSidebar;
 			this.$.parent = this;
 
+			/* Add event listeners */
 			this._addEventListeners();
 
 		}
@@ -111,9 +118,11 @@
 			 *
 			 * @param viewer
 			 */
+			/*
 			setViewer: function(viewer) {
+				console.log("DO WE NEED THIS?!");
 				this.pdfViewer = viewer;
-			},
+			},*/
 
 			/**
 			 *
@@ -414,8 +423,8 @@
 					bullet.appendChild(this.$.htmlElement('span', {'classes': ['dbv-colors-' + annotation.type], 'title': annotation.type}, ''));
 					box.appendChild(bullet);
 					box.appendChild(this.$.htmlElement('h5', {}, annotation.lemma, {
-				//		'mouseover':['inTextPopUpHoverAnnotation', annotation],
-						'click':['inTextPopUpClickAnnotation', annotation]
+						'mouseover':['inTextPopUpAction', annotation],
+						'click':['inTextPopUpAction', annotation]
 					}));
 
 					if (typeof annotation.references !== "undefined" && (annotation.references.length != 0)) {
@@ -457,19 +466,14 @@
 			 * @param e
 			 * @param annotation
 			 */
-			inTextPopUpClickAnnotation: function(e, annotation) {
-				console.log("!!!");
+			inTextPopUpAction: function(e, annotation) {
 				this.eventBus.dispatch('annotationEvent', {
 					annotation: annotation,
 					pageNumber: '<unknown>', // @ TODO fixme
 					target: e.target,
-					type: 'click',
+					type: e.type,
 					annotations: []
 				});
-			},
-
-			inTextPopUpHoverAnnotation: function(e, annotation) {
-				this.hoverAnnotation(annotation)
 			},
 
 			hoverAnnotation: function(annotation) {
@@ -761,7 +765,6 @@
 			 */
 			_addEventListeners: function annoViewer_addEventListeners() {
 				this.eventBus.on('annotationEvent', function(e) {
-
 					if (e.type == 'click') {
 						this.clickAnnotation(e.annotations, e.target);
 					}

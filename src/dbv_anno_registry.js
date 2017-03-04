@@ -39,10 +39,10 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 			url: '',
 			filename: '',
 			pubid: '',
-			metadata: {},
+			metadata: Object.create(null),
 
 			/* registry for loaded annotations ordered by ID */
-			registry: {},
+			registry: Object.create(null),
 			mayloadmore: false,
 
 			/* status view */
@@ -56,8 +56,8 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 			statusDiv: null,
 
 			/* data loader functions */
-			successFn: 	{},
-			errorFn: 	{},
+			successFn: 	Object.create(null),
+			errorFn: 	Object.create(null),
 
 			loadingPromise: null,
 			loadingPromiseResolver: null,
@@ -69,8 +69,8 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 				this.url = '';
 				this.filename = '';
 				this.state = 'wait';
-				this.registry = {};
-				this.metadata = {};
+				this.registry = Object.create(null);
+				this.metadata = Object.create(null);
 				this.mayloadmore = false;
 
 				this.loadingPromiseReset();

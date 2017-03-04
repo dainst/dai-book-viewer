@@ -39,9 +39,8 @@ var FindStates = pdfFindController.FindStates;
  */
 var PDFFindBar = (function PDFFindBarClosure() {
   function PDFFindBar(options) {
-    this.opened = false;
     
-    //elements
+    /* elements */
     this.bar = options.elements.bar || null;
     this.findField = options.elements.findField || null;
     this.phraseSearch = options.elements.phraseSearchCheckbox || null;
@@ -55,23 +54,20 @@ var PDFFindBar = (function PDFFindBarClosure() {
     this.findDeleteButton = options.elements.findDeleteButton || null;
     this.findController = options.elements.findController || null;
     
-    // controller
+    /* controller */
     this.findController = options.findController;
-    this.pdfSidebar = options.pdfSidebar;
+    //this.pdfSidebar = options.pdfSidebar;
     this.eventBus = options.eventBus;
-    this.$ = options.annoSidebar;
-    this.$.parent = this;
+
+   	/* options */
     this.editorMode = options.editorMode;
-    
-    if (this.findController === null) {
-      throw new Error('PDFFindBar cannot be used without a PDFFindController instance.');
-    }
 
-    // Add event listeners to the DOM elements.
+	/* sidebar components */
+	this.$ = options.annoSidebar;
+	this.$.parent = this;
+
+	/* Add event listeners */
 	this._addEventListeners();
-
-    
-    
   }
 
   PDFFindBar.prototype = {
@@ -170,14 +166,14 @@ var PDFFindBar = (function PDFFindBarClosure() {
     	this.findController.selected.pageIdx = page;
     	this.findController.updatePage(page);
     },
-    
+    /*
     open: function PDFFindBar_open() {
       this.pdfSidebar.switchView('find');
     	
       this.findField.select();
       this.findField.focus();
     },
-    
+    */
     addToHistory: function(searchId) {
     	if (searchId == 0) {
     		return;
@@ -284,10 +280,8 @@ var PDFFindBar = (function PDFFindBarClosure() {
 		});
 
         // listen to outside events
-        this.eventBus.on('textmarker', function(e) {
-			if (this.pdfSidebar.open && (this.pdfSidebar.active == 'find')) {
-				this.onTextmarker(e.text, e.pageIdx);
-			}
+        this.eventBus.on('textmarker::find', function(e) {
+			this.onTextmarker(e.text, e.pageIdx);
         }.bind(this));
     }
 

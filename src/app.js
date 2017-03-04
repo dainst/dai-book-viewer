@@ -344,8 +344,8 @@ var PDFViewerApplication = {
     });
 
     this.pdfViewer.setDbvControllers({
-    	  annoViewer: this.annoViewer,
-    	  annoRegistry: this.annoRegistry
+    	annoViewer: this.annoViewer,
+    	annoRegistry: this.annoRegistry
     });
 
 
@@ -396,7 +396,7 @@ var PDFViewerApplication = {
     	elements: appConfig.findBar,
         findController: this.findController,
     	eventBus: this.eventBus,
-    	pdfSidebar: this.pdfSidebar,
+    	/*pdfSidebar: this.pdfSidebar,*/
     	annoSidebar: new annoSidebar({container: appConfig.sidebar.findView}),
     	editorMode: this.preferenceAllowAnnotationEdit
     });

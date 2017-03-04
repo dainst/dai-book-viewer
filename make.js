@@ -78,10 +78,11 @@ target.dbv = function() {
 	cd(ROOT_DIR);
 	echo();
 	echo('### collect other files');
-
+	//echo('BUILD_DIR: ' + BUILD_DIR);
 
 	mkdir('-p', BUILD_DIR);
-	mkdir('-p', BUILD_DIR + '/cmaps');
+	mkdir('-p', BUILD_DIR + 'cmaps');
+	mkdir('-p', BUILD_DIR + 'style');
 
 	/*mv(BUILD_DIR + 'pdf.worker.js', BUILD_DIR + 'tmp.pdf.worker.js')
 	mv(BUILD_DIR + 'pdf.js', BUILD_DIR + 'tmp.pdf.js')
@@ -97,21 +98,21 @@ target.dbv = function() {
 	   ['LICENSE', BUILD_DIR],
 	   ['pdf.js/external/webL10n/l10n.js', BUILD_DIR],
 	   ['src/compatibility.js', BUILD_DIR],
-	   ['pdf.js/external/bcmaps/*', BUILD_DIR + '/cmaps/']
+	   ['pdf.js/external/bcmaps/*', BUILD_DIR + 'cmaps/']
 	 ],
 	 preprocess: [
 	   ['src/viewer.html', BUILD_DIR],
-     [BUILD_DIR + '*.js', BUILD_DIR]
+	   [BUILD_DIR + '*.js', BUILD_DIR]
 	 ],
 	 preprocessCSS: [
-	   ['generic', 'src/viewer.css', BUILD_DIR + '/viewer.css']
+	   ['generic', 'src/style/viewer.css', BUILD_DIR + 'style/viewer.css']
 	 ]
 	};
 
 	builder.build(setup);
 
 	cleanupJSSource(BUILD_DIR + '/viewer.js');
-	cleanupCSSSource(BUILD_DIR + '/viewer.css');
+	cleanupCSSSource(BUILD_DIR + 'style/viewer.css');
 
   echo('.. done');
 };

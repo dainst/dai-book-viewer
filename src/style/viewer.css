@@ -14,43 +14,43 @@
  * limitations under the License.
  */
 
-@import url("pdf_viewer.css");
+@import url(pdf_viewer.css);
 
 @font-face {
     font-family: 'Glyphicons Halflings';
-    src: url("inc/fonts/bootstrap/glyphicons-halflings-regular.eot");
-    src: url("inc/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"),
-      url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"),
-      url("inc/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"),
-      url("inc/fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype");
+    src: url("../inc/fonts/bootstrap/glyphicons-halflings-regular.eot");
+    src: url("../inc/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"),
+      url("../inc/fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"),
+      url("../inc/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"),
+      url("../inc/fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype");
 }
 
 @font-face {
     font-family:'Source Sans Pro';
   font-style:normal;
   font-weight:400;
-  src:local('Source Sans Pro'),local('SourceSansPro'),url("inc/fonts/google/SourceSansPro-Regular.ttf") format('truetype')
+  src:local('Source Sans Pro'),local('SourceSansPro'),url("../inc/fonts/google/SourceSansPro-Regular.ttf") format('truetype')
 }
 
 @font-face {
     font-family:'Source Sans Pro';
 	font-style:normal;
 	font-weight:600;
-	src:local('Source Sans Pro Bold'),local('SourceSansPro-Bold'),url("inc/fonts/google/SourceSansPro-Bold.ttf") format('truetype')
+	src:local('Source Sans Pro Bold'),local('SourceSansPro-Bold'),url("../inc/fonts/google/SourceSansPro-Bold.ttf") format('truetype')
 }
 
 @font-face {
     font-family:'Source Sans Pro';
 	font-style:italic;
 	font-weight:400;
-	src:local('Source Sans Pro Italic'),local('SourceSansPro-It'),url("inc/fonts/google/SourceSansPro-Italic.ttf") format('truetype')
+	src:local('Source Sans Pro Italic'),local('SourceSansPro-It'),url("../inc/fonts/google/SourceSansPro-Italic.ttf") format('truetype')
 }
 
 @font-face {
     font-family:'Source Sans Pro';
 	font-style:italic;
 	font-weight:600;
-	src:local('Source Sans Pro Bold Italic'),local('SourceSansPro-BoldIt'),url("inc/fonts/google/SourceSansPro-BoldItalic.ttf") format('truetype')
+	src:local('Source Sans Pro Bold Italic'),local('SourceSansPro-BoldIt'),url("../inc/fonts/google/SourceSansPro-BoldItalic.ttf") format('truetype')
 }
 
 * {
@@ -457,7 +457,7 @@ html[dir='rtl'] .findbar {
 }
 */
 #findInput[data-status="pending"] {
-    background-image: url(images/loading-small.png);
+    background-image: url("../images/loading-small.png");
     background-repeat: no-repeat;
     background-position: right;
 }
@@ -825,10 +825,6 @@ html[dir='rtl'] .dropdownToolbarButton {
  /* Opera does not support 'transparent' <select> background */
 }
 
-.dropdownToolbarButton > select > option {
-    background: hsl(0,0%,24%);
-}
-
 #customScaleOption {
     display: none;
 }
@@ -1157,7 +1153,7 @@ html[dir='rtl'] .verticalToolbarSeparator {
 }
 
 .toolbarField.pageNumber.visiblePageIsLoading {
-    background-image: url(images/loading-small.png);
+    background-image: url(../images/loading-small.png);
     background-repeat: no-repeat;
     background-position: 1px;
 }
@@ -1608,7 +1604,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .grab-to-pan-grab {
-    cursor: url("images/grab.cur"), move !important;
+    cursor: url("../images/grab.cur"), move !important;
     cursor: -webkit-grab !important;
     cursor: -moz-grab !important;
     cursor: grab !important;
@@ -1620,7 +1616,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 .grab-to-pan-grab:active,
 .grab-to-pan-grabbing {
-    cursor: url("images/grabbing.cur"), move !important;
+    cursor: url("../images/grabbing.cur"), move !important;
     cursor: -webkit-grabbing !important;
     cursor: -moz-grabbing !important;
     cursor: grabbing !important;
@@ -1882,7 +1878,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 .dbv-av-state.loading {
-    background-image: url("images/loading-small@2x.png");
+    background-image: url("../images/loading-small@2x.png");
     background-size: 16px 17px;
 }
 
@@ -2358,7 +2354,7 @@ html[dir='rtl'] .pull-right {
 
     .toolbarField.pageNumber.visiblePageIsLoading,
     #findInput[data-status="pending"] {
-        background-image: url("images/loading-small@2x.png");
+        background-image: url("../images/loading-small@2x.png");
         background-size: 16px 17px;
     }
 

@@ -291,14 +291,12 @@ var PDFViewerApplication = {
       pdfViewer: this.pdfViewer,
       eventBus: this.eventBus,
     });
-
     this.findController.onUpdateResultsCount = function (matchCount, matchDetails) {
       if (this.supportsIntegratedFind) {
         return;
       }
       this.findBar.updateResultsCount(matchCount, matchDetails);
     }.bind(this);
-
     this.findController.onUpdateState = function (state, previous, matchCount, matchDetails) {
       if (this.supportsIntegratedFind) {
         this.externalServices.updateFindControlState({result: state, findPrevious: previous});

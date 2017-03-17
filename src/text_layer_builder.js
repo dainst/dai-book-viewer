@@ -447,7 +447,7 @@
 					tEnd = next ? next.position.begin : infinity.offset;
 
 					// console.log('coords: ' + position.divIdx + '/' + position.begin + ' - ' + position.divIdx + '/' + position.end/*, 'for', JSON.stringify(ann.base)*/);
-					//console.log(prev,ann,next);
+					//console.log('A',ann.base.lemma,ann);
 
 					if ((selectedMatch > -1) && (ann.base.type == "_search") && (ann.base.id == "_searchresult_" + selectedMatch)) {
 						highlightSuffix += ' blink ';
@@ -474,7 +474,6 @@
 						appendTextToDiv(position.divIdx, 0, position.begin);
 					}
 
-
 					// add the annotation div
 					appendTextToDiv(position.divIdx, begin, end, highlightSuffix, ann.base);
 
@@ -483,17 +482,13 @@
 
 				}
 
-
 				// fill remaining text layers
 				this.fillRows();
-
-
 			},
 
 			/**
 			 * all events, like click, mouseover and more... shall dispatched as system wide events, to react in the sidebar for example
 			 */
-
 			onAnnotationHover: function extLayerBuilder_onAnnotationHover(event) {
 				event.stopPropagation();
 				this.eventBus.dispatch('annotationEvent', {
@@ -585,10 +580,6 @@
 				}
 			},
 
-			/**
-			 * dbv extension to show DAI computer generated annotations
-			 *
-			 */
 			pUpdateAnnotations: function TextLayerBuilder_pUpdateAnnotations() {
 
 				this.renderingPromise = new Promise(function (resolver) {// <-- womöglich woanders hin,
@@ -599,7 +590,7 @@
 				//console.log('UPDATE ANNOS PAGE ' + this.pageIdx, c);
 
 				if (this.findController === null) {
-					console.log('no findcontroller');
+					console.warn('no findcontroller');
 					return;
 				}
 				var dbvAnnotations = this.findController.dbvAnnoMatchesReady[this.pageIdx] || null;
@@ -632,21 +623,17 @@
 					if (!end) {
 						return;
 					}
-//#if !(MOZCENTRAL || FIREFOX)
 					// On non-Firefox browsers, the selection will feel better if the height
 					// of the endOfContent div will be adjusted to start at mouse click
 					// location -- this will avoid flickering when selections moves up.
 					// However it does not work when selection started on empty space.
 					var adjustTop = e.target !== div;
-//#if GENERIC
 					adjustTop = adjustTop && window.getComputedStyle(end).getPropertyValue('-moz-user-select') !== 'none';
-//#endif
 					if (adjustTop) {
 						var divBounds = div.getBoundingClientRect();
 						var r = Math.max(0, (e.pageY - divBounds.top) / divBounds.height);
 						end.style.top = (r * 100).toFixed(2) + '%';
 					}
-//#endif
 					end.classList.add('active');
 				});
 				div.addEventListener('mouseup', function (e) {
@@ -654,9 +641,8 @@
 					if (!end) {
 						return;
 					}
-//#if !(MOZCENTRAL || FIREFOX)
 					end.style.top = '';
-//#endif
+
 					end.classList.remove('active');
 				});
 			}

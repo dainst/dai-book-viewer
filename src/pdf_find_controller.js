@@ -209,11 +209,10 @@ var PDFFindController = (function PDFFindControllerClosure() {
 
         	var matches = self.calcFind(term, pageIndex, {'phraseSearch': false, 'caseSensitive': false, 'regex': false});     	
         	
-        	if (!matches) {
+        	if (!matches || (matches.length == 0)) {
         		//console.log('SOP no Matches for ', term, matches, annotation, ' on page ', pageIndex);
         		return;
         	}
-        	
 
         	//console.log('SOP and found:', term, matches);
 	        
@@ -315,7 +314,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         		term = query[1];
         		successor = query[2];
         	} else {
-        		console.log('can not handle term:', term);
+        		console.warn('can not handle term:', term);
         	}
         }        
         
@@ -323,6 +322,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         
         var regexp = new RegExp('(' + predecessor + ')\\b([\\W\\d]*)(' + term + ')[\\W\\d]*\\b(' + successor + ')', 'g' + ci);
     	//console.log('MM:' + regexp);
+    	//console.log('MM:' + pageContent);
 
         while ((match = regexp.exec(pageContent)) !== null) {
         	// match: 0: all 1: predecessor 2: trailing non-word-characters 3: term 4: successor
@@ -332,7 +332,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
         		'length': match[3].length 
         	});
         }
-        //console.log(matches);
+        //console.log('MM:', matches);
         return matches;
 	},
 

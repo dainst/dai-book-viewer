@@ -98,12 +98,48 @@ var AnnotationLayerBuilder = (function AnnotationLayerBuilderClosure() {
           parameters.div = self.div;
 
           pdfjsLib.AnnotationLayer.render(parameters);
+          //this.renderAnnotations(annotations); <- paf Baustelle
+
           if (typeof mozL10n !== 'undefined') {
             mozL10n.translate(self.div);
           }
         }
-      });
+      }.bind(this));
     },
+
+    renderAnnotations: function(annotations) {
+      for (var i = 0; i < annotations.length; i++) {
+        this.renderAnnotation(annotations[i]);
+      }
+    },
+
+	  /**
+       * test function by paf to test fo rendering of anntoations can be made better
+	   * @param data
+	   */
+	  renderAnnotation: function(data) {
+      console.log('RENDER!', data);
+      var container = document.createElement('div');
+      container.setAttribute('data-annotation-id', data.id);
+
+      // Do *not* modify `data.rect`, since that will corrupt the annotation
+      // position on subsequent calls to `_createContainer` (see issue 6804).
+      var rect = Util.normalizeRect([
+          data.rect[0],
+          page.view[3] - data.rect[1] + page.view[1],
+          data.rect[2],
+          page.view[3] - data.rect[3] + page.view[1]
+      ]);
+
+      CustomStyle.setProp('transform', container, 'matrix(' + viewport.transform.join(',') + ')');
+      CustomStyle.setProp('transformOrigin', container, -rect[0] + 'px ' + -rect[1] + 'px');
+      container.appendChild(
+		  document.createTextNode('HALLO')
+      );
+
+      this.div.appendChild(conatiner);
+    },
+
 
     hide: function AnnotationLayerBuilder_hide() {
       if (!this.div) {

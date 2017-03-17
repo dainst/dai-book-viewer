@@ -12,11 +12,7 @@
  * @param factory
  */
 
-//#if !PRODUCTION
-const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
-//#else
-//const TEST_DATA_URL = false;
-//#endif
+
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -34,6 +30,9 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 		};
 
 		AnnoRegistry.prototype = {
+
+			/* annotation sources */
+			sources: {}, // will be set by preferences
 
 			/* file information */
 			url: '',
@@ -77,8 +76,8 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 			},
 
 			/**
-			 * while app loading phase, several componets can bind functions to annotation loading success or fail
-			 * with this.onGetAnnotations
+			 * while app loading phase, several components can bind functions to annotation loading success or fail
+			 * with this.onGetAnnotations @ TODO use event bus instead
 			 *
 			 * if some functions shall be bound only on the next loading promise use then() and catch() functions
 			 * of this.loadingPromise oder this.loadingPromiseAlways. The latter resolves when the first resolves or fails
@@ -128,11 +127,15 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 
 			/**
 			 * get annotation for file from default source
+			 *	the identifier is a object containing severla collected data wich can be used to identify an pdf
+			 * - filename
+			 * - url
+			 * - pubid (for example provided via url or written in pdf xmp metadata)
+			 * - path - the url minus the filename
 			 *
 			 * @param identifier	<object>	{<filename|daiPubId>: <string>}
 			 */
 			get: function(identifier) {
-				console.log(identifier);
 
 				if (identifier.filename) {
 					this.setFilename(identifier.filename);
@@ -140,18 +143,18 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 
 				this.pubid = identifier.pubid;
 
-				// dai pubid
-				if (identifier.pubid) {
-          		console.log("get annotations by daiPubId: " + identifier.pubid);
-				  this.getAnnotations(['annotations', identifier.pubid]);
-					return;
-				} else if (identifier.filename && TEST_DATA_URL) {
-					console.warn("get annotations by filename is for testing only");
-					this.getAnnotations(['testdata', 'digest_' + this.filename + '.json'], TEST_DATA_URL);
-					return;
+				var source = this.sources[0]; //TODO make more then one source possible
+
+				if (source.source == 'local') {
+					source.source = identifier.path;
+				}
+
+				if (typeof identifier[source.identifier] !== "undefined") {
+					console.warn("try to get annotations from " + source.source + " for " + identifier[source.identifier]);
+					this.getAnnotations(['annotations', identifier[source.identifier]], source.source);
 				} else {
-          			this.loadingPromiseFail('no annotations to load');
-        		}
+					this.loadingPromiseFail('identifier ' + source.identifier + ' for annotation source ' + source.source + ' not found');
+				}
 			},
 
 			/**
@@ -172,7 +175,6 @@ const TEST_DATA_URL = 'http://localhost:63342/dai-book-viewer/DAIbookViewer';
 				var self = this;
 
 				var restprams = restparams || [];
-				var source = source || 'https://nlp.dainst.org:3000';
 				var url = source + '/' + restparams.join('/') + '?cachekiller' + Date.now();
 
 				var get = post ? 'POST': 'GET';

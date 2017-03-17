@@ -13,7 +13,12 @@
   "useOnlyCssZoom": false,
   "externalLinkTarget": 0,
 
-  "annotationSource": "https://nlp.dainst.org:3000",
+  "annotationSources": [
+    {
+      "source": "local",
+      "identifier": "filename"
+    }
+  ],
   "allowAnnotationEdit": true,
   "allowCorsPDF": true
 }

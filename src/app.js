@@ -282,8 +282,6 @@ var PDFViewerApplication = {
     });
     pdfLinkService.setHistory(this.pdfHistory);
 
-
-    // paf dai
     this.annoRegistry = new annoRegistry();
 
     this.findController = new PDFFindController({
@@ -423,6 +421,13 @@ var PDFViewerApplication = {
 
       Preferences.get('allowAnnotationEdit').then(function resolved(value) {
           self.preferenceAllowAnnotationEdit = value;
+      }),
+      Preferences.get('annotationSources').then(function resolved(value) {
+		  self.annoRegistry.sources = value;
+      }),
+
+      Preferences.get('allowCorsPDF').then(function resolved(value) {
+          self.allowCorsPDF = value;
       }),
 
       Preferences.get('disableTextLayer').then(function resolved(value) {
@@ -700,17 +705,28 @@ var PDFViewerApplication = {
     var result = loadingTask.promise.then(
       function getDocumentCallback(pdfDocument) {
 
-    	console.log('try to get annotations!', args);
     	self.annoViewer.load();
     	self.annoInfo.load();
     	self.findBar.load();
-		// load annotation editor if desired
+
+    	// load annotation editor if desired
 		self.pdfSidebar.updateTabs('editAnnotations', self.preferenceAllowAnnotationEdit)
 		if (self.preferenceAllowAnnotationEdit) {
 			self.annoEditor.load();
 		}
 
-    	var identifier = {filename: parameters.filename || parameters.url};
+
+		var identifier = {};
+		identifier.filename = parameters.filename;
+		if (typeof parameters.url !== "undefined") {
+			var split = parameters.url.match(/(.*)\/([^/\\&\?]+\.\w{3,4})/);
+			identifier.url = parameters.url;
+			identifier.path = split[1];
+			if (typeof parameters.filename === "undefined") {
+				identifier.filename = split[2]
+            }
+        }
+
     	if (typeof args.pubid !== 'undefined') {
     		identifier.pubid = args.pubid;
     	}
@@ -1343,7 +1359,7 @@ var PDFViewerApplication = {
 function validateFileURL(file) {
     Preferences.get('allowCorsPDF').then(function(allowCorsPDF) {
       if (allowCorsPDF) {
-		  try {4
+		  try {
 			  var viewerOrigin = new URL(window.location.href).origin || 'null';
 			  var fileOrigin = new URL(file, window.location.href).origin;
 

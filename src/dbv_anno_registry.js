@@ -151,7 +151,7 @@
 
 				if (typeof identifier[source.identifier] !== "undefined") {
 					console.warn("try to get annotations from " + source.source + " for " + identifier[source.identifier]);
-					this.getAnnotations(['annotations', identifier[source.identifier]], source.source);
+					this.getAnnotations(['annotations', identifier[source.identifier]], source.source, identifier.params);
 				} else {
 					this.loadingPromiseFail('identifier ' + source.identifier + ' for annotation source ' + source.source + ' not found');
 				}
@@ -163,10 +163,21 @@
 			 *
 			 *
 			 * @param restparams	<array>			list subfolders / REST-arguments
-			 * @param source		<string>		URL of the API/File
-			 * @param post			<boolean>		true: use POST; false (or omit) use GET
+			 * @param source		  <string>		URL of the API/File
+       * @param getparams   <object>    queryString with getParamas if any
 			 */
-			getAnnotations: function(restparams, source, post) {
+			getAnnotations: function(restparams, source, getparams) {
+
+        function jsonToQueryString(json) {
+            var keyMap = {
+              annotation_types: "type"
+            }
+            return '?' +
+                Object.keys(json).map(function(key) {
+                    var qkey = keyMap[key] ? keyMap[key] : key;
+                    return encodeURIComponent(qkey) + '=' + encodeURIComponent(json[key]);
+                }).join('&');
+        }
 
 				if (this.state == 'loading') {
 					return;
@@ -174,12 +185,13 @@
 
 				var self = this;
 
-				var restprams = restparams || [];
-				var url = source + '/' + restparams.join('/') + '?cachekiller' + Date.now();
+				restparams = restparams || [];
 
-				var get = post ? 'POST': 'GET';
+        var queryString = getparams ? jsonToQueryString(getparams)  + '&' : '?';
 
-				//console.log('fetch', get, url);
+				var url = source + '/' + restparams.join('/') + queryString +'cachekiller=' + Date.now();
+
+				console.log('fetch', url);
 
 				this.setState('loading');
 

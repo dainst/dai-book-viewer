@@ -731,6 +731,10 @@ var PDFViewerApplication = {
     		identifier.pubid = args.pubid;
     	}
 
+      identifier.params = {
+        annotation_types: args.annotation_types
+      }
+
     	self.annoRegistry.get(identifier);
 
     	self.load(pdfDocument, scale);
@@ -1405,6 +1409,7 @@ function webViewerInitialized() {
   var file = 'file' in params ? params.file : DEFAULT_URL;
 
   var pubid = 'pubid' in params ? params.pubid : undefined;
+  var annotation_types = 'annotation_types' in params ? params.annotation_types : false;
 
   validateFileURL(file);
 
@@ -1598,7 +1603,7 @@ function webViewerInitialized() {
   });
 
   Promise.all(waitForBeforeOpening).then(function () {
-    webViewerOpenFileViaURL(file, {pubid: pubid});
+    webViewerOpenFileViaURL(file, {pubid: pubid, annotation_types: annotation_types});
   }).catch(function (reason) {
     PDFViewerApplication.error(mozL10n.get('loading_error', null, 'An error occurred while opening.'), reason);
   });
@@ -1687,7 +1692,7 @@ function webViewerPageMode(e) {
     return;
   }
   // Handle the 'pagemode' hash parameter, see also `PDFLinkService_setHash`.
-  console.log('el modero', mode);
+  console.log('page mode', mode);
 
   var mode = e.mode, view;
   switch (mode) {

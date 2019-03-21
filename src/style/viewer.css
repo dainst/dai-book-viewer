@@ -1952,6 +1952,14 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     background-color: rgba(0, 0, 255, 0.3);
 }
 
+.dbv-colors-timespans {
+    background-color: rgba(255, 192, 37, 0.3);
+}
+
+.dbv-colors-objects {
+    background-color: rgba(47, 240, 255, 0.3);
+}
+
 .dbv-colors-error {
     background-color: rgba(129, 0, 0, 0.5);
 }

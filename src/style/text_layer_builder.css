@@ -116,6 +116,14 @@
 	background-color: rgb(0, 107, 0);
 }
 
+.textLayer .dbv-annotation.timespans {
+	background-color: rgb(255, 192, 37);
+}
+
+.textLayer .dbv-annotation.objects {
+	background-color: rgb(47, 240, 255);
+}
+
 .textLayer .dbv-annotation._search {
 	background-color: rgb(180, 0, 170);
 }
@@ -134,6 +142,8 @@
 	border-radius: 0;
 }
 
+.dbv-annotations-hidden-objects  .dbv-annotation.objects,
+.dbv-annotations-hidden-timespans  .dbv-annotations-hidden-timespans,
 .dbv-annotations-hidden-keyterms  .dbv-annotation.keyterms,
 .dbv-annotations-hidden-persons  .dbv-annotation.persons,
 .dbv-annotations-hidden-locations  .dbv-annotation.locations,

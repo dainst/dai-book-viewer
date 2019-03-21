@@ -145,7 +145,7 @@
 
 				var source = this.sources[0]; //TODO make more then one source possible
 
-				if (source.source == 'local') {
+				if (source.source === 'local') {
 					source.source = identifier.path;
 				}
 
@@ -171,7 +171,7 @@
         function jsonToQueryString(json) {
             var keyMap = {
               annotation_types: "type"
-            }
+            };
             return '?' +
                 Object.keys(json).map(function(key) {
                     var qkey = keyMap[key] ? keyMap[key] : key;
@@ -179,7 +179,7 @@
                 }).join('&');
         }
 
-				if (this.state == 'loading') {
+				if (this.state === 'loading') {
 					return;
 				}
 
@@ -218,14 +218,14 @@
 					} else {
 						return self.loadingPromiseFail('404 not found: ' + url, request);
 					}
-				}
+				};
 				request.onerror = function(e) {
 					return self.loadingPromiseFail('Request Error:' + e, request);
 				};
 				request.ontimeout = function(e) {
 					console.log("ADS timeout");
 					return self.loadingPromiseFail('Timeout: ' + e, request);
-				}
+				};
 
 				request.send();
 			},
@@ -235,7 +235,7 @@
 			 */
 			getFromLocalFile: function() {
 
-				if (this.state == 'loading') {
+				if (this.state === 'loading') {
 					return;
 				}
 
@@ -313,7 +313,7 @@
 			registerSet: function(data) {
 				for (var type in data) {
 					// register metadata
-					if (type == 'meta') {
+					if (type === 'meta') {
 						this.metadata = data[type];
 						continue;
 					}
@@ -442,7 +442,7 @@
 
 
 
-		}
+		};
 		return AnnoRegistry;
 	})();
 

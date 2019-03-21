@@ -710,7 +710,7 @@ var PDFViewerApplication = {
     	self.findBar.load();
 
     	// load annotation editor if desired
-		self.pdfSidebar.updateTabs('editAnnotations', self.preferenceAllowAnnotationEdit)
+		self.pdfSidebar.updateTabs('editAnnotations', self.preferenceAllowAnnotationEdit);
 		if (self.preferenceAllowAnnotationEdit) {
 			self.annoEditor.load();
 		}
@@ -731,9 +731,9 @@ var PDFViewerApplication = {
     		identifier.pubid = args.pubid;
     	}
 
-      identifier.params = {
-        annotation_types: args.annotation_types
-      }
+        identifier.params = {
+          annotation_types: args.annotation_types
+        };
 
     	self.annoRegistry.get(identifier);
 

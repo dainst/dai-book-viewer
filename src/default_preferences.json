@@ -15,7 +15,7 @@
 
   "annotationSources": [
     {
-      "source": "https://nlp.dainst.org:3000",
+      "source": "http://localhost:2222/documents/annotations",
       "identifier": "pubid"
     }
   ],

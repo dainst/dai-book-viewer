@@ -100,7 +100,7 @@
 				}
 
 				this.blocks[id] = {
-					opened: minimized ? false : true,
+					opened: !minimized,
 					block: block,
 					body: blockbody,
 					headline: blockh3,
@@ -108,8 +108,8 @@
 					footer: blockfooter,
 					controls: blockctrl,
 					add: function(attr, content, eventListeners) {return this.blockEntry(attr, content, eventListeners, id)}.bind(this),
-					clear: function() {blockbody.textContent = ''},
-				}
+					clear: function() {blockbody.textContent = ''}
+				};
 								
 				return blockbody;
 			},
@@ -124,7 +124,7 @@
 				for (var i in ctrl) {
 					control = ctrl[i];
 					hideClass = (typeof control.hide !== "undefined") ? 'dbv-av-block-controls-hide-' + control.hide : '';
-					if ((typeof control.type === "undefined") || (control.type == 'button')) {
+					if ((typeof control.type === "undefined") || (control.type === 'button')) {
 						controlEl = this.htmlElement(
 							'button',
 							{
@@ -192,7 +192,7 @@
 				// update message object
 				this.messageBox.text.dataset.l10nId = text;
 				
-				if (text != '') {
+				if (text !== '') {
 					mozL10n.translate(this.messageBox.text); 
 				}
 				

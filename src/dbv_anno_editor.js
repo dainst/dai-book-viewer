@@ -32,7 +32,7 @@
 				id: 'id#' + Math.random(),
 				new: true
 			}
-		};
+		}
 		
 		var annotationBase = {
 			terms: {},
@@ -40,7 +40,7 @@
 			pages: {},
 			text:  {},
 			id: {}
-		}
+		};
 		
 		var annotationTypes = {
 	        'locations': {
@@ -50,7 +50,7 @@
 	        'keyterms': {}, 
 	        'persons': {},
 	        'other': {}
-		}
+		};
 	
 		AnnoEditor.prototype = {
 				
@@ -83,7 +83,7 @@
 						icon: 'floppy-save',
 						eventListeners: {'click': 'saveAnnotation'},
 						caption: 'save annotation'
-					},
+					}
 				});
 				
 				var typesList = block.appendChild(this.$.htmlElement('div', {'classes': ['dbv-edit-types-list']}, ''));
@@ -123,7 +123,7 @@
 					return;
 				}
 
-			    if (text != '') {
+			    if (text !== '') {
 				    this.updateNewAnnotation('terms', text);
 				    this.updateNewAnnotation('lemma', text);
 			    }
@@ -182,13 +182,13 @@
 			
 			updateNewAnnotation: function(field, value) {
 				value = value.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1');
-				if (field == 'terms') {
+				if (field === 'terms') {
 					this.editorNewAnnotation[field] = [value];
-				} else if (field == 'pages') {
+				} else if (field === 'pages') {
 					this.editorNewAnnotation[field] = value.split(',').map(function(a){return parseInt(a)}).filter(function(a){return !isNaN(a)});
-				} else if (field == 'longitude') {
+				} else if (field === 'longitude') {
 					this.editorNewAnnotation['coordinates'][0] = value;
-				} else if (field == 'latitude') {
+				} else if (field === 'latitude') {
 					this.editorNewAnnotation['coordinates'][1] = value;
 				} else {
 					this.editorNewAnnotation[field] = value;	
@@ -218,15 +218,15 @@
 				for (var field in this.editorNewAnnotation) {
 					var value = this.editorNewAnnotation[field];
 					var it = '';
-					value = (field == 'terms') ? value.sort().join(', ') : value;
-					value = (field == 'pages') ? value.sort(sortStringsLikeNumbers).join(', ') : value;
-					if (value  && (field == 'coordinates')) {
+					value = (field === 'terms') ? value.sort().join(', ') : value;
+					value = (field === 'pages') ? value.sort(sortStringsLikeNumbers).join(', ') : value;
+					if (value  && (field === 'coordinates')) {
 						updateInput('longitude', value[0]);
 						updateInput('latitude', value[1]);
 					} else {
 						updateInput(field, value);
 					}
-					if (field == 'type') {
+					if (field === 'type') {
 						if (typeof this.editorElements.types[value] !== "undefined") {
 							this.editorElements.types[value].checked = true;
 							this.selectNewAnnoType(value);

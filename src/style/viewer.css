@@ -2343,10 +2343,6 @@ html[dir='rtl'] .pull-right {
 @media screen and (min-resolution: 2dppx) {
   /* Rules for Retina screens */
 
-    html {
-        font-size: 28px;
-    }
-
     html[dir='ltr'] .toolbarButton::before,
     html[dir='rtl'] .toolbarButton::before {
         left: -1px;
@@ -2369,11 +2365,6 @@ html[dir='rtl'] .pull-right {
     .toolbarButton::before, .secondaryToolbarButton::before {
         position: relative;
         top: 0
-    }
-
-    .panel-title,
-	.dbv-av-block-entry {
-        font-size: 200%;
     }
 
     .outlineItemToggler::before {

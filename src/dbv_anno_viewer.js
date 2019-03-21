@@ -516,19 +516,22 @@
 			 * @param entry | marker <elem>
 			 * @param event <event>
 			 */
-			entryClick: function(event) {
-				var annotation = this.annoRegistry.registry[event.originalTarget.annotationId];
+			entryClick: function(e) {
+				var originalElement = e.srcElement || e.originalTarget;
+				var annotation = this.annoRegistry.registry[originalElement.annotationId];
 				this.jumpToNextMatchingPage(annotation);
 			},
 
-			entryMouseover: function(event) {
-				var annotation = this.annoRegistry.registry[event.originalTarget.annotationId];
+			entryMouseover: function(e) {
+				var originalElement = e.srcElement || e.originalTarget;
+				var annotation = this.annoRegistry.registry[originalElement.annotationId];
 				this.highlightsShow(annotation);
 				this.mapCenter(annotation);
 			},
 
-			entryMouseout: function(event) {
-				var annotation = this.annoRegistry.registry[event.originalTarget.annotationId];
+			entryMouseout: function(e) {
+				var originalElement = e.srcElement || e.originalTarget;
+				var annotation = this.annoRegistry.registry[originalElement.annotationId];
 				this.highlightsHide(annotation);
 			},
 

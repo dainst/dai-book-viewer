@@ -1952,7 +1952,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     background-color: rgba(0, 0, 255, 0.3);
 }
 
-.dbv-colors-timespans {
+.dbv-colors-time_expressions {
     background-color: rgba(255, 192, 37, 0.3);
 }
 

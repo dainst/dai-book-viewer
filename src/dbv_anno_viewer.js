@@ -161,7 +161,7 @@
 				this.block('persons', 'Persons', 'user', data.persons);
 				this.block('keyterms', 'Keyterms', 'tags', data.keyterms);
 				this.block('objects', 'Objects', 'crown', data.objects);
-				this.block('timespans', 'Timespans', 'calendar', data.timespans);
+				this.block('time_expressions', 'Time Expressions', 'calendar', data.time_expressions);
 			},
 
 			/**

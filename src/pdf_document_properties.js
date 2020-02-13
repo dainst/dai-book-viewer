@@ -129,7 +129,7 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
           'fileSize': this._parseFileSize(),
           'title': data.info.Title,
           'author': data.info.Author,
-          'subject': data.info.Subject,
+          'subject': data.info.Subject.replace(/(?:\r\n|\r|\n)/g, '<br>'),
           'keywords': data.info.Keywords,
           'creationDate': this._parseDate(data.info.CreationDate),
           'modificationDate': this._parseDate(data.info.ModDate),

@@ -137,8 +137,9 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
           'producer': data.info.Producer,
           'version': data.info.PDFFormatVersion,
           'pageCount': this.pdfDocument.numPages,
-          'daiPubId': dbvData.url,
-          'zenonId': dbvData.zenon_id,
+          'publicationsLink': data.info.PublicationsLink,
+          'bibliographyLink': data.info.BibliographyLink,
+          'archiveLink': data.info.ArchiveLink,
           'description': dbvData.description
         };
         // Show the properties in the dialog.

@@ -2220,7 +2220,8 @@ html[dir='rtl'] .pull-right {
 }
 
 .panel-body table {
-    width: 100%
+    width: 100%;
+    table-layout: fixed;
 }
 
 .panel-body table td {

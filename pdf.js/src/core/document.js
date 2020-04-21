@@ -398,6 +398,9 @@ var PDFDocument = (function PDFDocumentClosure() {
         Producer: isString,
         CreationDate: isString,
         ModDate: isString,
+        PublicationsLink: isString,
+        BibliographyLink: isString,
+        ArchiveLink: isString,
         Trapped: isName
       });
     }

@@ -129,7 +129,7 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
           'fileSize': this._parseFileSize(),
           'title': data.info.Title,
           'author': data.info.Author,
-          'subject': data.info.Subject,
+          'subject': data.info.Subject.replace(/(?:\r\n|\r|\n)/g, '<br>'),
           'keywords': data.info.Keywords,
           'creationDate': this._parseDate(data.info.CreationDate),
           'modificationDate': this._parseDate(data.info.ModDate),
@@ -137,8 +137,9 @@ var PDFDocumentProperties = (function PDFDocumentPropertiesClosure() {
           'producer': data.info.Producer,
           'version': data.info.PDFFormatVersion,
           'pageCount': this.pdfDocument.numPages,
-          'daiPubId': dbvData.url,
-          'zenonId': dbvData.zenon_id,
+          'publicationsLink': data.info.PublicationsLink,
+          'bibliographyLink': data.info.BibliographyLink,
+          'archiveLink': data.info.ArchiveLink,
           'description': dbvData.description
         };
         // Show the properties in the dialog.

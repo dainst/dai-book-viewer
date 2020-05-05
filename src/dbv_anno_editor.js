@@ -49,6 +49,7 @@
 	        },
 	        'keyterms': {}, 
 	        'persons': {},
+	        'time_expressions': {},
 	        'other': {}
 		};
 	

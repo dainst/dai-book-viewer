@@ -142,13 +142,16 @@
 	border-radius: 0;
 }
 
-.dbv-annotations-hidden-objects  .dbv-annotation.objects,
-.dbv-annotations-hidden-time_expressions  .dbv-annotations-hidden-time_expressions,
-.dbv-annotations-hidden-keyterms  .dbv-annotation.keyterms,
-.dbv-annotations-hidden-persons  .dbv-annotation.persons,
-.dbv-annotations-hidden-locations  .dbv-annotation.locations,
-.dbv-annotations-hidden-places  .dbv-annotation.locations, /* @ TODO get rid of places */
-.dbv-annotations-hidden .dbv-annotation {
+/*
+  Do not show annotation classes that are marked as hidden from anywhere above in the DOM.
+*/
+.dbv-annotations-hidden-objects          .dbv-annotation.objects,
+.dbv-annotations-hidden-time_expressions .dbv-annotation.time_expressions,
+.dbv-annotations-hidden-keyterms         .dbv-annotation.keyterms,
+.dbv-annotations-hidden-persons          .dbv-annotation.persons,
+.dbv-annotations-hidden-locations        .dbv-annotation.locations,
+.dbv-annotations-hidden-places           .dbv-annotation.locations, /* @ TODO get rid of places */
+.dbv-annotations-hidden                  .dbv-annotation {
 	display: none
 }
 

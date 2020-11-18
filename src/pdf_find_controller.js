@@ -259,9 +259,26 @@ var PDFFindController = (function PDFFindControllerClosure() {
     			
     			// assemble pageContent as a string.
     			var textItems = textContent.items;
-    		    var str = [];
-    		    for (var i = 0, len = textItems.length; i < len; i++) {
-    		      str.push(textItems[i].str);
+
+    		    // a block is a contiguous sequence of items with the same writing direction ('rtl' or 'ltr')
+    		    var blocks = []
+    		    blocks.push({ str: [], dir: 'ltr' })
+    		        for (var i = 0, len = textItems.length; i < len; i++) {
+    		    	var item = textItems[i];
+    		    	// if the direction changes, begin a new block
+    		    	if (item.dir != blocks[blocks.length - 1].dir) {
+    		    		blocks.push({ str: [], dir: item.dir })
+    		    	}
+    		    	blocks[blocks.length - 1].str.push(item.str);
+    		    }
+    		    // After the blocks are collected join them together reversing where appropriate
+    		    var str = []
+    		    for (var i = 0; i < blocks.length; i++) {
+    		    	var block = blocks[i];
+    		    	if (block.dir == "rtl") {
+    		    		block.str.reverse();
+    		    	}
+    		    	str = str.concat(block.str);
     		    }
     		    self.pageContents[pageIndex] = str.join('');
     		    

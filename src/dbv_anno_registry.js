@@ -127,13 +127,12 @@
 
 			/**
 			 * get annotation for file from default source
-			 *	the identifier is a object containing severla collected data wich can be used to identify an pdf
+			 *	the identifier is an object containing several collected data wich can be used to identify a pdf
 			 * - filename
-			 * - url
 			 * - pubid (for example provided via url or written in pdf xmp metadata)
 			 * - path - the url minus the filename
 			 *
-			 * @param identifier	<object>	{<filename|daiPubId>: <string>}
+			 * @param identifier	<object>	{<filename|pubid>: <string>}
 			 */
 			get: function(identifier) {
 
@@ -151,7 +150,7 @@
 
 				if (typeof identifier[source.identifier] !== "undefined") {
 					console.warn("try to get annotations from " + source.source + " for " + identifier[source.identifier]);
-					this.getAnnotations(['annotations', identifier[source.identifier]], source.source, identifier.params);
+					this.getAnnotations([identifier[source.identifier]], source.source, identifier.params);
 				} else {
 					this.loadingPromiseFail('identifier ' + source.identifier + ' for annotation source ' + source.source + ' not found');
 				}
